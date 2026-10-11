@@ -2,7 +2,8 @@ import { normalizeHex } from '@/configs/colors';
 import { DEFAULT_SETTINGS } from '@/configs/defaults';
 import { FONT_SIZE_MAX, FONT_SIZE_MIN, SPEED_MAX, SPEED_MIN } from '@/configs/effects';
 import { TEXT_MAX_LENGTH } from '@/configs/fonts';
-import type { LightSettings } from '@/types/settings';
+import { PRESET_MAX, PRESET_NAME_MAX_LENGTH } from '@/configs/presets';
+import type { LightSettings, Preset } from '@/types/settings';
 
 function oneOf<T extends string>(value: unknown, allowed: readonly T[], fallback: T): T {
   return allowed.includes(value as T) ? (value as T) : fallback;
@@ -40,4 +41,21 @@ export function sanitizeSettings(raw: unknown): LightSettings {
     torchMode: oneOf(r.torchMode, ['steady', 'blink'], d.torchMode),
     torchRate: intIn(r.torchRate, SPEED_MIN, SPEED_MAX, d.torchRate),
   };
+}
+
+/** Dựng danh sách mẫu hợp lệ: bỏ phần tử hỏng, trùng id; giới hạn số lượng và độ dài tên. */
+export function sanitizePresets(raw: unknown): Preset[] {
+  if (!Array.isArray(raw)) return [];
+  const seen = new Set<string>();
+  const presets: Preset[] = [];
+  for (const item of raw) {
+    if (presets.length >= PRESET_MAX) break;
+    if (typeof item !== 'object' || item === null) continue;
+    const r = item as Record<string, unknown>;
+    const name = typeof r.name === 'string' ? r.name.trim().slice(0, PRESET_NAME_MAX_LENGTH) : '';
+    if (typeof r.id !== 'string' || !name || seen.has(r.id)) continue;
+    seen.add(r.id);
+    presets.push({ id: r.id, name, settings: sanitizeSettings(r.settings) });
+  }
+  return presets;
 }

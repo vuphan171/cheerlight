@@ -22,3 +22,10 @@ export interface LightSettings {
   torchMode: TorchMode; // khi torchSyncWithEffect = false
   torchRate: number; // 1–10, nhịp nháy riêng của flash
 }
+
+/** Một bộ cài đặt người dùng đặt tên và lưu lại để áp dụng nhanh. */
+export interface Preset {
+  id: string;
+  name: string;
+  settings: LightSettings;
+}

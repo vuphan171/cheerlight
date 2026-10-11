@@ -5,6 +5,7 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 import { ColorPicker } from '@/components/color-picker';
 import { EffectPreview } from '@/components/effect-preview';
 import { EffectSelector } from '@/components/effect-selector';
+import { PresetManager } from '@/components/preset-manager';
 import { Section } from '@/components/section';
 import { Segmented } from '@/components/segmented';
 import { SpeedSlider } from '@/components/speed-slider';
@@ -47,6 +48,10 @@ export default function SettingsScreen() {
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag">
+        <Section title="Mẫu đã lưu">
+          <PresetManager />
+        </Section>
+
         <Section title="Màu nền">
           <ColorPicker
             value={settings.backgroundColor}

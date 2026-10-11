@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 
 import { DEFAULT_SETTINGS } from '@/configs/defaults';
-import type { LightSettings } from '@/types/settings';
+import type { LightSettings, Preset } from '@/types/settings';
 
 export interface SettingsContextValue {
   settings: LightSettings;
@@ -13,6 +13,10 @@ export interface SettingsContextValue {
   /** `false` khi đã biết máy không dùng được camera/flash (CameraView báo lỗi mount). */
   torchAvailable: boolean;
   markTorchUnavailable: () => void;
+  presets: Preset[];
+  /** Lưu cài đặt hiện tại thành mẫu; trùng tên (không phân biệt hoa thường) thì ghi đè mẫu đó. */
+  savePreset: (name: string) => void;
+  deletePreset: (id: string) => void;
 }
 
 export const SettingsContext = createContext<SettingsContextValue>({
@@ -23,6 +27,9 @@ export const SettingsContext = createContext<SettingsContextValue>({
   acceptStrobe: () => {},
   torchAvailable: true,
   markTorchUnavailable: () => {},
+  presets: [],
+  savePreset: () => {},
+  deletePreset: () => {},
 });
 
 export function useSettings(): SettingsContextValue {

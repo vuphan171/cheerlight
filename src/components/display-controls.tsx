@@ -8,6 +8,7 @@ import { EffectSelector } from '@/components/effect-selector';
 import { useEffectChooser } from '@/components/strobe-warning';
 import { PRESET_COLORS } from '@/configs/colors';
 import { RADIUS, UI } from '@/configs/ui';
+import { useApplyPreset } from '@/hooks/use-apply-preset';
 import { useSettings } from '@/hooks/use-settings';
 
 export const CONTROLS_AUTO_HIDE_MS = 3000;
@@ -24,9 +25,10 @@ interface DisplayControlsProps {
 
 export function DisplayControls({ visible, onInteract, onHide, onBack, interactionKey }: DisplayControlsProps) {
   const insets = useSafeAreaInsets();
-  const { settings, updateSettings, torchAvailable } = useSettings();
+  const { settings, updateSettings, torchAvailable, presets } = useSettings();
   const [permission] = useCameraPermissions();
   const { choose: chooseEffect, warning } = useEffectChooser((effect) => updateSettings({ effect }));
+  const { apply: applyPreset, activeId, warning: presetWarning } = useApplyPreset();
 
   useEffect(() => {
     if (!visible) return;
@@ -67,6 +69,28 @@ export function DisplayControls({ visible, onInteract, onHide, onBack, interacti
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled">
+            {presets.length > 0 ? (
+              <>
+                {presets.map((preset) => {
+                  const active = preset.id === activeId;
+                  return (
+                    <Pressable
+                      key={preset.id}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Áp dụng mẫu ${preset.name}`}
+                      accessibilityState={{ selected: active }}
+                      onPress={() => applyPreset(preset)}
+                      style={[styles.chip, styles.presetChip, active && styles.chipOn]}>
+                      <View style={[styles.presetDot, { backgroundColor: preset.settings.backgroundColor }]} />
+                      <Text style={styles.chipLabel} numberOfLines={1}>
+                        {preset.name}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+                <View style={styles.divider} />
+              </>
+            ) : null}
             <EffectSelector value={settings.effect} onChange={chooseEffect} compact />
             <View style={styles.divider} />
             {PRESET_COLORS.slice(0, 10).map((color) => {
@@ -98,6 +122,7 @@ export function DisplayControls({ visible, onInteract, onHide, onBack, interacti
         </View>
       </Animated.View>
       {warning}
+      {presetWarning}
     </>
   );
 }
@@ -142,5 +167,7 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   chipOn: { backgroundColor: UI.accent, borderColor: UI.accent },
+  presetChip: { flexDirection: 'row', alignItems: 'center', gap: 8, maxWidth: 180 },
+  presetDot: { width: 14, height: 14, borderRadius: 7, borderWidth: 1, borderColor: UI.border },
   chipLabel: { color: UI.text, fontWeight: '600', fontSize: 14 },
 });

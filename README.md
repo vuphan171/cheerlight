@@ -14,10 +14,12 @@ LED, sáng tối đa, xoay ngang toàn màn hình, nháy đèn flash. Android + 
   hướng chạy; có thể chuyển sang font thường. Chữ dài (tới 500 ký tự) vẫn chạy mượt, không bị cắt.
 - **Màn hình hiển thị**: khoá ngang, ẩn status bar / navigation bar, độ sáng tối đa (chỉ trong app),
   không tự tắt màn hình. Chạm màn hình để hiện thanh điều khiển nổi (quay lại, đổi hiệu ứng, đổi màu,
-  bật/tắt flash), tự ẩn sau 3 giây.
+  bật/tắt flash, chọn mẫu), tự ẩn sau 3 giây.
 - **Đèn flash**: sáng liên tục, nháy theo nhịp riêng, hoặc đồng bộ với hiệu ứng nền. Luôn giới hạn
   **tối đa 5 lần/giây**. Flash tự tắt khi rời màn hình, khi app vào background.
 - **Xem trước** hiệu ứng ngay ở màn hình cài đặt.
+- **Mẫu đã lưu**: lưu tối đa 20 bộ cài đặt có đặt tên (lưu trùng tên = ghi đè), chạm để áp dụng,
+  xoá có xác nhận. Đổi nhanh giữa các mẫu ngay trên thanh điều khiển nổi ở màn hình hiển thị.
 - Tất cả cài đặt được **lưu lại** (AsyncStorage), tắt hẳn app mở lại vẫn giữ nguyên.
 
 ## Chạy app
