@@ -144,6 +144,8 @@ tiếng Việt có dấu (CỐ LÊN VIỆT NAM, "Cố lên các bạn ơi") hi�
   `AVCaptureDevice.hasTorch`) → cần development build, chưa làm.
 - Trên iOS Simulator (không có camera) CameraView không báo lỗi; đã kiểm tra không crash. Đã kiểm tra
   giao diện bị từ chối quyền bằng `xcrun simctl privacy booted revoke camera host.exp.Exponent`.
+- Android emulator (camera sau không có flash): CameraView mount bình thường, không crash — xem
+  "Kết quả test trên Android emulator" ở cuối file.
 
 ### Phase 4 (test thủ công — bắt buộc trên máy thật)
 - [ ] Bật flash lần đầu → hiện hộp thoại xin quyền Camera với nội dung tiếng Việt.
@@ -156,3 +158,69 @@ tiếng Việt có dấu (CỐ LÊN VIỆT NAM, "Cố lên các bạn ơi") hi�
 - [ ] Đang nháy → vuốt kill app → flash tắt.
 - [ ] Mở app Camera khác trong lúc CheerLight ở background rồi quay lại → không crash.
 - [ ] Tablet/máy không có flash: không crash khi bật công tắc.
+
+## Phase 5 — Hoàn thiện
+
+- Lưu cài đặt: `SettingsProvider` nạp `LightSettings` từ AsyncStorage (`cheerlight:settings:v1`) khi
+  khởi động, đi qua `sanitizeSettings()` (kiểm tra kiểu, kẹp giá trị, hex hợp lệ, cắt text) nên dữ liệu
+  cũ/hỏng không làm crash app. Ghi lại sau 300ms (debounce) và ghi ngay khi app rời foreground.
+  Splash giữ tới khi font + cài đặt đã nạp để không nháy giá trị mặc định.
+- `display`: chạm màn hình → hiện/ẩn thanh điều khiển nổi (Quay lại, đổi hiệu ứng có cảnh báo strobe,
+  10 màu nhanh, bật/tắt flash nếu có quyền). Tự ẩn 3 giây sau lần chạm cuối; hiện sẵn lúc mới vào.
+- "Xem trước" ở màn hình cài đặt: khung thu nhỏ đúng tỉ lệ màn hình ngang, cỡ chữ và tốc độ chữ nhân
+  cùng tỉ lệ; ghim phía trên để thấy thay đổi ngay khi chỉnh. Ẩn → unmount, dừng animation.
+- `app.json`: tên **CheerLight**, icon + adaptive icon + splash placeholder (vẽ bằng script Python,
+  hình lightstick đầu chấm LED), giao diện tối. Đã bỏ `assets/expo.icon` của template.
+- `android.blockedPermissions`: `expo-brightness` tự thêm `WRITE_SETTINGS` dù app không dùng (chỉ
+  đổi brightness của window) → chặn. Chặn luôn `READ/WRITE_EXTERNAL_STORAGE`, `RECORD_AUDIO`.
+  Đã kiểm tra bằng `npx expo config --type introspect`.
+
+Đã kiểm tra trên iOS Simulator: thanh điều khiển hiện lúc vào và tự ẩn sau 3 giây; đặt cài đặt →
+kill Expo Go (`simctl terminate`) → mở lại → màu, hiệu ứng, tốc độ, chữ giữ nguyên; khung xem trước
+chạy rainbow + chữ chạy thu nhỏ.
+
+### Phase 5 (test thủ công)
+- [ ] Đổi nhiều cài đặt → vuốt kill app ngay lập tức → mở lại → cài đặt vẫn còn.
+- [ ] `display`: chạm → thanh hiện; chạm lần nữa → ẩn; để yên 3 giây → tự ẩn; chạm vào vùng trống của
+      thanh → thanh không ẩn và đếm lại 3 giây.
+- [ ] Đổi hiệu ứng sang Strobe từ thanh nổi (khi chưa đồng ý cảnh báo) → modal hiện đúng ở màn ngang.
+- [ ] Icon, tên "CheerLight" và splash tối hiển thị đúng ở bản development build.
+
+## Ghi chú về cách agent test
+
+- Không có máy thật; test bằng iOS Simulator + Expo Go SDK 57. Không điều khiển chạm được
+  (osascript không có quyền Accessibility) nên điều hướng bằng deep link `exp://…/--/display` và
+  dùng một hook **tạm thời** đọc query params để đổi cài đặt (không commit).
+- Màu hiệu ứng được kiểm bằng cách đọc pixel từ nhiều ảnh chụp liên tiếp (`simctl io screenshot`).
+- Android: emulator Pixel 7 Pro (Android 13) + Expo Go, **chạm thật bằng `adb shell input`**.
+
+### Kết quả test trên Android emulator
+- Cảnh báo strobe: hiện lần đầu; "Huỷ" giữ nguyên chế độ; chọn lại vẫn hỏi; "Tôi hiểu" → Strobe;
+  sau đó chọn lại không hỏi nữa. ✅
+- Slider kéo hai chiều, kể cả bắt đầu kéo từ núm ở mép phải. ✅ (đã sửa lỗi, xem dưới)
+- Quyền camera: hộp thoại hệ thống; từ chối 2 lần → giao diện "Mở Cài đặt" → mở đúng trang App info. ✅
+- `display`: ngang (`ROTATION_90`), ẩn status + navigation bar (Android hiện thông báo "Viewing full
+  screen" lần đầu), blink chạy, thanh nổi hiện/ẩn/tự ẩn, đổi màu + hiệu ứng từ thanh nổi được lưu. ✅
+- Camera (dùng cho torch): mở khi vào `display`; **đóng** khi bấm Home (sau ~1–2 giây), mở lại khi quay
+  về, đóng khi bấm Back (`dumpsys media.camera` → `Active Camera Clients: []`). ✅
+- Camera sau của emulator có `android.flash.info.available = FALSE` → đúng trường hợp "có camera,
+  không có flash": không crash, torch không có tác dụng. ✅
+- Cài đặt giữ nguyên sau `am force-stop`. ✅
+
+### Lỗi tìm thấy khi test Android và đã sửa
+- **Slider**: núm ở hai đầu thò ra ngoài vùng chạm; Android không nhận chạm ngoài bounds của view
+  cha → không kéo được từ núm. Sửa: vùng chạm rộng hết cỡ, `rail` (dùng để đo) thụt vào trong.
+- **Bàn phím tự bật lại** sau khi đóng hộp thoại quyền (ô nhập chữ vẫn giữ focus). Sửa:
+  `Keyboard.dismiss()` trước khi xin quyền; `keyboardDismissMode="on-drag"` cho ScrollView.
+- **Camera đóng chậm** (~2–3 giây sau Home trên emulator) → torch có thể còn sáng một lúc. Sửa:
+  khi mất điều kiện sáng (background, blur, tắt flash), giữ `CameraView` thêm 400ms với
+  `enableTorch=false` (lệnh tắt torch có hiệu lực ngay) rồi mới tháo.
+- **Mở thẳng `display` bằng deep link** rồi bấm Back → thoát app (không có `index` bên dưới). Sửa:
+  `unstable_settings = { anchor: 'index' }` trong `_layout.tsx` + nút "Quay lại" dùng
+  `router.canGoBack()` rồi mới `back()`, nếu không thì `replace('/')`.
+
+### Lưu ý khi test bằng Expo Go
+- Expo Go lưu quyền **theo từng project** chồng lên quyền của hệ điều hành: cấp quyền bằng
+  `adb shell pm grant` (hoặc trong Cài đặt của Expo Go) **không** làm app thấy `granted`. Bản
+  development/production build không có lớp này. Muốn reset: `adb shell pm clear host.exp.exponent`.
+- Nút "Mở Cài đặt" trong Expo Go mở trang App info của **Expo Go**, không phải của CheerLight.

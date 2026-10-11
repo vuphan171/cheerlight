@@ -2,8 +2,10 @@ import { useKeepAwake } from 'expo-keep-awake';
 import { NavigationBar } from 'expo-navigation-bar';
 import { router, useIsFocused } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
+import { DisplayControls } from '@/components/DisplayControls';
 import { LightCanvas, useEffectClock } from '@/components/LightCanvas';
 import { Marquee } from '@/components/Marquee';
 import { TorchController } from '@/components/TorchController';
@@ -22,8 +24,23 @@ export default function DisplayScreen() {
   const focused = useIsFocused();
   const progress = useEffectClock(settings.effect, settings.speed);
 
+  // Thanh điều khiển nổi: chạm màn hình để ẩn/hiện, tự ẩn sau 3 giây không tương tác.
+  // Hiện sẵn lúc mới vào để người dùng biết là có.
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const [interactionKey, setInteractionKey] = useState(0);
+  const hideControls = useCallback(() => setControlsVisible(false), []);
+  const bumpInteraction = useCallback(() => setInteractionKey((k) => k + 1), []);
+  const toggleControls = () => {
+    setControlsVisible((v) => !v);
+    bumpInteraction();
+  };
+
   return (
-    <Pressable style={styles.container} onPress={() => router.back()}>
+    <Pressable
+      style={styles.container}
+      onPress={toggleControls}
+      accessibilityLabel="Chạm để hiện thanh điều khiển"
+      accessibilityHint="Thanh điều khiển tự ẩn sau 3 giây">
       <StatusBar hidden={focused} style="light" />
       <NavigationBar hidden={focused} />
       <LightCanvas color={settings.backgroundColor} effect={settings.effect} progress={progress} />
@@ -40,6 +57,13 @@ export default function DisplayScreen() {
         progress={progress}
         active={focused}
         onUnavailable={markTorchUnavailable}
+      />
+      <DisplayControls
+        visible={controlsVisible}
+        interactionKey={interactionKey}
+        onInteract={bumpInteraction}
+        onHide={hideControls}
+        onBack={() => (router.canGoBack() ? router.back() : router.replace('/'))}
       />
     </Pressable>
   );

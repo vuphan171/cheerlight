@@ -1,6 +1,16 @@
 import { useCameraPermissions } from 'expo-camera';
 import { useEffect } from 'react';
-import { AppState, Linking, Platform, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
+import {
+  AppState,
+  Keyboard,
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+} from 'react-native';
 
 import { Segmented } from '@/components/Segmented';
 import { SpeedSlider } from '@/components/SpeedSlider';
@@ -61,6 +71,8 @@ export function TorchSettings() {
       updateSettings({ torchEnabled: false });
       return;
     }
+    // Bỏ focus ô nhập chữ, nếu không Android sẽ bật lại bàn phím sau khi đóng hộp thoại quyền.
+    Keyboard.dismiss();
     const result = granted ? permission : await requestPermission();
     if (result?.granted) updateSettings({ torchEnabled: true });
   };

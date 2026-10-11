@@ -187,11 +187,11 @@ export interface LightSettings {
 
 ### Phase 5 — Hoàn thiện
 **Tasks**
-- [ ] `useSettings`: lưu và khôi phục toàn bộ `LightSettings` bằng AsyncStorage
-- [ ] Ở `display`: chạm màn hình để ẩn/hiện thanh điều khiển nổi (đổi chế độ nhanh, nút quay lại); tự ẩn sau 3 giây
-- [ ] Nút "Preview" nhỏ ở màn hình cài đặt hiển thị trước hiệu ứng
-- [ ] Đặt tên app, icon, splash screen placeholder trong `app.json`
-- [ ] Viết `README.md`: cách chạy, tính năng, giới hạn đã biết
+- [x] `useSettings`: lưu và khôi phục toàn bộ `LightSettings` bằng AsyncStorage
+- [x] Ở `display`: chạm màn hình để ẩn/hiện thanh điều khiển nổi (đổi chế độ nhanh, nút quay lại); tự ẩn sau 3 giây
+- [x] Nút "Preview" nhỏ ở màn hình cài đặt hiển thị trước hiệu ứng
+- [x] Đặt tên app, icon, splash screen placeholder trong `app.json`
+- [x] Viết `README.md`: cách chạy, tính năng, giới hạn đã biết
 
 **Acceptance criteria**
 - Tắt hẳn app rồi mở lại vẫn giữ cài đặt cũ

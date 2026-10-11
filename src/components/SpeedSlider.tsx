@@ -31,13 +31,13 @@ export function SpeedSlider({
   label,
   formatValue = String,
 }: SpeedSliderProps) {
-  const trackRef = useRef<View>(null);
+  const railRef = useRef<View>(null);
   const track = useRef({ x: 0, width: 1 });
   const steps = max - min + 1;
   const fraction = (value - min) / (max - min);
 
   const measure = () => {
-    trackRef.current?.measureInWindow((x, _y, width) => {
+    railRef.current?.measureInWindow((x, _y, width) => {
       track.current = { x, width: Math.max(1, width) };
     });
   };
@@ -57,9 +57,8 @@ export function SpeedSlider({
           <Text style={styles.value}>{formatValue(value)}</Text>
         </View>
       ) : null}
+      {/* Vùng chạm rộng hết cỡ (kể cả phần núm thò ra hai đầu); vị trí tính theo `rail`. */}
       <View
-        ref={trackRef}
-        onLayout={measure}
         style={styles.touchArea}
         accessible
         accessibilityRole="adjustable"
@@ -79,17 +78,19 @@ export function SpeedSlider({
           handleTouch(e);
         }}
         onResponderMove={handleTouch}>
-        <View style={styles.track}>
-          <View style={[styles.fill, { width: `${fraction * 100}%` }]} />
-          {Array.from({ length: steps }, (_, i) => (
-            <View
-              key={i}
-              style={[styles.tick, { left: `${(i / (steps - 1)) * 100}%` }]}
-              pointerEvents="none"
-            />
-          ))}
+        <View ref={railRef} onLayout={measure} style={styles.rail} pointerEvents="none">
+          <View style={styles.track}>
+            <View style={[styles.fill, { width: `${fraction * 100}%` }]} />
+            {Array.from({ length: steps }, (_, i) => (
+              <View
+                key={i}
+                style={[styles.tick, { left: `${(i / (steps - 1)) * 100}%` }]}
+                pointerEvents="none"
+              />
+            ))}
+          </View>
+          <View style={[styles.thumb, { left: `${fraction * 100}%` }]} />
         </View>
-        <View style={[styles.thumb, { left: `${fraction * 100}%` }]} pointerEvents="none" />
       </View>
     </View>
   );
@@ -102,7 +103,8 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between' },
   label: { color: UI.textMuted, fontSize: 14 },
   value: { color: UI.text, fontSize: 14, fontWeight: '700', fontVariant: ['tabular-nums'] },
-  touchArea: { height: 40, justifyContent: 'center', marginHorizontal: THUMB / 2 },
+  touchArea: { height: 44, justifyContent: 'center', paddingHorizontal: THUMB / 2 },
+  rail: { justifyContent: 'center', height: THUMB },
   track: { height: 6, borderRadius: 3, backgroundColor: UI.surfaceRaised },
   fill: { position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 3, backgroundColor: UI.accent },
   tick: {
