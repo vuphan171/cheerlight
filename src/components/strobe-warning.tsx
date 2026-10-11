@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { RADIUS, UI } from '@/constants/ui';
-import { useSettings } from '@/hooks/useSettings';
+import { RADIUS, UI } from '@/configs/ui';
+import { useSettings } from '@/hooks/use-settings';
 import type { EffectMode } from '@/types/settings';
 
 /**

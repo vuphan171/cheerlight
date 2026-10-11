@@ -2,10 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, Platform } from 'react-native';
 
-import { DEFAULT_SETTINGS } from '@/constants/defaults';
-import { sanitizeSettings } from '@/constants/sanitize';
-import { STORAGE_KEYS } from '@/constants/storage';
-import { SettingsContext } from '@/hooks/useSettings';
+import { DEFAULT_SETTINGS } from '@/configs/defaults';
+import { sanitizeSettings } from '@/configs/sanitize';
+import { STORAGE_KEYS } from '@/configs/storage';
+import { SettingsContext } from '@/hooks/use-settings';
 import type { LightSettings } from '@/types/settings';
 
 const SAVE_DEBOUNCE_MS = 300;

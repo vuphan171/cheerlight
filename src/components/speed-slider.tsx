@@ -6,8 +6,8 @@ import {
   View,
 } from 'react-native';
 
-import { SPEED_MAX, SPEED_MIN } from '@/constants/effects';
-import { UI } from '@/constants/ui';
+import { SPEED_MAX, SPEED_MIN } from '@/configs/effects';
+import { UI } from '@/configs/ui';
 
 interface SpeedSliderProps {
   value: number;

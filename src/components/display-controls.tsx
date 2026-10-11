@@ -4,11 +4,11 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { EffectSelector } from '@/components/EffectSelector';
-import { useEffectChooser } from '@/components/StrobeWarning';
-import { PRESET_COLORS } from '@/constants/colors';
-import { RADIUS, UI } from '@/constants/ui';
-import { useSettings } from '@/hooks/useSettings';
+import { EffectSelector } from '@/components/effect-selector';
+import { useEffectChooser } from '@/components/strobe-warning';
+import { PRESET_COLORS } from '@/configs/colors';
+import { RADIUS, UI } from '@/configs/ui';
+import { useSettings } from '@/hooks/use-settings';
 
 export const CONTROLS_AUTO_HIDE_MS = 3000;
 

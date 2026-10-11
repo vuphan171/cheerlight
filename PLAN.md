@@ -62,7 +62,7 @@ hooks/
   useMaxBrightness.ts
   useLandscape.ts
   useSettings.ts       # Đọc/ghi AsyncStorage
-constants/
+configs/
   colors.ts
   effects.ts
 types/
@@ -79,7 +79,7 @@ export type EffectMode = 'solid' | 'blink' | 'strobe' | 'rainbow';
 export interface LightSettings {
   backgroundColor: string;   // hex
   effect: EffectMode;
-  speed: number;             // 1–10, quy đổi ra ms trong constants/effects.ts
+  speed: number;             // 1–10, quy đổi ra ms trong configs/effects.ts
   text: string;              // rỗng = không hiện marquee
   textColor: string;
   fontSize: number;
@@ -100,7 +100,7 @@ export interface LightSettings {
 - [x] Cài toàn bộ thư viện ở mục 2 bằng `npx expo install`
 - [x] Cấu hình Reanimated đúng theo docs của version đã cài (babel plugin / worklets)
 - [x] Tạo cấu trúc thư mục ở mục 4 với file rỗng hoặc placeholder
-- [x] Tạo `types/settings.ts` và `constants/` với giá trị mặc định
+- [x] Tạo `types/settings.ts` và `configs/` với giá trị mặc định
 - [x] Tạo `NOTES.md`
 
 **Acceptance criteria**
@@ -126,11 +126,11 @@ export interface LightSettings {
 
 ### Phase 2 — Đổi màu & nhấp nháy
 **Tasks**
-- [x] `constants/colors.ts`: ít nhất 12 màu preset
+- [x] `configs/colors.ts`: ít nhất 12 màu preset
 - [x] `ColorPicker`: chọn từ preset; có ô nhập mã hex (validate định dạng)
 - [x] `EffectSelector`: chọn `solid | blink | strobe | rainbow`
 - [x] `SpeedSlider`: giá trị 1–10
-- [x] `constants/effects.ts`: hàm quy đổi `speed` → chu kỳ ms cho từng chế độ
+- [x] `configs/effects.ts`: hàm quy đổi `speed` → chu kỳ ms cho từng chế độ
   - `blink`: khoảng 1000ms (speed 1) → 150ms (speed 10)
   - `strobe`: khoảng 200ms → 50ms
   - `rainbow`: chu kỳ đổi hết dải màu khoảng 6000ms → 800ms

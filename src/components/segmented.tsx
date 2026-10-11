@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { RADIUS, UI } from '@/constants/ui';
+import { RADIUS, UI } from '@/configs/ui';
 
 interface SegmentedProps<T extends string> {
   options: readonly { value: T; label: string }[];

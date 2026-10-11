@@ -4,10 +4,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
-import { SettingsProvider } from '@/components/SettingsProvider';
-import { FONT_ASSETS } from '@/constants/fonts';
-import { UI } from '@/constants/ui';
-import { useSettings } from '@/hooks/useSettings';
+import { SettingsProvider } from '@/components/settings-provider';
+import { FONT_ASSETS } from '@/configs/fonts';
+import { UI } from '@/configs/ui';
+import { useSettings } from '@/hooks/use-settings';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 

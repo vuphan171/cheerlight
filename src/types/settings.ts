@@ -9,7 +9,7 @@ export type TorchMode = 'steady' | 'blink';
 export interface LightSettings {
   backgroundColor: string; // hex
   effect: EffectMode;
-  speed: number; // 1–10, quy đổi ra ms trong constants/effects.ts
+  speed: number; // 1–10, quy đổi ra ms trong configs/effects.ts
   text: string; // rỗng = không hiện marquee
   textColor: string;
   fontSize: number;

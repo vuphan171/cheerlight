@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { RADIUS, SPACING, UI } from '@/constants/ui';
+import { RADIUS, SPACING, UI } from '@/configs/ui';
 
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (

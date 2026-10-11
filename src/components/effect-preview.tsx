@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 
-import { LightCanvas, useEffectClock } from '@/components/LightCanvas';
-import { Marquee } from '@/components/Marquee';
-import { scrollPixelsPerSecond } from '@/constants/effects';
-import { fontFamilyFor } from '@/constants/fonts';
-import { RADIUS, UI } from '@/constants/ui';
+import { LightCanvas, useEffectClock } from '@/components/light-canvas';
+import { Marquee } from '@/components/marquee';
+import { scrollPixelsPerSecond } from '@/configs/effects';
+import { fontFamilyFor } from '@/configs/fonts';
+import { RADIUS, UI } from '@/configs/ui';
 import type { LightSettings } from '@/types/settings';
 
 /**

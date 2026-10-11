@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { normalizeHex, PRESET_COLORS } from '@/constants/colors';
-import { RADIUS, UI } from '@/constants/ui';
+import { normalizeHex, PRESET_COLORS } from '@/configs/colors';
+import { RADIUS, UI } from '@/configs/ui';
 
 interface ColorPickerProps {
   value: string;

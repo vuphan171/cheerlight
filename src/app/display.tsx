@@ -5,15 +5,15 @@ import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { DisplayControls } from '@/components/DisplayControls';
-import { LightCanvas, useEffectClock } from '@/components/LightCanvas';
-import { Marquee } from '@/components/Marquee';
-import { TorchController } from '@/components/TorchController';
-import { scrollPixelsPerSecond } from '@/constants/effects';
-import { fontFamilyFor } from '@/constants/fonts';
-import { useLandscape } from '@/hooks/useLandscape';
-import { useMaxBrightness } from '@/hooks/useMaxBrightness';
-import { useSettings } from '@/hooks/useSettings';
+import { DisplayControls } from '@/components/display-controls';
+import { LightCanvas, useEffectClock } from '@/components/light-canvas';
+import { Marquee } from '@/components/marquee';
+import { TorchController } from '@/components/torch-controller';
+import { scrollPixelsPerSecond } from '@/configs/effects';
+import { fontFamilyFor } from '@/configs/fonts';
+import { useLandscape } from '@/hooks/use-landscape';
+import { useMaxBrightness } from '@/hooks/use-max-brightness';
+import { useSettings } from '@/hooks/use-settings';
 
 export default function DisplayScreen() {
   useKeepAwake();

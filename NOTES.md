@@ -15,8 +15,8 @@ Ghi chú kỹ thuật, quyết định lệch khỏi `PLAN.md`, và checklist te
   `src/app/` cho expo-router. Alias `@/*` → `src/*`.
 - Đã gỡ các package template không dùng: `@expo/ui`, `expo-glass-effect`, `expo-symbols`,
   `expo-image`, `expo-device`, `expo-web-browser`.
-- Thêm `src/components/SettingsProvider.tsx` (context giữ settings dùng chung giữa 2 màn hình) và
-  `src/constants/defaults.ts` (giá trị mặc định).
+- Thêm `src/components/settings-provider.tsx` (context giữ settings dùng chung giữa 2 màn hình) và
+  `src/configs/defaults.ts` (giá trị mặc định).
 
 ## Thư viện ngoài danh sách PLAN mục 2
 
@@ -121,7 +121,7 @@ tiếng Việt có dấu (CỐ LÊN VIỆT NAM, "Cố lên các bạn ơi") hi�
   + màn hình `display` đang focus + app ở foreground (`AppState === 'active'`). Rời màn hình / app vào
   background (kể cả `inactive` khi kéo Control Center) / unmount → CameraView bị tháo → phiên camera
   dừng → flash tắt, không phụ thuộc việc JS kịp gửi `enableTorch=false`.
-- `torchPlan()` (`constants/effects.ts`) quyết định cách điều khiển. Đã kiểm tra hết 3.200 tổ hợp
+- `torchPlan()` (`configs/effects.ts`) quyết định cách điều khiển. Đã kiểm tra hết 3.200 tổ hợp
   input: **không tổ hợp nào vượt 5 lần nháy/giây**, flash không bao giờ sáng khi `torchEnabled=false`.
   - Nhịp riêng: chu kỳ 1000ms → 200ms (1 → 5 lần/giây).
   - Đồng bộ `blink`: theo đồng hồ hiệu ứng (`useAnimatedReaction`, chỉ báo JS khi đổi sáng/tắt) nếu

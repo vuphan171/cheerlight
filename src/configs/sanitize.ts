@@ -1,7 +1,7 @@
-import { normalizeHex } from '@/constants/colors';
-import { DEFAULT_SETTINGS } from '@/constants/defaults';
-import { FONT_SIZE_MAX, FONT_SIZE_MIN, SPEED_MAX, SPEED_MIN } from '@/constants/effects';
-import { TEXT_MAX_LENGTH } from '@/constants/fonts';
+import { normalizeHex } from '@/configs/colors';
+import { DEFAULT_SETTINGS } from '@/configs/defaults';
+import { FONT_SIZE_MAX, FONT_SIZE_MIN, SPEED_MAX, SPEED_MIN } from '@/configs/effects';
+import { TEXT_MAX_LENGTH } from '@/configs/fonts';
 import type { LightSettings } from '@/types/settings';
 
 function oneOf<T extends string>(value: unknown, allowed: readonly T[], fallback: T): T {

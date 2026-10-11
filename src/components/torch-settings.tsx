@@ -12,11 +12,11 @@ import {
   View,
 } from 'react-native';
 
-import { Segmented } from '@/components/Segmented';
-import { SpeedSlider } from '@/components/SpeedSlider';
-import { TORCH_MAX_FLASHES_PER_SECOND, torchPeriodMs } from '@/constants/effects';
-import { RADIUS, UI } from '@/constants/ui';
-import { useSettings } from '@/hooks/useSettings';
+import { Segmented } from '@/components/segmented';
+import { SpeedSlider } from '@/components/speed-slider';
+import { TORCH_MAX_FLASHES_PER_SECOND, torchPeriodMs } from '@/configs/effects';
+import { RADIUS, UI } from '@/configs/ui';
+import { useSettings } from '@/hooks/use-settings';
 import type { TorchMode } from '@/types/settings';
 
 const MODES: readonly { value: TorchMode; label: string }[] = [

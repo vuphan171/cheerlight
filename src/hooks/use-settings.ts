@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { DEFAULT_SETTINGS } from '@/constants/defaults';
+import { DEFAULT_SETTINGS } from '@/configs/defaults';
 import type { LightSettings } from '@/types/settings';
 
 export interface SettingsContextValue {

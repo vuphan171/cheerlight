@@ -14,8 +14,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { scheduleOnUI } from 'react-native-worklets';
 
-import { OFF_COLOR, RAINBOW_COLORS } from '@/constants/colors';
-import { effectPeriodMs, ON_RATIO } from '@/constants/effects';
+import { OFF_COLOR, RAINBOW_COLORS } from '@/configs/colors';
+import { effectPeriodMs, ON_RATIO } from '@/configs/effects';
 import type { EffectMode } from '@/types/settings';
 
 // Hiệu ứng là thứ người dùng chủ động chọn, nên không tự tắt khi bật "Giảm chuyển động".

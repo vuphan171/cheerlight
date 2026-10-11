@@ -4,7 +4,7 @@ import { AppState, Platform, StyleSheet } from 'react-native';
 import { type SharedValue, useAnimatedReaction } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
-import { ON_RATIO, type TorchPlan, torchPlan } from '@/constants/effects';
+import { ON_RATIO, type TorchPlan, torchPlan } from '@/configs/effects';
 import type { LightSettings } from '@/types/settings';
 
 interface TorchControllerProps {
