@@ -50,3 +50,29 @@ bar; về `index` → dọc, status bar hiện lại; background → foreground 
 - [ ] Để yên ở `display` lâu hơn thời gian tự khoá màn hình → màn hình không tắt.
 - [ ] Bật "Khoá xoay" (rotation lock) của hệ thống → `display` vẫn ngang, `index` vẫn dọc.
 - [ ] iPad: `display` khoá ngang được (nhờ `requireFullScreen`).
+
+## Phase 2 — Đổi màu & nhấp nháy
+
+- `useEffectClock(effect, speed)` (trong `LightCanvas.tsx`): một shared value `progress` chạy 0 → 1
+  mỗi chu kỳ bằng `withRepeat(withSequence(withTiming…))` trên UI thread. Khi đổi tốc độ, animation
+  được khởi động lại **từ pha hiện tại** (chạy nốt phần còn lại với chu kỳ mới) nên không nhảy màu.
+  `cancelAnimation` khi chuyển sang `solid` và khi unmount → không rò rỉ animation.
+- `LightCanvas` tính màu nền trong `useAnimatedStyle` từ `progress` + shared value màu/chế độ, nên
+  không có re-render React theo frame. Blink/strobe dùng tỉ lệ sáng 50% / 30% chu kỳ.
+- Dùng `.get()/.set()` cho shared value (khuyến nghị của Reanimated 4 khi bật React Compiler).
+- Animation dùng `ReduceMotion.Never`: hiệu ứng do người dùng chủ động chọn, nếu theo cài đặt
+  "Giảm chuyển động" của hệ thống thì blink/strobe/rainbow sẽ đứng yên.
+- `SpeedSlider` tự viết bằng responder system của RN (không thêm `@react-native-community/slider`).
+- Cảnh báo strobe: modal hiện khi chọn `strobe` lần đầu; trạng thái đồng ý lưu ở AsyncStorage
+  (`cheerlight:strobeWarningAccepted:v1`). Nếu bấm "Huỷ" thì không đổi chế độ và lần sau vẫn hỏi.
+
+Đã kiểm tra trên iOS Simulator: đo màu pixel qua nhiều ảnh chụp liên tiếp — blink xanh/đen xen kẽ,
+strobe chủ yếu đen với chớp trắng ngắn, rainbow đổi dải màu, đổi speed khi đang chạy vẫn mượt. Đếm
+render của `display` bằng log tạm thời: chỉ tăng khi đổi setting, không tăng theo frame.
+
+### Phase 2 (test thủ công)
+- [ ] Chọn Strobe lần đầu → hiện cảnh báo; "Huỷ" → không đổi; "Tôi hiểu" → đổi sang Strobe.
+      Chọn lại Strobe (kể cả sau khi tắt app) → không hiện cảnh báo nữa.
+- [ ] Nhập mã hex sai (vd `#12`) → viền đỏ + thông báo lỗi; nhập `#0f0` → nền đổi sang xanh lá.
+- [ ] Kéo slider tốc độ trong khi ScrollView đang cuộn → slider không bị "giật mất" thao tác.
+- [ ] Bật "Giảm chuyển động" (iOS) / "Remove animations" (Android) → hiệu ứng vẫn chạy.

@@ -2,8 +2,9 @@ import { useKeepAwake } from 'expo-keep-awake';
 import { NavigationBar } from 'expo-navigation-bar';
 import { router, useIsFocused } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
+import { LightCanvas, useEffectClock } from '@/components/LightCanvas';
 import { useLandscape } from '@/hooks/useLandscape';
 import { useMaxBrightness } from '@/hooks/useMaxBrightness';
 import { useSettings } from '@/hooks/useSettings';
@@ -15,19 +16,17 @@ export default function DisplayScreen() {
   const { settings } = useSettings();
   // Chỉ ẩn thanh hệ thống khi màn hình đang focus (có thể còn mount phía dưới stack).
   const focused = useIsFocused();
+  const progress = useEffectClock(settings.effect, settings.speed);
 
   return (
-    <Pressable
-      style={[styles.container, { backgroundColor: settings.backgroundColor }]}
-      onPress={() => router.back()}>
+    <Pressable style={styles.container} onPress={() => router.back()}>
       <StatusBar hidden={focused} style="light" />
       <NavigationBar hidden={focused} />
-      <Text style={styles.hint}>Chạm để quay lại</Text>
+      <LightCanvas color={settings.backgroundColor} effect={settings.effect} progress={progress} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  hint: { color: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: '#000' },
 });

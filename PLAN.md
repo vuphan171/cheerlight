@@ -126,21 +126,21 @@ export interface LightSettings {
 
 ### Phase 2 — Đổi màu & nhấp nháy
 **Tasks**
-- [ ] `constants/colors.ts`: ít nhất 12 màu preset
-- [ ] `ColorPicker`: chọn từ preset; có ô nhập mã hex (validate định dạng)
-- [ ] `EffectSelector`: chọn `solid | blink | strobe | rainbow`
-- [ ] `SpeedSlider`: giá trị 1–10
-- [ ] `constants/effects.ts`: hàm quy đổi `speed` → chu kỳ ms cho từng chế độ
+- [x] `constants/colors.ts`: ít nhất 12 màu preset
+- [x] `ColorPicker`: chọn từ preset; có ô nhập mã hex (validate định dạng)
+- [x] `EffectSelector`: chọn `solid | blink | strobe | rainbow`
+- [x] `SpeedSlider`: giá trị 1–10
+- [x] `constants/effects.ts`: hàm quy đổi `speed` → chu kỳ ms cho từng chế độ
   - `blink`: khoảng 1000ms (speed 1) → 150ms (speed 10)
   - `strobe`: khoảng 200ms → 50ms
   - `rainbow`: chu kỳ đổi hết dải màu khoảng 6000ms → 800ms
-- [ ] `LightCanvas`: nền full screen, hiệu ứng bằng Reanimated
+- [x] `LightCanvas`: nền full screen, hiệu ứng bằng Reanimated
   - `solid`: màu tĩnh
   - `blink`: bật/tắt giữa màu chọn và đen
   - `strobe`: như blink nhưng nhanh, chu kỳ sáng ngắn
   - `rainbow`: `interpolateColor` qua dải màu cầu vồng, lặp vô hạn
-- [ ] Đổi setting khi đang chạy thì animation cập nhật ngay, không giật
-- [ ] Hiện **cảnh báo động kinh do ánh sáng** (photosensitive epilepsy) lần đầu người dùng chọn `strobe`; lưu trạng thái đã đồng ý
+- [x] Đổi setting khi đang chạy thì animation cập nhật ngay, không giật
+- [x] Hiện **cảnh báo động kinh do ánh sáng** (photosensitive epilepsy) lần đầu người dùng chọn `strobe`; lưu trạng thái đã đồng ý
 
 **Acceptance criteria**
 - Cả 4 chế độ chạy mượt, không rò rỉ animation khi đổi chế độ hoặc rời màn hình
