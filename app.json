@@ -39,6 +39,15 @@
         {
           "initialOrientation": "PORTRAIT_UP"
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "CheerLight cần quyền camera để bật/nháy đèn flash. Ứng dụng không chụp hay ghi hình.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": false
+        }
       ]
     ],
     "experiments": {

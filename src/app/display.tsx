@@ -6,6 +6,7 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { LightCanvas, useEffectClock } from '@/components/LightCanvas';
 import { Marquee } from '@/components/Marquee';
+import { TorchController } from '@/components/TorchController';
 import { scrollPixelsPerSecond } from '@/constants/effects';
 import { fontFamilyFor } from '@/constants/fonts';
 import { useLandscape } from '@/hooks/useLandscape';
@@ -16,7 +17,7 @@ export default function DisplayScreen() {
   useKeepAwake();
   useLandscape();
   useMaxBrightness();
-  const { settings } = useSettings();
+  const { settings, markTorchUnavailable } = useSettings();
   // Chỉ ẩn thanh hệ thống khi màn hình đang focus (có thể còn mount phía dưới stack).
   const focused = useIsFocused();
   const progress = useEffectClock(settings.effect, settings.speed);
@@ -33,6 +34,12 @@ export default function DisplayScreen() {
         fontFamily={fontFamilyFor(settings.textFont)}
         pixelsPerSecond={scrollPixelsPerSecond(settings.scrollSpeed)}
         direction={settings.scrollDirection}
+      />
+      <TorchController
+        settings={settings}
+        progress={progress}
+        active={focused}
+        onUnavailable={markTorchUnavailable}
       />
     </Pressable>
   );

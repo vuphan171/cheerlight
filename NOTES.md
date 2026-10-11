@@ -112,3 +112,47 @@ tiếng Việt có dấu (CỐ LÊN VIỆT NAM, "Cố lên các bạn ơi") hi�
 - [ ] Chữ ngắn ("Hi") và chữ 300+ ký tự đều chạy liên tục, không giật, tốc độ nhìn như nhau.
 - [ ] Đổi nội dung khi đang ở màn hình `display` (qua thanh điều khiển Phase 5) → chạy lại từ mép.
 - [ ] Android: chữ LED hiển thị đúng font chấm tròn, không bị cắt phần dấu phía trên (Ệ, Ố…).
+
+## Phase 4 — Đèn flash
+
+- `expo-camera` plugin trong `app.json`: chỉ xin quyền camera (`microphonePermission: false`,
+  `recordAudioAndroid: false`, `barcodeScannerEnabled: false`).
+- `TorchController` render `CameraView` 1×1, `opacity: 0`, và **chỉ mount khi**: flash bật + có quyền
+  + màn hình `display` đang focus + app ở foreground (`AppState === 'active'`). Rời màn hình / app vào
+  background (kể cả `inactive` khi kéo Control Center) / unmount → CameraView bị tháo → phiên camera
+  dừng → flash tắt, không phụ thuộc việc JS kịp gửi `enableTorch=false`.
+- `torchPlan()` (`constants/effects.ts`) quyết định cách điều khiển. Đã kiểm tra hết 3.200 tổ hợp
+  input: **không tổ hợp nào vượt 5 lần nháy/giây**, flash không bao giờ sáng khi `torchEnabled=false`.
+  - Nhịp riêng: chu kỳ 1000ms → 200ms (1 → 5 lần/giây).
+  - Đồng bộ `blink`: theo đồng hồ hiệu ứng (`useAnimatedReaction`, chỉ báo JS khi đổi sáng/tắt) nếu
+    chu kỳ ≥ 200ms; nhanh hơn (speed cao) hoặc `strobe` → timer riêng ở mức tối đa 200ms.
+  - Đồng bộ với `solid` / `rainbow`: không có nhịp → sáng liên tục.
+- Nháy flash dùng `setTimeout` + state trong component nhỏ `TorchCamera`: đây là bật/tắt một prop
+  native ≤ 10 lần/giây, không phải nháy màu nền (quy tắc 3.5 vẫn giữ cho `LightCanvas`).
+- Quyền: bật công tắc mới xin quyền. Bị từ chối vĩnh viễn (`canAskAgain=false`) → ẩn công tắc, hiện
+  hướng dẫn + nút "Mở Cài đặt" (`Linking.openSettings()`); tự kiểm tra lại quyền khi app quay về
+  foreground. Bị thu hồi quyền → tự tắt flash.
+
+### Giới hạn đã biết: phát hiện máy không có flash
+- expo-camera 57 **không có API** kiểm tra có flash hay không. Native đã chặn sẵn
+  (iOS `device.hasTorch`, Android `cameraInfo.hasFlashUnit()`) nên máy không có flash **không crash**,
+  chỉ là flash không sáng.
+- Tính năng tự ẩn khi `CameraView` báo `onMountError` (Android: không mở được camera). Lỗi tạm thời
+  "Camera session was reset" của iOS được bỏ qua.
+- Máy **có camera sau nhưng không có flash** (một số tablet): công tắc vẫn hiện nhưng không có tác dụng.
+  Muốn ẩn chính xác cần native module nhỏ (Android `FEATURE_CAMERA_FLASH`, iOS
+  `AVCaptureDevice.hasTorch`) → cần development build, chưa làm.
+- Trên iOS Simulator (không có camera) CameraView không báo lỗi; đã kiểm tra không crash. Đã kiểm tra
+  giao diện bị từ chối quyền bằng `xcrun simctl privacy booted revoke camera host.exp.Exponent`.
+
+### Phase 4 (test thủ công — bắt buộc trên máy thật)
+- [ ] Bật flash lần đầu → hiện hộp thoại xin quyền Camera với nội dung tiếng Việt.
+- [ ] Từ chối quyền (Android: chọn "Không cho phép" 2 lần) → hiện hướng dẫn + nút "Mở Cài đặt";
+      cấp quyền trong Cài đặt rồi quay lại → công tắc hiện lại.
+- [ ] Sáng liên tục: vào `display` → flash sáng; quay lại `index` → flash tắt ngay.
+- [ ] Nháy nhịp riêng 1 → 10: từ 1 lần/giây tới 5 lần/giây, nhịp đều, không bị "kẹt" sáng.
+- [ ] Đồng bộ + Nháy speed 1–5: flash sáng cùng lúc nền sáng. Speed 10 và Strobe: flash nháy 5 lần/giây.
+- [ ] Đang nháy → vuốt về Home / kéo Control Center / khoá màn hình → flash tắt ngay; mở lại → nháy tiếp.
+- [ ] Đang nháy → vuốt kill app → flash tắt.
+- [ ] Mở app Camera khác trong lúc CheerLight ở background rồi quay lại → không crash.
+- [ ] Tablet/máy không có flash: không crash khi bật công tắc.

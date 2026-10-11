@@ -10,6 +10,9 @@ export interface SettingsContextValue {
   /** Người dùng đã đồng ý cảnh báo động kinh do ánh sáng (strobe). */
   strobeAccepted: boolean;
   acceptStrobe: () => void;
+  /** `false` khi đã biết máy không dùng được camera/flash (CameraView báo lỗi mount). */
+  torchAvailable: boolean;
+  markTorchUnavailable: () => void;
 }
 
 export const SettingsContext = createContext<SettingsContextValue>({
@@ -18,6 +21,8 @@ export const SettingsContext = createContext<SettingsContextValue>({
   loaded: false,
   strobeAccepted: false,
   acceptStrobe: () => {},
+  torchAvailable: true,
+  markTorchUnavailable: () => {},
 });
 
 export function useSettings(): SettingsContextValue {

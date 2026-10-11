@@ -64,3 +64,35 @@ export function scrollPixelsPerSecond(scrollSpeed: number): number {
 
 export const FONT_SIZE_MIN = 40;
 export const FONT_SIZE_MAX = 240;
+
+export type TorchPlan =
+  | { kind: 'off' }
+  | { kind: 'steady' }
+  /** Nháy theo đồng hồ hiệu ứng nền (chỉ khi chu kỳ đủ chậm). */
+  | { kind: 'follow' }
+  /** Nháy bằng timer riêng với chu kỳ đã bị giới hạn ≥ TORCH_MIN_PERIOD_MS. */
+  | { kind: 'timer'; periodMs: number };
+
+interface TorchPlanInput {
+  torchEnabled: boolean;
+  torchSyncWithEffect: boolean;
+  torchMode: 'steady' | 'blink';
+  torchRate: number;
+  effect: EffectMode;
+  speed: number;
+}
+
+/** Quyết định cách điều khiển flash. Không bao giờ nháy nhanh hơn TORCH_MAX_FLASHES_PER_SECOND. */
+export function torchPlan(s: TorchPlanInput): TorchPlan {
+  if (!s.torchEnabled) return { kind: 'off' };
+  if (s.torchSyncWithEffect) {
+    const effectPeriod = effectPeriodMs(s.effect, s.speed);
+    if (s.effect === 'blink' && effectPeriod >= TORCH_MIN_PERIOD_MS) return { kind: 'follow' };
+    const capped = torchSyncPeriodMs(s.effect, s.speed);
+    if (capped !== null) return { kind: 'timer', periodMs: capped };
+    // solid / rainbow: không có nhịp để theo → sáng liên tục.
+    return { kind: 'steady' };
+  }
+  if (s.torchMode === 'steady') return { kind: 'steady' };
+  return { kind: 'timer', periodMs: torchPeriodMs(s.torchRate) };
+}

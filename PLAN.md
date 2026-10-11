@@ -171,12 +171,12 @@ export interface LightSettings {
 
 ### Phase 4 — Nháy đèn flash
 **Tasks**
-- [ ] Xin quyền camera; nếu bị từ chối thì ẩn tính năng flash và hiện hướng dẫn mở Settings
-- [ ] `TorchController`: render `CameraView` kích thước gần 0 / ẩn, điều khiển `enableTorch`
-- [ ] Chế độ: bật liên tục, nháy theo nhịp riêng
-- [ ] Giới hạn tần số nháy flash **tối đa 5 lần/giây** (bật/tắt torch nhanh hơn dễ bị bỏ qua hoặc gây lỗi trên nhiều máy)
-- [ ] Tùy chọn `torchSyncWithEffect`: nháy theo nhịp `blink`; với `strobe` thì tự hạ xuống mức tối đa cho phép
-- [ ] Tắt torch chắc chắn khi rời màn hình, khi app vào background, khi unmount
+- [x] Xin quyền camera; nếu bị từ chối thì ẩn tính năng flash và hiện hướng dẫn mở Settings
+- [x] `TorchController`: render `CameraView` kích thước gần 0 / ẩn, điều khiển `enableTorch`
+- [x] Chế độ: bật liên tục, nháy theo nhịp riêng
+- [x] Giới hạn tần số nháy flash **tối đa 5 lần/giây** (bật/tắt torch nhanh hơn dễ bị bỏ qua hoặc gây lỗi trên nhiều máy)
+- [x] Tùy chọn `torchSyncWithEffect`: nháy theo nhịp `blink`; với `strobe` thì tự hạ xuống mức tối đa cho phép
+- [x] Tắt torch chắc chắn khi rời màn hình, khi app vào background, khi unmount
 
 **Acceptance criteria**
 - Flash bật/tắt/nháy đúng trên máy thật (ghi checklist test vào `NOTES.md` nếu agent không có máy thật)

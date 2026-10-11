@@ -7,6 +7,7 @@ import { Section } from '@/components/Section';
 import { Segmented } from '@/components/Segmented';
 import { SpeedSlider } from '@/components/SpeedSlider';
 import { useEffectChooser } from '@/components/StrobeWarning';
+import { TorchSettings } from '@/components/TorchSettings';
 import { FONT_SIZE_MAX, FONT_SIZE_MIN } from '@/constants/effects';
 import { LED_FONT_FAMILY, TEXT_MAX_LENGTH } from '@/constants/fonts';
 import { RADIUS, SPACING, UI } from '@/constants/ui';
@@ -112,6 +113,10 @@ export default function SettingsScreen() {
             />
           </>
         ) : null}
+      </Section>
+
+      <Section title="Đèn flash">
+        <TorchSettings />
       </Section>
 
       <Pressable
