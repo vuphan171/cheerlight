@@ -152,6 +152,10 @@ const vi: Strings = {
     lockedLabel: 'Đã khoá · nhấn giữ để mở',
     tapHint: 'Chạm để mở điều khiển',
   },
+  splash: {
+    appName: 'CheerLight',
+    tagline: 'Bảng đèn cổ vũ trong túi bạn',
+  },
 };
 
 export { vi };

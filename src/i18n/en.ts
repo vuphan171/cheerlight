@@ -157,6 +157,10 @@ const en = {
     lockedLabel: 'Locked · long press to unlock',
     tapHint: 'Tap to show controls',
   },
+  splash: {
+    appName: 'CheerLight',
+    tagline: 'A cheer light board in your pocket',
+  },
 };
 
 export type Strings = typeof en;

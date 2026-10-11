@@ -11,7 +11,8 @@
       "bundleIdentifier": "com.vuphan.cheerlight",
       "requireFullScreen": true,
       "infoPlist": {
-        "CFBundleAllowMixedLocalizations": true
+        "CFBundleAllowMixedLocalizations": true,
+        "UIStatusBarStyle": "UIStatusBarStyleLightContent"
       }
     },
     "android": {
@@ -36,11 +37,46 @@
     "plugins": [
       "expo-router",
       [
+        "expo-font",
+        {
+          "ios": {
+            "fonts": ["./assets/fonts/CheerLightDots-Regular.ttf", "./assets/fonts/Ionicons.ttf"]
+          },
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "CheerLightDots",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/CheerLightDots-Regular.ttf",
+                    "weight": 400
+                  }
+                ]
+              },
+              {
+                "fontFamily": "Ionicons",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/Ionicons.ttf",
+                    "weight": 400
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      [
         "expo-splash-screen",
         {
-          "backgroundColor": "#F2F2F7",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 160
+          "backgroundColor": "#2C73D2",
+          "image": "./assets/splash/splash-icon.png",
+          "imageWidth": 273,
+          "resizeMode": "contain",
+          "dark": {
+            "backgroundColor": "#2C73D2",
+            "image": "./assets/splash/splash-icon.png"
+          }
         }
       ],
       [
@@ -62,14 +98,8 @@
         "expo-localization",
         {
           "supportedLocales": {
-            "ios": [
-              "en",
-              "vi"
-            ],
-            "android": [
-              "en",
-              "vi"
-            ]
+            "ios": ["en", "vi"],
+            "android": ["en", "vi"]
           }
         }
       ]

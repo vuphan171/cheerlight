@@ -11,6 +11,7 @@ import { Marquee } from '@/components/marquee';
 import { resolveTextColor } from '@/configs/colors';
 import { scrollPixelsPerSecond, torchPlan } from '@/configs/effects';
 import { fontFamilyFor } from '@/configs/fonts';
+import { PLAY_UI } from '@/configs/ui';
 import { DisplayOverlay } from '@/features/display/display-overlay';
 import { TorchController } from '@/features/display/torch-controller';
 import { useMaxBrightness } from '@/features/display/use-max-brightness';
@@ -137,5 +138,5 @@ export default function DisplayScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000' },
+  container: { flex: 1, backgroundColor: PLAY_UI.bg },
 });

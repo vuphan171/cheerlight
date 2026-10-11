@@ -7,7 +7,7 @@ import { Marquee } from '@/components/marquee';
 import { resolveTextColor } from '@/configs/colors';
 import { scrollPixelsPerSecond } from '@/configs/effects';
 import { fontFamilyFor } from '@/configs/fonts';
-import { RADII } from '@/configs/ui';
+import { PLAY_UI, RADII } from '@/configs/ui';
 import type { LightSettings } from '@/types/settings';
 
 /**
@@ -52,5 +52,10 @@ export function PreviewFrame({
 }
 
 const styles = StyleSheet.create({
-  box: { width: '100%', borderRadius: RADII.preview, overflow: 'hidden', backgroundColor: '#000' },
+  box: {
+    width: '100%',
+    borderRadius: RADII.preview,
+    overflow: 'hidden',
+    backgroundColor: PLAY_UI.bg,
+  },
 });

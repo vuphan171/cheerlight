@@ -4,7 +4,7 @@ import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/ui/icon';
-import { SHADOW, UI } from '@/configs/ui';
+import { PLAY_UI, SHADOW, UI } from '@/configs/ui';
 import { useStrings } from '@/i18n';
 
 const FADE_MS = 200;
@@ -58,7 +58,7 @@ export function DisplayOverlay({
       <Fade visible={controlsVisible && !locked}>
         {flashOn ? (
           <View style={[styles.flashBadge, { top: edges.top, right: edges.right }]}>
-            <Icon name="flash" size={14} color="#FFFFFF" />
+            <Icon name="flash" size={14} color={PLAY_UI.label} />
             <Text style={styles.flashLabel}>{t.flash.badge}</Text>
           </View>
         ) : null}
@@ -91,7 +91,7 @@ export function DisplayOverlay({
       <Fade visible={locked && lockHintVisible}>
         <View style={[styles.centerBottom, { bottom: edges.bottom }]} pointerEvents="box-none">
           <Pressable onLongPress={onUnlock} delayLongPress={600} style={styles.lockedHint}>
-            <Icon name="lock-closed" size={15} color="#FFFFFF" />
+            <Icon name="lock-closed" size={15} color={PLAY_UI.label} />
             <Text style={styles.hintLabel}>{t.display.lockedLabel}</Text>
           </Pressable>
         </View>
@@ -131,9 +131,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 14,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: PLAY_UI.chip,
   },
-  flashLabel: { fontSize: 13, fontWeight: '600', color: '#FFFFFF' },
+  flashLabel: { fontSize: 13, fontWeight: '600', color: PLAY_UI.label },
   centerBottom: { position: 'absolute', left: 0, right: 0, alignItems: 'center' },
   lockedHint: {
     flexDirection: 'row',
@@ -142,13 +142,13 @@ const styles = StyleSheet.create({
     minHeight: 44,
     paddingHorizontal: 18,
     borderRadius: 22,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: PLAY_UI.chip,
   },
   tapHint: {
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: PLAY_UI.chip,
   },
-  hintLabel: { fontSize: 15, fontWeight: '600', color: '#FFFFFF' },
+  hintLabel: { fontSize: 15, fontWeight: '600', color: PLAY_UI.label },
 });

@@ -14,7 +14,9 @@ import type { AutoHideMs } from '@/types/settings';
 const DisplaySection = () => {
   const t = useStrings();
   const { prefs, updatePrefs } = useSettings();
+
   const secondsLabel = (ms: number) => t.settings.seconds(ms / 1000);
+
   const [autoHideOpen, setAutoHideOpen] = useState(false);
 
   const pickAutoHide = () => {
@@ -22,7 +24,9 @@ const DisplaySection = () => {
       setAutoHideOpen(true);
       return;
     }
+
     const labels = AUTO_HIDE_OPTIONS.map(secondsLabel);
+
     ActionSheetIOS.showActionSheetWithOptions(
       {
         title: t.settings.autoHideTitle,

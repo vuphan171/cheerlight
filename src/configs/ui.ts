@@ -16,6 +16,13 @@ export const UI = {
   onAccent: '#FFFFFF',
 } as const;
 
+/** Màu màn Phát: luôn nền đen, không theo tông sáng của `UI`. */
+export const PLAY_UI = {
+  bg: '#000000',
+  chip: 'rgba(0,0,0,0.6)',
+  label: '#FFFFFF',
+} as const;
+
 export const ICON_BG = {
   blue: '#0A84FF',
   orange: '#FF9F0A',
