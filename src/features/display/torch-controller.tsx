@@ -9,14 +9,12 @@ import type { LightSettings } from '@/types/settings';
 
 interface TorchControllerProps {
   settings: LightSettings;
-  /** Đồng hồ hiệu ứng nền (0 → 1 mỗi chu kỳ), dùng khi flash đồng bộ với `blink`. */
   progress: SharedValue<number>;
   /** `false` khi màn hình không focus → tháo CameraView, flash tắt chắc chắn. */
   active: boolean;
   onUnavailable: () => void;
 }
 
-/** Theo dõi app có đang ở foreground không. */
 function useAppActive(): boolean {
   const [active, setActive] = useState(AppState.currentState === 'active');
   useEffect(() => {

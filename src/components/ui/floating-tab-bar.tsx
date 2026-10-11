@@ -31,10 +31,7 @@ function useKeyboardVisible(): boolean {
   return visible;
 }
 
-/**
- * Thanh tab nổi: tab đang chọn là viên thuốc accent (icon + nhãn), tab khác chỉ có icon.
- * Bấm tab Tạo luôn mở chế độ tạo mới (xoá `presetId` của chế độ Sửa).
- */
+/** Bấm tab Tạo luôn mở chế độ tạo mới (xoá `presetId` của chế độ Sửa). */
 export function FloatingTabBar({ state, navigation, insets }: BottomTabBarProps) {
   const t = useStrings();
   const keyboardVisible = useKeyboardVisible();

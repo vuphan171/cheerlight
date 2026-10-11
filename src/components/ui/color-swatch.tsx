@@ -11,7 +11,6 @@ interface ColorSwatchProps {
   size?: number;
 }
 
-/** Ô màu tròn. Khi chọn: vòng trắng 2.5 + vòng accent 2, kèm ✓ đen/trắng theo độ chói. */
 export function ColorSwatch({ color, selected, onPress, size = 34 }: ColorSwatchProps) {
   return (
     <Pressable
@@ -34,7 +33,6 @@ export function ColorSwatch({ color, selected, onPress, size = 34 }: ColorSwatch
   );
 }
 
-/** Ô "＋ màu khác": vòng nhiều màu (PNG tĩnh), giữa là chấm trắng có dấu ＋. */
 export function CustomColorSwatch({
   selected,
   onPress,

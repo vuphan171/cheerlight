@@ -3,7 +3,6 @@ import { Pressable, StyleSheet } from 'react-native';
 import { Icon } from '@/components/ui/icon';
 import { SHADOW, UI } from '@/configs/ui';
 
-/** Kiểu nút Phát duy nhất trong app: tròn trắng 48, icon ▶ accent. */
 export function PlayButton({ onPress }: { onPress: () => void }) {
   return (
     <Pressable

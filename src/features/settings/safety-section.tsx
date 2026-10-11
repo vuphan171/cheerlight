@@ -1,9 +1,9 @@
-import { Alert } from "react-native";
+import { Alert } from 'react-native';
 
-import { MenuGroup } from "@/components/ui/menu/menu-group";
-import { MenuAction } from "@/components/ui/menu/menu-action";
-import { useSettings } from "@/hooks/use-settings";
-import { useStrings } from "@/i18n";
+import { MenuAction } from '@/components/ui/menu/menu-action';
+import { MenuGroup } from '@/components/ui/menu/menu-group';
+import { useSettings } from '@/hooks/use-settings';
+import { useStrings } from '@/i18n';
 
 const SafetySection = () => {
   const t = useStrings();

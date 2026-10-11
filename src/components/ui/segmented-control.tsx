@@ -12,7 +12,6 @@ interface SegmentedControlProps<T extends string> {
 
 const PAD = 2;
 
-/** Segmented kiểu iOS: track `fill`, thumb trắng trượt bằng Reanimated. */
 export function SegmentedControl<T extends string>({
   options,
   value,

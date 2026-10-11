@@ -5,12 +5,12 @@ import Animated, {
   Easing,
   interpolateColor,
   ReduceMotion,
-  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
   withSequence,
   withTiming,
+  type SharedValue,
 } from 'react-native-reanimated';
 import { scheduleOnUI } from 'react-native-worklets';
 
@@ -23,7 +23,6 @@ const TIMING = { easing: Easing.linear, reduceMotion: ReduceMotion.Never } as co
 
 const RAINBOW_INPUT = RAINBOW_COLORS.map((_, i) => i / (RAINBOW_COLORS.length - 1));
 
-/** Chạy trên UI thread: tiếp tục từ pha hiện tại tới 1, rồi lặp 0 → 1 vô hạn. */
 function startLoop(progress: SharedValue<number>, periodMs: number) {
   'worklet';
   cancelAnimation(progress);
@@ -105,5 +104,7 @@ export function LightCanvas({ color, effect, progress, style }: LightCanvasProps
     }
   });
 
-  return <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, style, animatedStyle]} />;
+  return (
+    <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, style, animatedStyle]} />
+  );
 }

@@ -13,7 +13,6 @@ interface HexColorSheetProps {
   onClose: () => void;
 }
 
-/** Nhập mã màu hex. Báo lỗi ngay khi gõ; xem trước là giá trị hợp lệ gần nhất. */
 export function HexColorSheet({ visible, value, onSubmit, onClose }: HexColorSheetProps) {
   const t = useStrings();
   const [text, setText] = useState(value);

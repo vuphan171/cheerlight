@@ -17,7 +17,6 @@ interface Props {
   trailing?: ReactNode;
   onPress?: () => void;
   disabled?: boolean;
-  selected?: boolean;
 }
 
 const MenuRow: React.FC<Props> = ({
@@ -29,7 +28,6 @@ const MenuRow: React.FC<Props> = ({
   trailing,
   onPress,
   disabled,
-  selected,
 }) => {
   const last = useContext(MenuRowLastContext);
 

@@ -3,7 +3,6 @@ import type { EffectMode } from '@/types/settings';
 export const SPEED_MIN = 1;
 export const SPEED_MAX = 10;
 
-/** Thứ tự hiện trong list Hiệu ứng. Tên hiển thị nằm trong `i18n` (`t.effects[mode]`). */
 export const EFFECTS: readonly EffectMode[] = ['solid', 'blink', 'strobe', 'rainbow'];
 
 /** Chu kỳ (ms) ở speed 1 và speed 10 cho từng chế độ. Một chu kỳ = một lần sáng + một lần tắt. */
@@ -34,8 +33,6 @@ export function effectPeriodMs(effect: EffectMode, speed: number): number {
   return lerpBySpeed(speed, PERIOD_RANGE[effect]);
 }
 
-// ---- Torch (flash) ----
-
 /** Tối đa 5 lần nháy/giây → chu kỳ tối thiểu 200ms. */
 export const TORCH_MAX_FLASHES_PER_SECOND = 5;
 export const TORCH_MIN_PERIOD_MS = 1000 / TORCH_MAX_FLASHES_PER_SECOND;
@@ -52,9 +49,6 @@ export function torchSyncPeriodMs(effect: EffectMode, speed: number): number | n
   return Math.max(TORCH_MIN_PERIOD_MS, effectPeriodMs(effect, speed));
 }
 
-// ---- Marquee ----
-
-/** scrollSpeed (1–10) → pixel/giây. */
 export function scrollPixelsPerSecond(scrollSpeed: number): number {
   return lerpBySpeed(scrollSpeed, [60, 900]);
 }

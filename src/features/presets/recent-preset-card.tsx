@@ -9,7 +9,6 @@ import { RADII } from '@/configs/ui';
 import { useStrings } from '@/i18n';
 import type { Preset } from '@/types/settings';
 
-/** Thẻ "Dùng gần nhất": chạm vào bất kỳ đâu (hoặc ▶) để phát. */
 export function RecentPresetCard({ preset, onPlay }: { preset: Preset; onPlay: () => void }) {
   const t = useStrings();
   const { settings } = preset;

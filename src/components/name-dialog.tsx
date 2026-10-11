@@ -17,7 +17,6 @@ interface NameDialogProps {
   onCancel: () => void;
 }
 
-/** Hộp thoại nhập tên mẫu (Lưu mẫu, Đổi tên). Tối đa 30 ký tự, đếm ký tự. */
 export function NameDialog({
   visible,
   title,

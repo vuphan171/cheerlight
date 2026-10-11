@@ -16,13 +16,11 @@ export interface SettingsContextValue {
   presets: Preset[];
   /** Tạo mẫu mới; trùng tên (không phân biệt hoa thường) thì ghi đè mẫu đó. Trả về id, hoặc `null` khi đã đủ mẫu. */
   createPreset: (name: string, settings: LightSettings) => string | null;
-  /** Ghi đè cài đặt của mẫu đang sửa. */
   updatePresetSettings: (id: string, settings: LightSettings) => void;
   renamePreset: (id: string, name: string) => RenameResult;
   /** Trả về `false` khi đã đủ mẫu. */
   duplicatePreset: (id: string) => boolean;
   deletePreset: (id: string) => void;
-  /** Mẫu cho thẻ "Dùng gần nhất". */
   lastUsedPresetId: string | undefined;
 
   /** Cài đặt màn Phát đang chạy (chỉ trong RAM, không ghi đè bản nháp). */
@@ -32,10 +30,8 @@ export interface SettingsContextValue {
   prefs: AppPrefs;
   updatePrefs: (patch: Partial<AppPrefs>) => void;
 
-  /** Người dùng đã đồng ý cảnh báo động kinh do ánh sáng (strobe). */
   strobeAccepted: boolean;
   acceptStrobe: () => void;
-  /** "Hiện lại cảnh báo Strobe" ở tab Cài đặt. */
   resetStrobeWarning: () => void;
 
   /** `false` khi đã biết máy không dùng được camera/flash (CameraView báo lỗi mount). */

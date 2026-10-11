@@ -18,7 +18,6 @@ interface PresetTileProps {
   onOpenMenu: (anchor: MenuAnchor) => void;
 }
 
-/** Ô mẫu trong lưới: chạm để phát, ⋯ hoặc nhấn giữ để mở menu. */
 export function PresetTile({ preset, width, onPlay, onOpenMenu }: PresetTileProps) {
   const t = useStrings();
   const { settings } = preset;

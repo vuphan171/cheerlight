@@ -19,7 +19,8 @@ describe('torchPlan — không bao giờ quá 5 lần/giây', () => {
               effect,
               speed,
             });
-            if (plan.kind === 'timer') expect(plan.periodMs).toBeGreaterThanOrEqual(TORCH_MIN_PERIOD_MS);
+            if (plan.kind === 'timer')
+              expect(plan.periodMs).toBeGreaterThanOrEqual(TORCH_MIN_PERIOD_MS);
           }
         });
       }

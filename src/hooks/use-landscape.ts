@@ -1,5 +1,5 @@
-import * as ScreenOrientation from 'expo-screen-orientation';
 import { useFocusEffect } from 'expo-router';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import { useCallback } from 'react';
 import { AppState, Platform } from 'react-native';
 
@@ -30,7 +30,6 @@ export function useOrientationLock(orientation: ScreenOrientation.OrientationLoc
   );
 }
 
-/** Khoá landscape khi màn hình focus; trả về portrait khi rời đi. */
 export function useLandscape(): void {
   useOrientationLock(OrientationLock.LANDSCAPE);
   useFocusEffect(
@@ -43,7 +42,6 @@ export function useLandscape(): void {
   );
 }
 
-/** Khoá portrait cho các màn hình cài đặt. */
 export function usePortrait(): void {
   useOrientationLock(OrientationLock.PORTRAIT_UP);
 }

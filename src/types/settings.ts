@@ -10,7 +10,7 @@ export type TorchMode = 'steady' | 'blink';
 export type TextColorMode = 'auto' | 'fixed';
 
 export interface LightSettings {
-  backgroundColor: string; // hex
+  backgroundColor: string;
   effect: EffectMode;
   speed: number; // 1–10, quy đổi ra ms trong configs/effects.ts
   text: string; // rỗng = không hiện marquee
@@ -21,13 +21,11 @@ export interface LightSettings {
   scrollDirection: ScrollDirection;
   torchEnabled: boolean;
   torchSyncWithEffect: boolean;
-  // Mở rộng so với PLAN mục 5 (xem NOTES.md):
   textFont: TextFont; // 'system' khi font LED thiếu glyph (tiếng Việt có dấu, emoji)
   torchMode: TorchMode; // khi torchSyncWithEffect = false
   torchRate: number; // 1–10, nhịp nháy riêng của flash
 }
 
-/** Một bộ cài đặt người dùng đặt tên và lưu lại để phát nhanh. */
 export interface Preset {
   id: string;
   name: string;
@@ -37,7 +35,6 @@ export interface Preset {
 
 export type AutoHideMs = 2000 | 3000 | 5000;
 
-/** Tuỳ chọn chung của app (tab Cài đặt). */
 export interface AppPrefs {
   showTapHint: boolean;
   maxBrightness: boolean;

@@ -8,7 +8,6 @@ interface SliderProps {
   onChange: (value: number) => void;
   min: number;
   max: number;
-  /** Nhãn hai đầu, vd. "Chậm"/"Nhanh" hoặc chữ "A" nhỏ/to. */
   minLabel?: ReactNode;
   maxLabel?: ReactNode;
 }

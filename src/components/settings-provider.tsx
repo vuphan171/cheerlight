@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { AppState, Platform } from 'react-native';
 
 import { DEFAULT_PREFS, DEFAULT_SETTINGS } from '@/configs/defaults';
@@ -18,9 +18,9 @@ import {
   sanitizeSettings,
 } from '@/configs/sanitize';
 import { STORAGE_KEYS } from '@/configs/storage';
-import { type RenameResult, SettingsContext } from '@/hooks/use-settings';
-import type { AppPrefs, LightSettings, Preset } from '@/types/settings';
+import { SettingsContext, type RenameResult } from '@/hooks/use-settings';
 import { getStrings } from '@/i18n';
+import type { AppPrefs, LightSettings, Preset } from '@/types/settings';
 
 const SAVE_DEBOUNCE_MS = 300;
 
@@ -90,7 +90,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     latestDraft.current = draft;
     if (!loaded) return;
-    const timer = setTimeout(() => persist(STORAGE_KEYS.settings, JSON.stringify(draft)), SAVE_DEBOUNCE_MS);
+    const timer = setTimeout(
+      () => persist(STORAGE_KEYS.settings, JSON.stringify(draft)),
+      SAVE_DEBOUNCE_MS,
+    );
     return () => clearTimeout(timer);
   }, [draft, loaded]);
 
@@ -130,7 +133,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       const existing = findPresetByName(prev, cleaned);
       if (existing) {
         setPresets(
-          prev.map((p) => (p.id === existing.id ? { ...p, name: cleaned, settings, updatedAt: now } : p)),
+          prev.map((p) =>
+            p.id === existing.id ? { ...p, name: cleaned, settings, updatedAt: now } : p,
+          ),
         );
         return existing.id;
       }
@@ -145,7 +150,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const updatePresetSettings = useCallback(
     (id: string, settings: LightSettings) => {
       const now = Date.now();
-      setPresets(presetsRef.current.map((p) => (p.id === id ? { ...p, settings, updatedAt: now } : p)));
+      setPresets(
+        presetsRef.current.map((p) => (p.id === id ? { ...p, settings, updatedAt: now } : p)),
+      );
     },
     [setPresets],
   );
@@ -157,7 +164,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       const prev = presetsRef.current;
       const clash = findPresetByName(prev, cleaned);
       if (clash && clash.id !== id) return 'duplicate';
-      setPresets(prev.map((p) => (p.id === id ? { ...p, name: cleaned, updatedAt: Date.now() } : p)));
+      setPresets(
+        prev.map((p) => (p.id === id ? { ...p, name: cleaned, updatedAt: Date.now() } : p)),
+      );
       return 'ok';
     },
     [setPresets],

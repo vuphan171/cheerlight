@@ -5,13 +5,9 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Icon } from '@/components/ui/icon';
 import { UI } from '@/configs/ui';
 import { useSettings } from '@/hooks/use-settings';
-import type { EffectMode } from '@/types/settings';
 import { useStrings } from '@/i18n';
+import type { EffectMode } from '@/types/settings';
 
-/**
- * Trả về hàm chọn hiệu ứng có chặn cảnh báo động kinh do ánh sáng lần đầu chọn `strobe`,
- * và phần tử modal cần render.
- */
 export function useEffectChooser(onChange: (mode: EffectMode) => void) {
   const { strobeAccepted, acceptStrobe } = useSettings();
   const [pending, setPending] = useState(false);

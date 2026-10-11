@@ -1,7 +1,6 @@
 import type { Strings } from '@/i18n';
 import type { LightSettings } from '@/types/settings';
 
-/** 14 màu phát. `id` tra tên hiển thị trong `t.colors` (nhãn "MÀU NỀN · {tên}"). */
 export const PLAY_COLORS = [
   { hex: '#FFFFFF', id: 'white' },
   { hex: '#000000', id: 'black' },

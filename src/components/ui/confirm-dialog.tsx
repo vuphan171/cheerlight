@@ -14,7 +14,6 @@ import { RADII, TYPE, UI } from '@/configs/ui';
 export interface DialogAction {
   label: string;
   onPress: () => void;
-  /** 'primary' = accent đậm, 'danger' = chữ đỏ, mặc định = chữ accent. */
   kind?: 'default' | 'primary' | 'danger';
   disabled?: boolean;
 }
@@ -29,7 +28,6 @@ interface ConfirmDialogProps {
   onRequestClose: () => void;
 }
 
-/** Hộp thoại tông sáng (cảnh báo Strobe, đặt tên mẫu, chọn tuỳ chọn…). Xác nhận xoá vẫn dùng `Alert`. */
 export function ConfirmDialog({
   visible,
   title,
@@ -128,7 +126,6 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.35 },
 });
 
-/** Ô nhập dùng trong ConfirmDialog. */
 export const dialogInputStyle = {
   fontSize: 17,
   color: UI.label,

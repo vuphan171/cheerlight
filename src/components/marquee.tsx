@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { type LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, type LayoutChangeEvent } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
   ReduceMotion,
-  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
   withSequence,
   withTiming,
+  type SharedValue,
 } from 'react-native-reanimated';
 import { scheduleOnUI } from 'react-native-worklets';
 
@@ -56,7 +56,13 @@ function chunkText(text: string): string[] {
  * Chạy trên UI thread: đi tiếp từ vị trí hiện tại tới `to`, rồi lặp `from → to` vô hạn.
  * Tốc độ (px/s) là hằng số, nên thời gian một vòng = (textWidth + screenWidth) / pps.
  */
-function startScroll(x: SharedValue<number>, from: number, to: number, pps: number, reset: boolean) {
+function startScroll(
+  x: SharedValue<number>,
+  from: number,
+  to: number,
+  pps: number,
+  reset: boolean,
+) {
   'worklet';
   cancelAnimation(x);
   const lo = Math.min(from, to);
@@ -108,8 +114,7 @@ export function Marquee({
     if (!screenWidth || !textWidth) return;
     const reset = lastContentKey.current !== contentKey;
     lastContentKey.current = contentKey;
-    const [from, to] =
-      direction === 'left' ? [screenWidth, -textWidth] : [-textWidth, screenWidth];
+    const [from, to] = direction === 'left' ? [screenWidth, -textWidth] : [-textWidth, screenWidth];
     scheduleOnUI(startScroll, x, from, to, Math.max(1, pixelsPerSecond), reset);
   }, [contentKey, direction, pixelsPerSecond, screenWidth, textWidth, x]);
 

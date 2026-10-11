@@ -25,7 +25,6 @@ export interface ContextMenuAction {
   onPress: () => void;
   destructive?: boolean;
   disabled?: boolean;
-  /** Vẽ vạch ngăn nhóm phía trên mục này. */
   separatorBefore?: boolean;
 }
 
@@ -39,10 +38,6 @@ const MENU_WIDTH = 230;
 const ITEM_HEIGHT = 46;
 const MARGIN = 12;
 
-/**
- * Popover tự vẽ đặt dưới nút ⋯ (căn trái hoặc phải theo vị trí nút), nền mờ `overlay`.
- * Tự lật lên trên khi không đủ chỗ phía dưới.
- */
 export function ContextMenu({ anchor, items, onClose }: ContextMenuProps) {
   const window = useWindowDimensions();
   if (!anchor) return null;

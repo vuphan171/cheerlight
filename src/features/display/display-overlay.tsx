@@ -9,7 +9,6 @@ import { useStrings } from '@/i18n';
 
 const FADE_MS = 200;
 
-/** Lớp mờ dần (200 ms), không nhận chạm khi ẩn. */
 function Fade({ visible, children }: { visible: boolean; children: ReactNode }) {
   const style = useAnimatedStyle(() => ({
     opacity: withTiming(visible ? 1 : 0, { duration: FADE_MS }),
@@ -34,10 +33,6 @@ interface DisplayOverlayProps {
   onUnlock: () => void;
 }
 
-/**
- * Điều khiển màn Phát: "‹ Thoát" (trái dưới), "Khoá màn hình" (phải dưới), nhãn ⚡ Flash (phải trên).
- * Khi khoá: chỉ còn nhãn "Đã khoá · nhấn giữ để mở" ở giữa đáy.
- */
 export function DisplayOverlay({
   controlsVisible,
   locked,

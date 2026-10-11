@@ -9,7 +9,6 @@ import { useStrings } from '@/i18n';
 import type { EffectMode } from '@/types/settings';
 
 interface EffectTabProps extends EditorTabProps {
-  /** Chọn hiệu ứng qua `useEffectChooser` (chặn cảnh báo Strobe lần đầu). */
   chooseEffect: (mode: EffectMode) => void;
 }
 

@@ -1,12 +1,12 @@
 import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { LargeTitle } from '@/components/ui/large-title';
+import { GROUP_GAP, SPACING, TAB_BAR_CLEARANCE, UI } from '@/configs/ui';
 import { AboutSection } from '@/features/settings/about-section';
 import { DisplaySection } from '@/features/settings/display-section';
 import { FlashSection } from '@/features/settings/flash-section';
 import { SafetySection } from '@/features/settings/safety-section';
-import { LargeTitle } from '@/components/ui/large-title';
-import { GROUP_GAP, SPACING, TAB_BAR_CLEARANCE, UI } from '@/configs/ui';
 import { useStrings } from '@/i18n';
 
 const SettingsScreen = () => {

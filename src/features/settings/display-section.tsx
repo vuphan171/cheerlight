@@ -11,7 +11,6 @@ import { useSettings } from '@/hooks/use-settings';
 import { useStrings } from '@/i18n';
 import type { AutoHideMs } from '@/types/settings';
 
-/** Nhóm "Màn Phát": gợi ý chạm, độ sáng tối đa, thời gian tự ẩn điều khiển. */
 const DisplaySection = () => {
   const t = useStrings();
   const { prefs, updatePrefs } = useSettings();

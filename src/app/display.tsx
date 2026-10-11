@@ -19,7 +19,6 @@ import { useSettings } from '@/hooks/use-settings';
 
 const HINT_MS = 2000;
 
-/** Bật `true` rồi tự về `false` sau `ms` kể từ lần `show()` gần nhất. */
 function useTransient(ms: number, initial = false) {
   const [state, setState] = useState({ visible: initial, key: 0 });
   useEffect(() => {
@@ -49,7 +48,6 @@ export default function DisplayScreen() {
   useMaxBrightness(prefs.maxBrightness);
   const navigation = useNavigation();
   const [permission] = useCameraPermissions();
-  // Chỉ ẩn thanh hệ thống khi màn hình đang focus.
   const focused = useIsFocused();
 
   // Mở thẳng qua deep link (chưa có nowPlaying) → mẫu dùng gần nhất, không có thì bản nháp.

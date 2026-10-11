@@ -28,7 +28,6 @@ const MenuOption: React.FC<Props> = ({
       subtitleColor={subtitleColor}
       icon={icon}
       onPress={onPress}
-      selected={selected}
       trailing={selected ? <Icon name="checkmark" size={22} color={UI.accent} /> : null}
     />
   );

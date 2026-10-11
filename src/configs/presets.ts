@@ -5,7 +5,6 @@ import type { LightSettings, Preset } from '@/types/settings';
 export const PRESET_MAX = 20;
 export const PRESET_NAME_MAX_LENGTH = 30;
 
-/** Bỏ khoảng trắng thừa, cắt theo độ dài tối đa. */
 export function cleanPresetName(name: string): string {
   return name.trim().replace(/\s+/g, ' ').slice(0, PRESET_NAME_MAX_LENGTH).trim();
 }
@@ -20,7 +19,6 @@ export function findPresetByName(presets: readonly Preset[], name: string): Pres
   return presets.find((p) => presetNameKey(p.name) === key);
 }
 
-/** Tên gợi ý "Preset N" / "Mẫu N" chưa bị dùng. */
 export function suggestPresetName(presets: readonly Preset[], t: Strings): string {
   for (let n = presets.length + 1; ; n++) {
     const name = t.presets.suggestedName(n);
@@ -59,7 +57,6 @@ export function effectLabel(effect: LightSettings['effect'], t: Strings): string
   return t.effects[effect].label;
 }
 
-/** Tóm tắt một dòng, vd. "Blink · ⚡ Flash". */
 export function presetSummary(s: LightSettings, t: Strings): string {
   const parts = [effectLabel(s.effect, t)];
   if (s.torchEnabled) parts.push('⚡ Flash');

@@ -2,14 +2,14 @@ import { describe, expect, it } from '@jest/globals';
 
 import { DEFAULT_PREFS, DEFAULT_SETTINGS } from '@/configs/defaults';
 import { duplicateName, PRESET_MAX, PRESET_NAME_MAX_LENGTH } from '@/configs/presets';
-import { en } from '@/i18n/en';
-import { vi } from '@/i18n/vi';
 import {
   resolveLastUsedId,
   sanitizePrefs,
   sanitizePresets,
   sanitizeSettings,
 } from '@/configs/sanitize';
+import { en } from '@/i18n/en';
+import { vi } from '@/i18n/vi';
 import type { Preset } from '@/types/settings';
 
 describe('sanitizeSettings — migration v1', () => {
@@ -22,7 +22,9 @@ describe('sanitizeSettings — migration v1', () => {
     expect(s.textColor).toBe('#FFD400');
   });
   it('giữ textColorMode hợp lệ đã lưu', () => {
-    expect(sanitizeSettings({ textColor: '#FFD400', textColorMode: 'auto' }).textColorMode).toBe('auto');
+    expect(sanitizeSettings({ textColor: '#FFD400', textColorMode: 'auto' }).textColorMode).toBe(
+      'auto',
+    );
   });
   it('màu nền đã bỏ khỏi bảng vẫn giữ nguyên hex', () => {
     expect(sanitizeSettings({ backgroundColor: '#FF2E7E' }).backgroundColor).toBe('#FF2E7E');

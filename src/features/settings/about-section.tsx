@@ -4,7 +4,6 @@ import { MenuGroup } from '@/components/ui/menu/menu-group';
 import { MenuInfo } from '@/components/ui/menu/menu-info';
 import { useStrings } from '@/i18n';
 
-/** Nhóm cuối: phiên bản app và font. */
 const AboutSection = () => {
   const t = useStrings();
 

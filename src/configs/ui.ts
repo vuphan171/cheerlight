@@ -16,7 +16,6 @@ export const UI = {
   onAccent: '#FFFFFF',
 } as const;
 
-/** Nền ô icon trong list (kiểu iOS Settings). */
 export const ICON_BG = {
   blue: '#0A84FF',
   orange: '#FF9F0A',
