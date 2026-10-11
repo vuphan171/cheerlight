@@ -1,7 +1,10 @@
 import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
 
+import { usePortrait } from '@/hooks/useLandscape';
+
 export default function SettingsScreen() {
+  usePortrait();
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Pressable style={styles.startButton} onPress={() => router.push('/display')}>

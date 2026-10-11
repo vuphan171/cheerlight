@@ -112,10 +112,10 @@ export interface LightSettings {
 
 ### Phase 1 — Nền tảng màn hình hiển thị
 **Tasks**
-- [ ] `useMaxBrightness`: khi màn hình `display` mount thì lưu độ sáng hiện tại, set về `1`; khi unmount thì khôi phục. Dùng brightness của app (không đổi brightness hệ thống, không cần quyền `WRITE_SETTINGS`)
-- [ ] Gọi `useKeepAwake()` trong `display.tsx`
-- [ ] `useLandscape`: khóa landscape khi vào `display`, trả về portrait khi rời đi
-- [ ] Ẩn status bar và navigation bar ở màn hình `display`
+- [x] `useMaxBrightness`: khi màn hình `display` mount thì lưu độ sáng hiện tại, set về `1`; khi unmount thì khôi phục. Dùng brightness của app (không đổi brightness hệ thống, không cần quyền `WRITE_SETTINGS`)
+- [x] Gọi `useKeepAwake()` trong `display.tsx`
+- [x] `useLandscape`: khóa landscape khi vào `display`, trả về portrait khi rời đi
+- [x] Ẩn status bar và navigation bar ở màn hình `display`
 
 **Acceptance criteria**
 - Vào `display`: màn hình ngang, full screen, sáng tối đa, không tự tắt sau thời gian chờ

@@ -16,7 +16,12 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ title: 'CheerLight' }} />
         <Stack.Screen
           name="display"
-          options={{ headerShown: false, animation: 'fade', contentStyle: { backgroundColor: '#000' } }}
+          options={{
+            headerShown: false,
+            animation: 'fade',
+            autoHideHomeIndicator: true,
+            contentStyle: { backgroundColor: '#000' },
+          }}
         />
       </Stack>
     </SettingsProvider>

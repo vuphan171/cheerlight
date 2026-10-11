@@ -23,3 +23,30 @@ Ghi chú kỹ thuật, quyết định lệch khỏi `PLAN.md`, và checklist te
 | Thư viện | Lý do |
 |---|---|
 | `expo-navigation-bar` | Ẩn thanh điều hướng Android ở màn hình `display` (Phase 1 yêu cầu full screen). Thư viện chính thức của Expo, không có cách khác trong managed workflow. |
+
+## Phase 1 — Màn hình hiển thị
+
+- `app.json`: `orientation: "default"` (thay vì `portrait`) để iOS khai báo hỗ trợ landscape trong
+  Info.plist — nếu không `lockAsync(LANDSCAPE)` sẽ không có tác dụng ở bản build thật. Hướng dọc của
+  màn hình cài đặt được đảm bảo bằng `usePortrait()`; plugin `expo-screen-orientation` với
+  `initialOrientation: PORTRAIT_UP`; `ios.requireFullScreen: true` (iPad split view chặn khoá hướng).
+- Hook dùng `useFocusEffect` (không chỉ mount/unmount) + lắng nghe `AppState` để khoá lại hướng khi
+  quay về foreground.
+- Độ sáng: Android chỉ đổi brightness của window (khôi phục bằng `restoreSystemBrightnessAsync`);
+  iOS `setBrightnessAsync` đổi độ sáng màn hình thật và **giữ nguyên khi app vào background**, nên
+  hook khôi phục giá trị cũ khi app rời foreground và đặt lại 1 khi quay về.
+- Ẩn status bar (`expo-status-bar`) + navigation bar Android (`expo-navigation-bar`) dưới dạng
+  component, phụ thuộc `useIsFocused()`; ẩn home indicator iOS bằng `autoHideHomeIndicator`.
+
+Đã kiểm tra trên iOS Simulator (iPhone 16 Pro, Expo Go SDK 57): vào `display` → ngang, ẩn status
+bar; về `index` → dọc, status bar hiện lại; background → foreground ở `display` → vẫn ngang.
+
+## Checklist test thủ công trên máy thật
+
+### Phase 1
+- [ ] iOS + Android: vào `display` → độ sáng nhảy lên tối đa; về `index` → trở lại mức cũ.
+- [ ] iOS: đang ở `display`, vuốt về Home → độ sáng hệ thống trở lại mức cũ; mở lại app → tối đa.
+- [ ] Android: thanh điều hướng (3 nút / gesture bar) bị ẩn ở `display`, hiện lại ở `index`.
+- [ ] Để yên ở `display` lâu hơn thời gian tự khoá màn hình → màn hình không tắt.
+- [ ] Bật "Khoá xoay" (rotation lock) của hệ thống → `display` vẫn ngang, `index` vẫn dọc.
+- [ ] iPad: `display` khoá ngang được (nhờ `requireFullScreen`).
