@@ -151,16 +151,16 @@ export interface LightSettings {
 
 ### Phase 3 — Chữ chạy LED (Marquee)
 **Tasks**
-- [ ] Thêm font dot-matrix vào `assets/fonts/`, load trong `_layout.tsx` bằng `expo-font`; ghi tên font + license vào `NOTES.md`
-- [ ] `Marquee`:
+- [x] Thêm font dot-matrix vào `assets/fonts/`, load trong `_layout.tsx` bằng `expo-font`; ghi tên font + license vào `NOTES.md`
+- [x] `Marquee`:
   - Đo chiều rộng chữ (`onLayout`) và chiều rộng màn hình
   - Dịch `translateX` từ ngoài mép phải sang ngoài mép trái, lặp vô hạn bằng `withRepeat`
   - Thời gian một vòng tính theo `(textWidth + screenWidth) / pixelsPerSecond` để tốc độ ổn định với mọi độ dài chữ
   - Hỗ trợ `scrollDirection`
   - Chữ dài không bị cắt hay xuống dòng (`numberOfLines={1}`, không giới hạn width của Text)
-- [ ] Màn hình cài đặt: ô nhập text, chọn màu chữ, slider cỡ chữ, slider tốc độ, chọn hướng
-- [ ] Marquee hiển thị đè lên `LightCanvas` và vẫn chạy khi nền đang nháy
-- [ ] Hỗ trợ tiếng Việt có dấu và emoji (kiểm tra font có glyph; nếu font LED thiếu dấu tiếng Việt thì có tùy chọn chuyển sang font thường)
+- [x] Màn hình cài đặt: ô nhập text, chọn màu chữ, slider cỡ chữ, slider tốc độ, chọn hướng
+- [x] Marquee hiển thị đè lên `LightCanvas` và vẫn chạy khi nền đang nháy
+- [x] Hỗ trợ tiếng Việt có dấu và emoji (kiểm tra font có glyph; nếu font LED thiếu dấu tiếng Việt thì có tùy chọn chuyển sang font thường)
 
 **Acceptance criteria**
 - Chữ ngắn và chữ rất dài (200+ ký tự) đều chạy mượt, liên tục, đúng tốc độ

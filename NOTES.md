@@ -76,3 +76,39 @@ render của `display` bằng log tạm thời: chỉ tăng khi đổi setting, 
 - [ ] Nhập mã hex sai (vd `#12`) → viền đỏ + thông báo lỗi; nhập `#0f0` → nền đổi sang xanh lá.
 - [ ] Kéo slider tốc độ trong khi ScrollView đang cuộn → slider không bị "giật mất" thao tác.
 - [ ] Bật "Giảm chuyển động" (iOS) / "Remove animations" (Android) → hiệu ứng vẫn chạy.
+
+## Phase 3 — Chữ chạy LED
+
+### Font
+- **CheerLightDots** (`assets/fonts/CheerLightDots-Regular.ttf`) — bản tĩnh dựng từ font
+  **Tiny5** (© The Tiny5 Project Authors, https://github.com/Gissio/font_tiny5), giấy phép
+  **SIL Open Font License 1.1** (`assets/fonts/OFL.txt`). Tiny5 không khai báo Reserved Font Name;
+  vẫn đổi tên family để phân biệt với bản gốc vì đây là Modified Version.
+- Cách dựng (fontTools, chỉ dùng lúc build, không phải dependency của app):
+  `fonttools varLib.instancer Tiny5[BLED,JITT,ROND,wdth,wght].ttf wght=400 wdth=100 ROND=100 BLED=0 JITT=0`
+  rồi đổi name table thành `CheerLightDots`. `ROND=100` biến pixel vuông thành chấm tròn → giống
+  bảng LED dot-matrix.
+- Lý do chọn: đã kiểm tra bảng `cmap` của các font dot/pixel OFL trên Google Fonts. Doto,
+  DotGothic16, Sixtyfour **thiếu ~100 ký tự tiếng Việt** (ạ, ế, ộ…). Tiny5 có đủ 134/134 ký tự tiếng
+  Việt có dấu (hoa + thường).
+- Emoji: font không có emoji, iOS/Android tự fallback sang font emoji hệ thống (đã thấy 🇻🇳 🎉 hiển
+  thị đúng trên simulator). Vẫn có tuỳ chọn "Kiểu chữ: Thường" (font hệ thống) cho ai thích dễ đọc.
+
+### Marquee
+- Đo `screenWidth` (onLayout container) và `textWidth` (onLayout hàng chữ). `translateX` chạy
+  `screenWidth → -textWidth` (trái) hoặc ngược lại (phải), thời gian = `(textWidth + screenWidth) / pps`.
+- Hàng chữ nằm trong một View vô hình rộng 1.000.000px để Yoga không giới hạn chiều rộng Text
+  (nếu không, `numberOfLines={1}` sẽ cắt chữ bằng dấu "…").
+- Chữ được chia thành các đoạn ~24 ký tự **tại khoảng trắng** (không cắt dấu tiếng Việt hay chuỗi
+  emoji), mỗi đoạn một `<Text>`, để không có native view nào quá rộng (giới hạn texture/bộ nhớ).
+  Đo trên simulator: 280 ký tự, cỡ 240 → hàng chữ rộng 29.250px, bộ nhớ chỉ tăng ~8MB.
+- Đổi nội dung/cỡ chữ/hướng → chạy lại từ mép; chỉ đổi tốc độ → đi tiếp từ vị trí hiện tại.
+- Giới hạn nội dung 500 ký tự (`TEXT_MAX_LENGTH`).
+
+Đã kiểm tra trên iOS Simulator: chữ căn giữa dọc, chạy trái/phải, chạy tiếp khi nền blink/rainbow,
+tiếng Việt có dấu (CỐ LÊN VIỆT NAM, "Cố lên các bạn ơi") hiển thị đúng ở cả font LED và font thường.
+
+### Phase 3 (test thủ công)
+- [ ] Chữ ngắn ("Hi") và chữ 300+ ký tự đều chạy liên tục, không giật, tốc độ nhìn như nhau.
+- [ ] Đổi nội dung khi đang ở màn hình `display` (qua thanh điều khiển Phase 5) → chạy lại từ mép.
+- [ ] Android: chữ LED hiển thị đúng font chấm tròn, không bị cắt phần dấu phía trên (Ệ, Ố…).

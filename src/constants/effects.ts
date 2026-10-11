@@ -5,7 +5,7 @@ export const SPEED_MAX = 10;
 
 export const EFFECTS: readonly { mode: EffectMode; label: string }[] = [
   { mode: 'solid', label: 'Tĩnh' },
-  { mode: 'blink', label: 'Nhấp nháy' },
+  { mode: 'blink', label: 'Nháy' },
   { mode: 'strobe', label: 'Strobe' },
   { mode: 'rainbow', label: 'Cầu vồng' },
 ];

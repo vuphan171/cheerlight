@@ -5,6 +5,9 @@ import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet } from 'react-native';
 
 import { LightCanvas, useEffectClock } from '@/components/LightCanvas';
+import { Marquee } from '@/components/Marquee';
+import { scrollPixelsPerSecond } from '@/constants/effects';
+import { fontFamilyFor } from '@/constants/fonts';
 import { useLandscape } from '@/hooks/useLandscape';
 import { useMaxBrightness } from '@/hooks/useMaxBrightness';
 import { useSettings } from '@/hooks/useSettings';
@@ -23,6 +26,14 @@ export default function DisplayScreen() {
       <StatusBar hidden={focused} style="light" />
       <NavigationBar hidden={focused} />
       <LightCanvas color={settings.backgroundColor} effect={settings.effect} progress={progress} />
+      <Marquee
+        text={settings.text}
+        color={settings.textColor}
+        fontSize={settings.fontSize}
+        fontFamily={fontFamilyFor(settings.textFont)}
+        pixelsPerSecond={scrollPixelsPerSecond(settings.scrollSpeed)}
+        direction={settings.scrollDirection}
+      />
     </Pressable>
   );
 }
