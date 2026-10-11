@@ -7,9 +7,11 @@ import { fontFamilyFor } from '@/configs/fonts';
 import { presetSummary } from '@/configs/presets';
 import { RADII } from '@/configs/ui';
 import type { Preset } from '@/types/settings';
+import { useStrings } from '@/i18n';
 
 /** Thẻ "Dùng gần nhất": chạm vào bất kỳ đâu (hoặc ▶) để phát. */
 export function RecentPresetCard({ preset, onPlay }: { preset: Preset; onPlay: () => void }) {
+  const t = useStrings();
   const { settings } = preset;
   const fg = resolveTextColor(settings);
   const text = settings.text.trim();
@@ -18,10 +20,10 @@ export function RecentPresetCard({ preset, onPlay }: { preset: Preset; onPlay: (
     <Pressable
       onPress={onPlay}
       accessibilityRole="button"
-      accessibilityLabel={`Phát mẫu dùng gần nhất: ${preset.name}`}
+      accessibilityLabel={t.presets.playRecentA11y(preset.name)}
       style={({ pressed }) => [styles.card, { backgroundColor: settings.backgroundColor }, pressed && styles.pressed]}>
       {settings.effect === 'rainbow' ? <RainbowFill /> : null}
-      <Text style={[styles.kicker, { color: fg }]}>Dùng gần nhất</Text>
+      <Text style={[styles.kicker, { color: fg }]}>{t.presets.recent}</Text>
       <Text
         style={[styles.marquee, { color: fg, fontFamily: fontFamilyFor(settings.textFont) }]}
         numberOfLines={1}
@@ -34,10 +36,10 @@ export function RecentPresetCard({ preset, onPlay }: { preset: Preset; onPlay: (
             {preset.name}
           </Text>
           <Text style={[styles.summary, { color: fg }]} numberOfLines={1}>
-            {presetSummary(settings)}
+            {presetSummary(settings, t)}
           </Text>
         </View>
-        <PlayButton onPress={onPlay} accessibilityLabel={`Phát ${preset.name}`} />
+        <PlayButton onPress={onPlay} accessibilityLabel={t.presets.playA11y(preset.name)} />
       </View>
     </Pressable>
   );

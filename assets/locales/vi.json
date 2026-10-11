@@ -1,0 +1,5 @@
+{
+  "ios": {
+    "NSCameraUsageDescription": "CheerLight cần quyền camera để bật/nháy đèn flash. Ứng dụng không chụp hay ghi hình."
+  }
+}

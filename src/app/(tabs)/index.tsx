@@ -4,8 +4,8 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, Vi
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { NameDialog } from '@/components/name-dialog';
-import { PresetTile } from '@/components/preset-tile';
-import { RecentPresetCard } from '@/components/recent-preset-card';
+import { PresetTile } from '@/features/presets/preset-tile';
+import { RecentPresetCard } from '@/features/presets/recent-preset-card';
 import { ContextMenu, type MenuAnchor } from '@/components/ui/context-menu';
 import { Icon } from '@/components/ui/icon';
 import { LargeTitle } from '@/components/ui/large-title';
@@ -14,17 +14,19 @@ import { SPACING, TAB_BAR_CLEARANCE, TYPE, UI } from '@/configs/ui';
 import { usePlay } from '@/hooks/use-play';
 import { useSettings } from '@/hooks/use-settings';
 import type { Preset } from '@/types/settings';
+import { type Strings, useStrings } from '@/i18n';
 
 const GRID_GAP = 12;
 
-function confirmDelete(preset: Preset, onConfirm: () => void) {
-  Alert.alert('Xoá mẫu', `Xoá mẫu "${preset.name}"? Không thể hoàn tác.`, [
-    { text: 'Huỷ', style: 'cancel' },
-    { text: 'Xoá', style: 'destructive', onPress: onConfirm },
+function confirmDelete(preset: Preset, t: Strings, onConfirm: () => void) {
+  Alert.alert(t.presets.deletePreset, t.presets.deleteConfirm(preset.name), [
+    { text: t.common.cancel, style: 'cancel' },
+    { text: t.common.delete, style: 'destructive', onPress: onConfirm },
   ]);
 }
 
 export default function PresetsScreen() {
+  const t = useStrings();
   const { presets, lastUsedPresetId, renamePreset, duplicatePreset, deletePreset } = useSettings();
   const { play, warning } = usePlay();
   const window = useWindowDimensions();
@@ -41,29 +43,29 @@ export default function PresetsScreen() {
   const menuItems = menu
     ? [
         {
-          label: 'Sửa',
+          label: t.presets.edit,
           icon: 'color-palette-outline' as const,
           onPress: () => router.navigate({ pathname: '/create', params: { presetId: menu.preset.id } }),
         },
-        { label: 'Đổi tên', icon: 'pencil' as const, onPress: () => setRenaming(menu.preset) },
+        { label: t.presets.rename, icon: 'pencil' as const, onPress: () => setRenaming(menu.preset) },
         {
-          label: 'Nhân bản',
+          label: t.presets.duplicate,
           icon: 'copy-outline' as const,
           disabled: full,
           onPress: () => {
             if (!duplicatePreset(menu.preset.id)) {
-              Alert.alert('Đã đủ mẫu', `Tối đa ${PRESET_MAX} mẫu. Xoá bớt để nhân bản.`);
+              Alert.alert(t.presets.fullTitle, t.presets.fullBody(PRESET_MAX));
             }
           },
         },
         {
-          label: 'Xoá mẫu',
+          label: t.presets.deletePreset,
           icon: 'trash-outline' as const,
           destructive: true,
           separatorBefore: true,
           onPress: () => {
             const target = menu.preset;
-            confirmDelete(target, () => deletePreset(target.id));
+            confirmDelete(target, t, () => deletePreset(target.id));
           },
         },
       ]
@@ -72,10 +74,10 @@ export default function PresetsScreen() {
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <LargeTitle>Mẫu</LargeTitle>
+        <LargeTitle>{t.presets.title}</LargeTitle>
 
         {presets.length === 0 ? (
-          <EmptyState onCreate={newPreset} />
+          <EmptyState t={t} onCreate={newPreset} />
         ) : (
           <View style={styles.body}>
             {recent ? <RecentPresetCard preset={recent} onPlay={() => playPreset(recent)} /> : null}
@@ -83,9 +85,9 @@ export default function PresetsScreen() {
             <View style={styles.headerRow}>
               <View style={styles.headerTitle}>
                 <Text style={styles.sectionTitle} accessibilityRole="header">
-                  Tất cả mẫu
+                  {t.presets.all}
                 </Text>
-                <Text style={styles.count} accessibilityLabel={`${presets.length} trên ${PRESET_MAX} mẫu`}>
+                <Text style={styles.count} accessibilityLabel={t.presets.countA11y(presets.length, PRESET_MAX)}>
                   {presets.length}/{PRESET_MAX}
                 </Text>
               </View>
@@ -93,12 +95,12 @@ export default function PresetsScreen() {
                 onPress={newPreset}
                 disabled={full}
                 accessibilityRole="button"
-                accessibilityLabel="Mẫu mới"
-                accessibilityHint={full ? `Đã đủ ${PRESET_MAX} mẫu` : undefined}
+                accessibilityLabel={t.presets.new}
+                accessibilityHint={full ? t.presets.fullHint(PRESET_MAX) : undefined}
                 accessibilityState={{ disabled: full }}
                 style={({ pressed }) => [styles.newButton, pressed && styles.newButtonPressed, full && styles.disabled]}>
                 <Icon name="add" size={18} color={UI.onAccent} />
-                <Text style={styles.newLabel}>Mẫu mới</Text>
+                <Text style={styles.newLabel}>{t.presets.new}</Text>
               </Pressable>
             </View>
 
@@ -121,12 +123,12 @@ export default function PresetsScreen() {
 
       <NameDialog
         visible={renaming !== null}
-        title="Đổi tên mẫu"
+        title={t.presets.renameTitle}
         initialName={renaming?.name ?? ''}
-        confirmLabel={() => 'Lưu'}
+        confirmLabel={() => t.common.save}
         validate={(name) => {
           const clash = findPresetByName(presets, name);
-          return clash && clash.id !== renaming?.id ? { error: `Đã có mẫu tên “${clash.name}”.` } : {};
+          return clash && clash.id !== renaming?.id ? { error: t.presets.nameTaken(clash.name) } : {};
         }}
         onCancel={() => setRenaming(null)}
         onSubmit={(name) => {
@@ -138,20 +140,20 @@ export default function PresetsScreen() {
   );
 }
 
-function EmptyState({ onCreate }: { onCreate: () => void }) {
+function EmptyState({ t, onCreate }: { t: Strings; onCreate: () => void }) {
   return (
     <View style={styles.empty}>
       <View style={styles.emptyArt}>
         <Icon name="albums-outline" size={44} color={UI.accent} />
       </View>
-      <Text style={styles.emptyTitle}>Chưa có mẫu nào</Text>
-      <Text style={styles.emptyBody}>Tạo màu, hiệu ứng và chữ chạy rồi lưu lại để phát nhanh khi cổ vũ.</Text>
+      <Text style={styles.emptyTitle}>{t.presets.emptyTitle}</Text>
+      <Text style={styles.emptyBody}>{t.presets.emptyBody}</Text>
       <Pressable
         onPress={onCreate}
         accessibilityRole="button"
         style={({ pressed }) => [styles.newButton, styles.emptyButton, pressed && styles.newButtonPressed]}>
         <Icon name="add" size={18} color={UI.onAccent} />
-        <Text style={styles.newLabel}>Tạo mẫu đầu tiên</Text>
+        <Text style={styles.newLabel}>{t.presets.createFirst}</Text>
       </Pressable>
     </View>
   );

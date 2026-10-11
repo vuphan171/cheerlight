@@ -3,6 +3,7 @@ import { Modal, Platform, Pressable, StyleSheet, Text, useWindowDimensions, View
 
 import { Icon, type IconName } from '@/components/ui/icon';
 import { SHADOW, UI } from '@/configs/ui';
+import { useStrings } from '@/i18n';
 
 export interface MenuAnchor {
   x: number;
@@ -36,6 +37,7 @@ const MARGIN = 12;
  * Tự lật lên trên khi không đủ chỗ phía dưới.
  */
 export function ContextMenu({ anchor, items, onClose }: ContextMenuProps) {
+  const t = useStrings();
   const window = useWindowDimensions();
   if (!anchor) return null;
 
@@ -51,7 +53,7 @@ export function ContextMenu({ anchor, items, onClose }: ContextMenuProps) {
 
   return (
     <Modal visible transparent animationType="fade" statusBarTranslucent onRequestClose={onClose}>
-      <Pressable style={styles.overlay} onPress={onClose} accessibilityLabel="Đóng menu" />
+      <Pressable style={styles.overlay} onPress={onClose} accessibilityLabel={t.presets.closeMenu} />
       <View style={[styles.menu, SHADOW.floating, { top, left }]} accessibilityRole="menu">
         {items.map((item, i) => (
           <Fragment key={item.label}>

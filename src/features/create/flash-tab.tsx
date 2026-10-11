@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import type { EditorTabProps } from '@/components/create/types';
+import type { EditorTabProps } from '@/features/create/types';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { GroupedSection } from '@/components/ui/grouped-section';
-import { ListRow } from '@/components/ui/list-row';
+import { MenuGroup } from '@/components/ui/menu-group';
+import { MenuItem } from '@/components/ui/menu-item';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Slider } from '@/components/ui/slider';
 import { Toggle } from '@/components/ui/toggle';
@@ -12,20 +12,19 @@ import { SPEED_MAX, SPEED_MIN, TORCH_MAX_FLASHES_PER_SECOND, torchPeriodMs } fro
 import { ICON_BG, TYPE, UI } from '@/configs/ui';
 import { useTorchPermission } from '@/hooks/use-torch-permission';
 import type { TorchMode } from '@/types/settings';
+import { useStrings } from '@/i18n';
 
-const MODES: readonly { value: TorchMode; label: string }[] = [
-  { value: 'steady', label: 'Sáng liên tục' },
-  { value: 'blink', label: 'Nháy' },
-];
 
-export const FLASH_NOTE = `Flash nháy tối đa ${TORCH_MAX_FLASHES_PER_SECOND} lần/giây. Với Tĩnh và Cầu vồng, flash sáng liên tục.`;
-
-function flashesPerSecond(rate: number): string {
-  return `${(1000 / torchPeriodMs(rate)).toFixed(1).replace('.', ',')} lần/giây`;
-}
 
 export function FlashTab({ settings, update }: EditorTabProps) {
+  const t = useStrings();
   const { status, granted, ensure, openSettings } = useTorchPermission();
+  const flashNote = t.flash.note(TORCH_MAX_FLASHES_PER_SECOND);
+  const flashesPerSecond = (rate: number) => t.flash.flashesPerSecond(1000 / torchPeriodMs(rate));
+  const modes: readonly { value: TorchMode; label: string }[] = [
+    { value: 'steady', label: t.flashTab.steady },
+    { value: 'blink', label: t.flashTab.blink },
+  ];
   const [rateOpen, setRateOpen] = useState(false);
 
   // Mất quyền (vd. thu hồi trong Cài đặt) → tắt flash.
@@ -37,26 +36,26 @@ export function FlashTab({ settings, update }: EditorTabProps) {
 
   if (status === 'unavailable') {
     return (
-      <GroupedSection label="Đèn flash" list={false}>
-        <Text style={styles.muted}>Thiết bị này không hỗ trợ điều khiển đèn flash.</Text>
-      </GroupedSection>
+      <MenuGroup label={t.flashTab.group} list={false}>
+        <Text style={styles.muted}>{t.flashTab.unsupported}</Text>
+      </MenuGroup>
     );
   }
 
   if (status === 'blocked') {
     return (
-      <GroupedSection
-        label="Đèn flash"
-        footer="Đèn flash cần quyền Camera nhưng quyền đã bị từ chối. Mở Cài đặt → CheerLight → bật Camera.">
-        <ListRow
-          title="Quyền Camera"
+      <MenuGroup
+        label={t.flashTab.group}
+        footer={t.flashTab.blockedFooter}>
+        <MenuItem
+          title={t.flashTab.cameraPermission}
           icon={{ name: 'camera', color: ICON_BG.gray }}
-          value="Bị chặn"
+          value={t.torchStatus.blocked}
           chevron
           onPress={openSettings}
         />
-        <ListRow title="Mở Cài đặt" titleColor={UI.accent} onPress={openSettings} last />
-      </GroupedSection>
+        <MenuItem title={t.common.openSettings} titleColor={UI.accent} onPress={openSettings} last />
+      </MenuGroup>
     );
   }
 
@@ -70,38 +69,38 @@ export function FlashTab({ settings, update }: EditorTabProps) {
 
   const enabled = settings.torchEnabled && granted;
   const rateValue =
-    settings.torchMode === 'steady' ? 'Sáng liên tục' : `Nháy · ${flashesPerSecond(settings.torchRate)}`;
+    settings.torchMode === 'steady' ? t.flashTab.steady : t.flashTab.blinkValue(flashesPerSecond(settings.torchRate));
 
   return (
     <>
-      <GroupedSection
-        label="Đèn flash"
-        footer={granted ? FLASH_NOTE : `Sẽ xin quyền Camera (chỉ để bật flash). ${FLASH_NOTE}`}>
-        <ListRow
-          title="Bật đèn flash"
+      <MenuGroup
+        label={t.flashTab.group}
+        footer={granted ? flashNote : t.flashTab.askFooter(flashNote)}>
+        <MenuItem
+          title={t.flashTab.enable}
           icon={{ name: 'flash', color: ICON_BG.orange }}
           accessory={
-            <Toggle value={enabled} onValueChange={(v) => void toggleTorch(v)} accessibilityLabel="Bật đèn flash" />
+            <Toggle value={enabled} onValueChange={(v) => void toggleTorch(v)} accessibilityLabel={t.flashTab.enable} />
           }
           last={!enabled}
         />
         {enabled ? (
-          <ListRow
-            title="Nháy theo hiệu ứng"
+          <MenuItem
+            title={t.flashTab.sync}
             icon={{ name: 'pulse', color: ICON_BG.blue }}
             accessory={
               <Toggle
                 value={settings.torchSyncWithEffect}
                 onValueChange={(torchSyncWithEffect) => update({ torchSyncWithEffect })}
-                accessibilityLabel="Flash nháy theo hiệu ứng nền"
+                accessibilityLabel={t.flashTab.syncA11y}
               />
             }
             last={settings.torchSyncWithEffect}
           />
         ) : null}
         {enabled && !settings.torchSyncWithEffect ? (
-          <ListRow
-            title="Nhịp riêng"
+          <MenuItem
+            title={t.flashTab.rate}
             icon={{ name: 'time', color: ICON_BG.gray }}
             value={rateValue}
             chevron
@@ -109,16 +108,16 @@ export function FlashTab({ settings, update }: EditorTabProps) {
             last
           />
         ) : null}
-      </GroupedSection>
+      </MenuGroup>
 
       <ConfirmDialog
         visible={rateOpen}
-        title="Nhịp riêng của flash"
+        title={t.flashTab.rateTitle}
         onRequestClose={() => setRateOpen(false)}
-        actions={[{ label: 'Xong', kind: 'primary', onPress: () => setRateOpen(false) }]}>
+        actions={[{ label: t.common.done, kind: 'primary', onPress: () => setRateOpen(false) }]}>
         <View style={styles.rateBody}>
           <SegmentedControl
-            options={MODES}
+            options={modes}
             value={settings.torchMode}
             onChange={(torchMode) => update({ torchMode })}
           />
@@ -130,9 +129,9 @@ export function FlashTab({ settings, update }: EditorTabProps) {
                 max={SPEED_MAX}
                 onChange={(torchRate) => update({ torchRate })}
                 formatValue={flashesPerSecond}
-                minLabel="Chậm"
-                maxLabel="Nhanh"
-                accessibilityLabel="Nhịp nháy flash"
+                minLabel={t.common.slow}
+                maxLabel={t.common.fast}
+                accessibilityLabel={t.flashTab.rateA11y}
               />
               <Text style={styles.rateValue}>{flashesPerSecond(settings.torchRate)}</Text>
             </>

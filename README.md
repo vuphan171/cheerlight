@@ -67,10 +67,15 @@ npx expo-doctor
 src/
   app/            _layout.tsx (font, splash, provider), display.tsx (màn Phát)
     (tabs)/       _layout.tsx (thanh tab nổi), index.tsx (Mẫu), create.tsx (Tạo/Sửa), settings.tsx
-  components/     light-canvas, marquee, torch-controller, preview-frame, display-overlay, …
-    create/       4 tab con của tab Tạo
-    ui/           component dùng chung (tab bar, list row, segmented, slider, dialog, icon…)
-  hooks/          use-settings, use-play, use-torch-permission, use-max-brightness, use-landscape
+  features/       code chỉ một màn dùng
+    create/       4 tab con của tab Tạo, khung xem trước
+    presets/      ô mẫu, thẻ mẫu gần đây (tab Mẫu)
+    settings/     các nhóm của tab Cài đặt
+    display/      lớp điều khiển, điều khiển flash, độ sáng tối đa (màn Phát)
+  components/     dùng chung giữa các feature: light-canvas, marquee, name-dialog, strobe-warning, …
+    ui/           component giao diện chung (tab bar, menu item, segmented, slider, dialog, icon…)
+  hooks/          use-settings, use-play, use-torch-permission, use-landscape
+  i18n/           chuỗi giao diện: en.ts (mặc định), vi.ts, useStrings()
   configs/        ui (token), colors, effects, presets, sanitize (+ migration), storage, …
   types/          settings.ts
 assets/fonts/     CheerLightDots-Regular.ttf + OFL.txt, Ionicons.ttf + IONICONS-LICENSE.txt

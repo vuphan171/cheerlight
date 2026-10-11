@@ -3,6 +3,7 @@ import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { Icon } from '@/components/ui/icon';
 import { autoTextColor, colorName } from '@/configs/colors';
 import { UI } from '@/configs/ui';
+import { useStrings } from '@/i18n';
 
 interface ColorSwatchProps {
   color: string;
@@ -14,11 +15,12 @@ interface ColorSwatchProps {
 
 /** Ô màu tròn. Khi chọn: vòng trắng 2.5 + vòng accent 2, kèm ✓ đen/trắng theo độ chói. */
 export function ColorSwatch({ color, selected, onPress, size = 34, accessibilityLabel }: ColorSwatchProps) {
+  const t = useStrings();
   return (
     <Pressable
       accessibilityRole="radio"
       accessibilityState={{ selected }}
-      accessibilityLabel={accessibilityLabel ?? `Màu ${colorName(color)}`}
+      accessibilityLabel={accessibilityLabel ?? t.color.a11y(colorName(color, t))}
       onPress={onPress}
       hitSlop={4}
       style={[styles.outer, { width: size, height: size, borderRadius: size / 2 }, selected && styles.ring]}>
@@ -44,11 +46,12 @@ export function CustomColorSwatch({
   onPress: () => void;
   size?: number;
 }) {
+  const t = useStrings();
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
-      accessibilityLabel="Màu khác, nhập mã hex"
+      accessibilityLabel={t.color.customA11y}
       onPress={onPress}
       hitSlop={4}
       style={[styles.custom, { width: size, height: size }]}>

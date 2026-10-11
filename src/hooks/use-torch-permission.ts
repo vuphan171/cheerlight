@@ -6,13 +6,6 @@ import { useSettings } from '@/hooks/use-settings';
 
 export type TorchPermissionStatus = 'granted' | 'undetermined' | 'blocked' | 'unavailable';
 
-export const TORCH_STATUS_LABEL: Record<TorchPermissionStatus, string> = {
-  granted: 'Đã cấp',
-  undetermined: 'Chưa cấp',
-  blocked: 'Bị chặn',
-  unavailable: 'Không hỗ trợ',
-};
-
 /** Trạng thái quyền Camera (dùng cho đèn flash) + các thao tác xin quyền / mở Cài đặt. */
 export function useTorchPermission() {
   const { torchAvailable } = useSettings();

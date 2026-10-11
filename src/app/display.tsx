@@ -6,16 +6,17 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, StyleSheet } from 'react-native';
 
-import { DisplayOverlay } from '@/components/display-overlay';
+import { DisplayOverlay } from '@/features/display/display-overlay';
 import { LightCanvas, useEffectClock } from '@/components/light-canvas';
 import { Marquee } from '@/components/marquee';
-import { TorchController } from '@/components/torch-controller';
+import { TorchController } from '@/features/display/torch-controller';
 import { resolveTextColor } from '@/configs/colors';
 import { scrollPixelsPerSecond, torchPlan } from '@/configs/effects';
 import { fontFamilyFor } from '@/configs/fonts';
 import { useLandscape } from '@/hooks/use-landscape';
-import { useMaxBrightness } from '@/hooks/use-max-brightness';
+import { useMaxBrightness } from '@/features/display/use-max-brightness';
 import { useSettings } from '@/hooks/use-settings';
+import { useStrings } from '@/i18n';
 
 const HINT_MS = 2000;
 
@@ -49,6 +50,7 @@ export default function DisplayScreen() {
   const settings = nowPlaying ?? presets.find((p) => p.id === lastUsedPresetId)?.settings ?? draft;
   const progress = useEffectClock(settings.effect, settings.speed);
 
+  const t = useStrings();
   const controls = useTransient(prefs.autoHideMs);
   const lockHint = useTransient(HINT_MS);
   const tapHint = useTransient(HINT_MS, prefs.showTapHint);
@@ -100,8 +102,8 @@ export default function DisplayScreen() {
     <Pressable
       style={styles.container}
       onPress={onTap}
-      accessibilityLabel={locked ? 'Màn hình đã khoá' : 'Chạm để hiện điều khiển'}
-      accessibilityHint={locked ? 'Nhấn giữ nhãn khoá để mở' : undefined}>
+      accessibilityLabel={locked ? t.display.screenLockedA11y : t.display.tapHint}
+      accessibilityHint={locked ? t.display.screenLockedHint : undefined}>
       <StatusBar hidden={focused} style="light" />
       <NavigationBar hidden={focused} />
       <LightCanvas color={settings.backgroundColor} effect={settings.effect} progress={progress} />

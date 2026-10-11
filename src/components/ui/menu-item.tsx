@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -5,7 +6,7 @@ import { Icon, type IconName } from '@/components/ui/icon';
 import { IconBadge } from '@/components/ui/icon-badge';
 import { ROW_MIN_HEIGHT, SPACING, TYPE, UI } from '@/configs/ui';
 
-interface ListRowProps {
+interface Props {
   title: string;
   subtitle?: string;
   subtitleColor?: string;
@@ -24,7 +25,8 @@ interface ListRowProps {
   disabled?: boolean;
 }
 
-export function ListRow({
+/** Một mục trong `MenuGroup` (kiểu app Cài đặt iOS): icon, tiêu đề, giá trị hoặc toggle bên phải, mũi tên `›`. */
+const MenuItem: React.FC<Props> = ({
   title,
   subtitle,
   subtitleColor,
@@ -38,7 +40,7 @@ export function ListRow({
   last,
   accessibilityRole,
   disabled,
-}: ListRowProps) {
+}) => {
   const content = (
     <>
       {icon ? <IconBadge name={icon.name} color={icon.color} /> : null}
@@ -83,7 +85,7 @@ export function ListRow({
       {content}
     </Pressable>
   );
-}
+};
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', paddingLeft: SPACING, gap: 12 },
@@ -105,3 +107,5 @@ const styles = StyleSheet.create({
   subtitle: TYPE.caption,
   value: { fontSize: 17, color: UI.secondary, flexShrink: 1 },
 });
+
+export { MenuItem };

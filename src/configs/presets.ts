@@ -1,5 +1,5 @@
 import { DEFAULT_SETTINGS } from '@/configs/defaults';
-import { EFFECTS } from '@/configs/effects';
+import type { Strings } from '@/i18n';
 import type { LightSettings, Preset } from '@/types/settings';
 
 export const PRESET_MAX = 20;
@@ -20,18 +20,18 @@ export function findPresetByName(presets: readonly Preset[], name: string): Pres
   return presets.find((p) => presetNameKey(p.name) === key);
 }
 
-/** Tên gợi ý "Mẫu N" chưa bị dùng. */
-export function suggestPresetName(presets: readonly Preset[]): string {
+/** Tên gợi ý "Preset N" / "Mẫu N" chưa bị dùng. */
+export function suggestPresetName(presets: readonly Preset[], t: Strings): string {
   for (let n = presets.length + 1; ; n++) {
-    const name = `Mẫu ${n}`;
+    const name = t.presets.suggestedName(n);
     if (!findPresetByName(presets, name)) return name;
   }
 }
 
-/** "Tên (bản sao)", rồi "(bản sao 2)"… Cắt bớt tên gốc để vừa giới hạn độ dài. */
-export function duplicateName(presets: readonly Preset[], name: string): string {
+/** "Tên (copy)", rồi "(copy 2)"… Cắt bớt tên gốc để vừa giới hạn độ dài. */
+export function duplicateName(presets: readonly Preset[], name: string, t: Strings): string {
   for (let n = 1; ; n++) {
-    const suffix = n === 1 ? ' (bản sao)' : ` (bản sao ${n})`;
+    const suffix = t.presets.copySuffix(n);
     const base = name.slice(0, Math.max(1, PRESET_NAME_MAX_LENGTH - suffix.length)).trim();
     const candidate = `${base}${suffix}`;
     if (!findPresetByName(presets, candidate)) return candidate;
@@ -55,13 +55,13 @@ export function settingsEqual(a: LightSettings, b: LightSettings): boolean {
   return SETTING_KEYS.every((key) => a[key] === b[key]);
 }
 
-export function effectLabel(effect: LightSettings['effect']): string {
-  return EFFECTS.find((e) => e.mode === effect)?.label ?? effect;
+export function effectLabel(effect: LightSettings['effect'], t: Strings): string {
+  return t.effects[effect].label;
 }
 
-/** Tóm tắt một dòng, vd. "Nháy · ⚡ Flash". */
-export function presetSummary(s: LightSettings): string {
-  const parts = [effectLabel(s.effect)];
+/** Tóm tắt một dòng, vd. "Blink · ⚡ Flash". */
+export function presetSummary(s: LightSettings, t: Strings): string {
+  const parts = [effectLabel(s.effect, t)];
   if (s.torchEnabled) parts.push('⚡ Flash');
   return parts.join(' · ');
 }

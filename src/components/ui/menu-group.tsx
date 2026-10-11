@@ -1,9 +1,10 @@
+import type React from 'react';
 import { Children, type ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { RADII, SPACING, TYPE, UI } from '@/configs/ui';
 
-interface GroupedSectionProps {
+interface Props {
   label?: string;
   footer?: string;
   children: ReactNode;
@@ -12,7 +13,7 @@ interface GroupedSectionProps {
 }
 
 /** Nhóm kiểu iOS: nhãn IN HOA, khối trắng bo góc, chú thích tuỳ chọn. */
-export function GroupedSection({ label, footer, children, list = true }: GroupedSectionProps) {
+const MenuGroup: React.FC<Props> = ({ label, footer, children, list = true }) => {
   return (
     <View style={styles.section}>
       {label ? <Text style={styles.label}>{label}</Text> : null}
@@ -20,7 +21,7 @@ export function GroupedSection({ label, footer, children, list = true }: Grouped
       {footer ? <Text style={styles.footer}>{footer}</Text> : null}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   section: { gap: 7, flexShrink: 0 },
@@ -29,3 +30,5 @@ const styles = StyleSheet.create({
   padded: { padding: SPACING, gap: 14 },
   footer: { ...TYPE.caption, paddingHorizontal: SPACING },
 });
+
+export { MenuGroup };

@@ -1,29 +1,31 @@
+import type { Strings } from '@/i18n';
 import type { LightSettings } from '@/types/settings';
 
-/** 14 màu phát. Có tên để hiện ở nhãn "MÀU NỀN · {tên}". */
+/** 14 màu phát. `id` tra tên hiển thị trong `t.colors` (nhãn "MÀU NỀN · {tên}"). */
 export const PLAY_COLORS = [
-  { hex: '#FFFFFF', name: 'Trắng' },
-  { hex: '#000000', name: 'Đen' },
-  { hex: '#FF1A1A', name: 'Đỏ' },
-  { hex: '#FF7A00', name: 'Cam' },
-  { hex: '#FFD60A', name: 'Vàng' },
-  { hex: '#9BFF00', name: 'Chanh' },
-  { hex: '#00E05A', name: 'Xanh lá' },
-  { hex: '#00E5D0', name: 'Ngọc' },
-  { hex: '#00A3FF', name: 'Xanh trời' },
-  { hex: '#2E5BFF', name: 'Xanh dương' },
-  { hex: '#8A2BFF', name: 'Tím' },
-  { hex: '#B794FF', name: 'Tím nhạt' },
-  { hex: '#FF2FD6', name: 'Hồng' },
-  { hex: '#FF8FC6', name: 'Hồng phấn' },
+  { hex: '#FFFFFF', id: 'white' },
+  { hex: '#000000', id: 'black' },
+  { hex: '#FF1A1A', id: 'red' },
+  { hex: '#FF7A00', id: 'orange' },
+  { hex: '#FFD60A', id: 'yellow' },
+  { hex: '#9BFF00', id: 'lime' },
+  { hex: '#00E05A', id: 'green' },
+  { hex: '#00E5D0', id: 'turquoise' },
+  { hex: '#00A3FF', id: 'sky' },
+  { hex: '#2E5BFF', id: 'blue' },
+  { hex: '#8A2BFF', id: 'purple' },
+  { hex: '#B794FF', id: 'lavender' },
+  { hex: '#FF2FD6', id: 'pink' },
+  { hex: '#FF8FC6', id: 'rose' },
 ] as const;
 
 export const TEXT_COLOR_QUICK = ['#FFFFFF', '#000000', '#FFD60A', '#FF1A1A', '#2E5BFF'] as const;
 
 /** Tên màu trong bảng, hoặc mã hex nếu là màu tự nhập. */
-export function colorName(hex: string): string {
+export function colorName(hex: string, t: Strings): string {
   const upper = hex.toUpperCase();
-  return PLAY_COLORS.find((c) => c.hex === upper)?.name ?? upper;
+  const color = PLAY_COLORS.find((c) => c.hex === upper);
+  return color ? t.colors[color.id] : upper;
 }
 
 export const RAINBOW_COLORS = [

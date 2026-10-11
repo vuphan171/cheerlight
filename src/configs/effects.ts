@@ -3,12 +3,8 @@ import type { EffectMode } from '@/types/settings';
 export const SPEED_MIN = 1;
 export const SPEED_MAX = 10;
 
-export const EFFECTS: readonly { mode: EffectMode; label: string }[] = [
-  { mode: 'solid', label: 'Tĩnh' },
-  { mode: 'blink', label: 'Nháy' },
-  { mode: 'strobe', label: 'Strobe' },
-  { mode: 'rainbow', label: 'Cầu vồng' },
-];
+/** Thứ tự hiện trong list Hiệu ứng. Tên hiển thị nằm trong `i18n` (`t.effects[mode]`). */
+export const EFFECTS: readonly EffectMode[] = ['solid', 'blink', 'strobe', 'rainbow'];
 
 /** Chu kỳ (ms) ở speed 1 và speed 10 cho từng chế độ. Một chu kỳ = một lần sáng + một lần tắt. */
 const PERIOD_RANGE: Record<Exclude<EffectMode, 'solid'>, [slow: number, fast: number]> = {
@@ -43,6 +39,7 @@ export function effectPeriodMs(effect: EffectMode, speed: number): number {
 /** Tối đa 5 lần nháy/giây → chu kỳ tối thiểu 200ms. */
 export const TORCH_MAX_FLASHES_PER_SECOND = 5;
 export const TORCH_MIN_PERIOD_MS = 1000 / TORCH_MAX_FLASHES_PER_SECOND;
+
 const TORCH_PERIOD_RANGE: [number, number] = [1000, TORCH_MIN_PERIOD_MS];
 
 export function torchPeriodMs(rate: number): number {

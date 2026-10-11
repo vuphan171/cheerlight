@@ -1,28 +1,28 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import type { EditorTabProps } from '@/components/create/types';
+import type { EditorTabProps } from '@/features/create/types';
 import { ColorSwatch, CustomColorSwatch } from '@/components/ui/color-swatch';
-import { GroupedSection } from '@/components/ui/grouped-section';
+import { MenuGroup } from '@/components/ui/menu-group';
 import { HexColorSheet } from '@/components/ui/hex-color-sheet';
 import { colorName, PLAY_COLORS } from '@/configs/colors';
+import { useStrings } from '@/i18n';
 
 const COLUMNS = 8;
 
 export function ColorTab({ settings, update }: EditorTabProps) {
+  const t = useStrings();
   const [hexOpen, setHexOpen] = useState(false);
   const current = settings.backgroundColor.toUpperCase();
   const isCustom = !PLAY_COLORS.some((c) => c.hex === current);
 
   return (
     <>
-      <GroupedSection
-        label={`Màu nền · ${colorName(current)}`}
+      <MenuGroup
+        label={t.colorTab.background(colorName(current, t))}
         list={false}
         footer={
-          settings.effect === 'rainbow'
-            ? 'Hiệu ứng Cầu vồng đang bật nên màu nền tạm không áp dụng.'
-            : undefined
+          settings.effect === 'rainbow' ? t.colorTab.rainbowNote : undefined
         }>
         <View style={styles.grid} accessibilityRole="radiogroup">
           {PLAY_COLORS.map((c) => (
@@ -31,7 +31,7 @@ export function ColorTab({ settings, update }: EditorTabProps) {
                 color={c.hex}
                 selected={c.hex === current}
                 onPress={() => update({ backgroundColor: c.hex })}
-                accessibilityLabel={`Màu ${c.name}`}
+                accessibilityLabel={t.color.a11y(t.colors[c.id])}
               />
             </View>
           ))}
@@ -39,7 +39,7 @@ export function ColorTab({ settings, update }: EditorTabProps) {
             <CustomColorSwatch selected={isCustom} onPress={() => setHexOpen(true)} />
           </View>
         </View>
-      </GroupedSection>
+      </MenuGroup>
       <HexColorSheet
         visible={hexOpen}
         value={current}

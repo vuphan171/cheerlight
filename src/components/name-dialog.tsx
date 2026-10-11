@@ -4,6 +4,7 @@ import { StyleSheet, Text, TextInput } from 'react-native';
 import { ConfirmDialog, dialogInputStyle } from '@/components/ui/confirm-dialog';
 import { PRESET_NAME_MAX_LENGTH } from '@/configs/presets';
 import { UI } from '@/configs/ui';
+import { useStrings } from '@/i18n';
 
 interface NameDialogProps {
   visible: boolean;
@@ -26,6 +27,7 @@ export function NameDialog({
   onSubmit,
   onCancel,
 }: NameDialogProps) {
+  const t = useStrings();
   const [name, setName] = useState(initialName);
   const [wasVisible, setWasVisible] = useState(visible);
   if (visible !== wasVisible) {
@@ -43,13 +45,13 @@ export function NameDialog({
       title={title}
       onRequestClose={onCancel}
       actions={[
-        { label: 'Huỷ', onPress: onCancel },
+        { label: t.common.cancel, onPress: onCancel },
         { label: confirmLabel(trimmed), kind: 'primary', disabled: !canSubmit, onPress: () => onSubmit(trimmed) },
       ]}>
       <TextInput
         value={name}
         onChangeText={setName}
-        placeholder="Tên mẫu"
+        placeholder={t.presets.namePlaceholder}
         placeholderTextColor={UI.secondary}
         maxLength={PRESET_NAME_MAX_LENGTH}
         autoFocus
@@ -57,7 +59,7 @@ export function NameDialog({
         returnKeyType="done"
         onSubmitEditing={() => canSubmit && onSubmit(trimmed)}
         style={[dialogInputStyle, error ? styles.invalid : null]}
-        accessibilityLabel="Tên mẫu"
+        accessibilityLabel={t.presets.namePlaceholder}
       />
       <Text style={[styles.note, error ? styles.error : null]}>
         {error ?? hint ?? `${name.length}/${PRESET_NAME_MAX_LENGTH}`}

@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/ui/icon';
 import { SHADOW, UI } from '@/configs/ui';
+import { useStrings } from '@/i18n';
 
 const FADE_MS = 200;
 
@@ -47,6 +48,7 @@ export function DisplayOverlay({
   onLock,
   onUnlock,
 }: DisplayOverlayProps) {
+  const t = useStrings();
   const insets = useSafeAreaInsets();
   // Tránh vùng an toàn (iPhone ngang: notch/Dynamic Island hai bên, home indicator dưới).
   const edges = {
@@ -62,13 +64,13 @@ export function DisplayOverlay({
         {flashOn ? (
           <View style={[styles.flashBadge, { top: edges.top, right: edges.right }]}>
             <Icon name="flash" size={14} color="#FFFFFF" />
-            <Text style={styles.flashLabel}>Flash</Text>
+            <Text style={styles.flashLabel}>{t.flash.badge}</Text>
           </View>
         ) : null}
         <Pressable
           onPress={onExit}
           accessibilityRole="button"
-          accessibilityLabel="Thoát màn Phát"
+          accessibilityLabel={t.display.exitA11y}
           style={({ pressed }) => [
             styles.pill,
             styles.exit,
@@ -77,13 +79,13 @@ export function DisplayOverlay({
             pressed && styles.pressed,
           ]}>
           <Icon name="chevron-back" size={18} color={UI.label} />
-          <Text style={styles.exitLabel}>Thoát</Text>
+          <Text style={styles.exitLabel}>{t.display.exit}</Text>
         </Pressable>
         <Pressable
           onPress={onLock}
           accessibilityRole="button"
-          accessibilityLabel="Khoá màn hình"
-          accessibilityHint="Chặn chạm và nút quay lại. Nhấn giữ nhãn khoá để mở."
+          accessibilityLabel={t.display.lock}
+          accessibilityHint={t.display.lockHint}
           style={({ pressed }) => [
             styles.pill,
             styles.lock,
@@ -92,7 +94,7 @@ export function DisplayOverlay({
             pressed && styles.pressed,
           ]}>
           <Icon name="lock-closed" size={16} color={UI.onAccent} />
-          <Text style={styles.lockLabel}>Khoá màn hình</Text>
+          <Text style={styles.lockLabel}>{t.display.lock}</Text>
         </Pressable>
       </Fade>
 
@@ -102,14 +104,14 @@ export function DisplayOverlay({
             onLongPress={onUnlock}
             delayLongPress={600}
             accessibilityRole="button"
-            accessibilityLabel="Đã khoá. Nhấn giữ để mở khoá"
-            accessibilityActions={[{ name: 'activate', label: 'Mở khoá' }]}
+            accessibilityLabel={t.display.lockedA11y}
+            accessibilityActions={[{ name: 'activate', label: t.display.unlock }]}
             onAccessibilityAction={(e) => {
               if (e.nativeEvent.actionName === 'activate') onUnlock();
             }}
             style={styles.lockedHint}>
             <Icon name="lock-closed" size={15} color="#FFFFFF" />
-            <Text style={styles.hintLabel}>Đã khoá · nhấn giữ để mở</Text>
+            <Text style={styles.hintLabel}>{t.display.lockedLabel}</Text>
           </Pressable>
         </View>
       </Fade>
@@ -117,7 +119,7 @@ export function DisplayOverlay({
       <Fade visible={tapHintVisible && !controlsVisible && !locked}>
         <View style={[styles.centerBottom, { bottom: edges.bottom }]} pointerEvents="none">
           <View style={styles.tapHint}>
-            <Text style={styles.hintLabel}>Chạm để mở điều khiển</Text>
+            <Text style={styles.hintLabel}>{t.display.tapHint}</Text>
           </View>
         </View>
       </Fade>

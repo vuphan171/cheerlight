@@ -9,7 +9,7 @@ interface Props extends SwitchProps {
   accessibilityLabel: string;
 }
 
-export const Toggle: React.FC<Props> = ({ value, onValueChange, ...props }) => {
+const Toggle: React.FC<Props> = ({ value, onValueChange, ...props }) => {
   return (
     <Switch
       trackColor={{ true: UI.accent, false: UI.fill }}
@@ -20,3 +20,5 @@ export const Toggle: React.FC<Props> = ({ value, onValueChange, ...props }) => {
     />
   );
 };
+
+export { Toggle };

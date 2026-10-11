@@ -20,6 +20,7 @@ import {
 import { STORAGE_KEYS } from '@/configs/storage';
 import { type RenameResult, SettingsContext } from '@/hooks/use-settings';
 import type { AppPrefs, LightSettings, Preset } from '@/types/settings';
+import { getStrings } from '@/i18n';
 
 const SAVE_DEBOUNCE_MS = 300;
 
@@ -169,7 +170,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       if (!source || prev.length >= PRESET_MAX) return false;
       const copy: Preset = {
         id: newPresetId(),
-        name: duplicateName(prev, source.name),
+        name: duplicateName(prev, source.name, getStrings()),
         settings: source.settings,
         updatedAt: Date.now(),
       };

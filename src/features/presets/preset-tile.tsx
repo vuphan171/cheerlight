@@ -9,6 +9,7 @@ import { resolveTextColor } from '@/configs/colors';
 import { effectLabel, presetSummary } from '@/configs/presets';
 import { RADII } from '@/configs/ui';
 import type { Preset } from '@/types/settings';
+import { useStrings } from '@/i18n';
 
 interface PresetTileProps {
   preset: Preset;
@@ -19,6 +20,7 @@ interface PresetTileProps {
 
 /** Ô mẫu trong lưới: chạm để phát, ⋯ hoặc nhấn giữ để mở menu. */
 export function PresetTile({ preset, width, onPlay, onOpenMenu }: PresetTileProps) {
+  const t = useStrings();
   const { settings } = preset;
   const fg = resolveTextColor(settings);
   const moreRef = useRef<View>(null);
@@ -34,9 +36,9 @@ export function PresetTile({ preset, width, onPlay, onOpenMenu }: PresetTileProp
       onPress={onPlay}
       onLongPress={() => open(moreRef.current ?? tileRef.current)}
       accessibilityRole="button"
-      accessibilityLabel={`Phát mẫu ${preset.name}, ${presetSummary(settings)}`}
-      accessibilityHint="Nhấn giữ để mở menu"
-      accessibilityActions={[{ name: 'longpress', label: 'Mở menu' }]}
+      accessibilityLabel={t.presets.tileA11y(preset.name, presetSummary(settings, t))}
+      accessibilityHint={t.presets.tileHint}
+      accessibilityActions={[{ name: 'longpress', label: t.presets.openMenu }]}
       onAccessibilityAction={(e) => {
         if (e.nativeEvent.actionName === 'longpress') open(moreRef.current);
       }}
@@ -47,14 +49,14 @@ export function PresetTile({ preset, width, onPlay, onOpenMenu }: PresetTileProp
       ]}>
       {settings.effect === 'rainbow' ? <RainbowFill /> : null}
       <View style={styles.top}>
-        <View accessible accessibilityLabel={effectLabel(settings.effect)}>
+        <View accessible accessibilityLabel={effectLabel(settings.effect, t)}>
           <Icon name={EFFECT_META[settings.effect].icon} size={20} color={fg} />
         </View>
         <Pressable
           ref={moreRef}
           onPress={() => open(moreRef.current)}
           accessibilityRole="button"
-          accessibilityLabel={`Tuỳ chọn cho ${preset.name}`}
+          accessibilityLabel={t.presets.optionsA11y(preset.name)}
           style={styles.more}>
           <Icon name="ellipsis-horizontal" size={22} color={fg} />
         </Pressable>
@@ -64,7 +66,7 @@ export function PresetTile({ preset, width, onPlay, onOpenMenu }: PresetTileProp
           {preset.name}
         </Text>
         <Text style={[styles.summary, { color: fg }]} numberOfLines={1}>
-          {presetSummary(settings)}
+          {presetSummary(settings, t)}
         </Text>
       </View>
     </Pressable>

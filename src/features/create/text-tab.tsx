@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import type { EditorTabProps } from '@/components/create/types';
+import type { EditorTabProps } from '@/features/create/types';
 import { ColorSwatch, CustomColorSwatch } from '@/components/ui/color-swatch';
-import { GroupedSection } from '@/components/ui/grouped-section';
+import { MenuGroup } from '@/components/ui/menu-group';
 import { HexColorSheet } from '@/components/ui/hex-color-sheet';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Slider } from '@/components/ui/slider';
@@ -12,58 +12,58 @@ import { FONT_SIZE_MAX, FONT_SIZE_MIN, FONT_SIZE_STEP, SPEED_MAX, SPEED_MIN } fr
 import { TEXT_MAX_LENGTH } from '@/configs/fonts';
 import { TYPE, UI } from '@/configs/ui';
 import type { ScrollDirection, TextFont } from '@/types/settings';
-
-const FONTS: readonly { value: TextFont; label: string }[] = [
-  { value: 'led', label: 'LED' },
-  { value: 'system', label: 'Thường' },
-];
-
-const DIRECTIONS: readonly { value: ScrollDirection; label: string; accessibilityLabel: string }[] = [
-  { value: 'left', label: '←', accessibilityLabel: 'Chạy sang trái' },
-  { value: 'right', label: '→', accessibilityLabel: 'Chạy sang phải' },
-];
+import { useStrings } from '@/i18n';
 
 const QUICK_SWATCH = 30;
 
 export function TextTab({ settings, update }: EditorTabProps) {
+  const t = useStrings();
   const [hexOpen, setHexOpen] = useState(false);
+  const fonts: readonly { value: TextFont; label: string }[] = [
+    { value: 'led', label: t.textTab.fontLed },
+    { value: 'system', label: t.textTab.fontSystem },
+  ];
+  const directions: readonly { value: ScrollDirection; label: string; accessibilityLabel: string }[] = [
+    { value: 'left', label: '←', accessibilityLabel: t.textTab.left },
+    { value: 'right', label: '→', accessibilityLabel: t.textTab.right },
+  ];
   const fixed = settings.textColorMode === 'fixed';
   const textColor = settings.textColor.toUpperCase();
   const customSelected = fixed && !TEXT_COLOR_QUICK.some((c) => c === textColor);
 
   return (
     <>
-      <GroupedSection label="Chữ chạy" list={false} footer="Để trống thì màn Phát không hiện chữ.">
+      <MenuGroup label={t.textTab.text} list={false} footer={t.textTab.textFooter}>
         <View style={styles.inputRow}>
           <TextInput
             value={settings.text}
             onChangeText={(text) => update({ text })}
-            placeholder="Nhập nội dung cổ vũ…"
+            placeholder={t.textTab.placeholder}
             placeholderTextColor={UI.secondary}
             maxLength={TEXT_MAX_LENGTH}
             returnKeyType="done"
             style={styles.input}
-            accessibilityLabel="Nội dung chữ chạy"
+            accessibilityLabel={t.textTab.textA11y}
           />
-          <Text style={styles.counter} accessibilityLabel={`${settings.text.length} trên ${TEXT_MAX_LENGTH} ký tự`}>
+          <Text style={styles.counter} accessibilityLabel={t.textTab.counterA11y(settings.text.length, TEXT_MAX_LENGTH)}>
             {settings.text.length}/{TEXT_MAX_LENGTH}
           </Text>
         </View>
-      </GroupedSection>
+      </MenuGroup>
 
-      <GroupedSection label="Kiểu chữ" list={false}>
-        <SegmentedControl options={FONTS} value={settings.textFont} onChange={(textFont) => update({ textFont })} />
-      </GroupedSection>
+      <MenuGroup label={t.textTab.font} list={false}>
+        <SegmentedControl options={fonts} value={settings.textFont} onChange={(textFont) => update({ textFont })} />
+      </MenuGroup>
 
-      <GroupedSection label={`Màu chữ · ${fixed ? colorName(textColor) : 'Tự động'}`} list={false}>
+      <MenuGroup label={t.textTab.textColor(fixed ? colorName(textColor, t) : t.textTab.auto)} list={false}>
         <View style={styles.colorRow} accessibilityRole="radiogroup">
           <Pressable
             accessibilityRole="radio"
             accessibilityState={{ selected: !fixed }}
-            accessibilityLabel="Màu chữ tự động theo màu nền"
+            accessibilityLabel={t.textTab.autoA11y}
             onPress={() => update({ textColorMode: 'auto' })}
             style={[styles.autoPill, !fixed && styles.autoPillOn]}>
-            <Text style={[styles.autoLabel, !fixed && styles.autoLabelOn]}>Tự động</Text>
+            <Text style={[styles.autoLabel, !fixed && styles.autoLabelOn]}>{t.textTab.auto}</Text>
           </Pressable>
           {TEXT_COLOR_QUICK.map((color) => (
             <ColorSwatch
@@ -76,40 +76,40 @@ export function TextTab({ settings, update }: EditorTabProps) {
           ))}
           <CustomColorSwatch size={QUICK_SWATCH} selected={customSelected} onPress={() => setHexOpen(true)} />
         </View>
-      </GroupedSection>
+      </MenuGroup>
 
-      <GroupedSection label="Hướng chạy" list={false}>
+      <MenuGroup label={t.textTab.direction} list={false}>
         <SegmentedControl
-          options={DIRECTIONS}
+          options={directions}
           value={settings.scrollDirection}
           onChange={(scrollDirection) => update({ scrollDirection })}
         />
-      </GroupedSection>
+      </MenuGroup>
 
-      <GroupedSection label="Cỡ chữ" list={false}>
+      <MenuGroup label={t.textTab.size} list={false}>
         <Slider
           value={Math.round(settings.fontSize / FONT_SIZE_STEP)}
           min={FONT_SIZE_MIN / FONT_SIZE_STEP}
           max={FONT_SIZE_MAX / FONT_SIZE_STEP}
           onChange={(v) => update({ fontSize: v * FONT_SIZE_STEP })}
           formatValue={(v) => `${v * FONT_SIZE_STEP}`}
-          accessibilityLabel="Cỡ chữ"
+          accessibilityLabel={t.textTab.size}
           minLabel={<Text style={styles.aSmall}>A</Text>}
           maxLabel={<Text style={styles.aBig}>A</Text>}
         />
-      </GroupedSection>
+      </MenuGroup>
 
-      <GroupedSection label="Tốc độ chạy" list={false}>
+      <MenuGroup label={t.textTab.scrollSpeed} list={false}>
         <Slider
           value={settings.scrollSpeed}
           min={SPEED_MIN}
           max={SPEED_MAX}
           onChange={(scrollSpeed) => update({ scrollSpeed })}
-          minLabel="Chậm"
-          maxLabel="Nhanh"
-          accessibilityLabel="Tốc độ chạy chữ"
+          minLabel={t.common.slow}
+          maxLabel={t.common.fast}
+          accessibilityLabel={t.textTab.scrollSpeedA11y}
         />
-      </GroupedSection>
+      </MenuGroup>
 
       <HexColorSheet
         visible={hexOpen}

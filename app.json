@@ -9,7 +9,10 @@
     "userInterfaceStyle": "light",
     "ios": {
       "bundleIdentifier": "com.vuphan.cheerlight",
-      "requireFullScreen": true
+      "requireFullScreen": true,
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true
+      }
     },
     "android": {
       "package": "com.vuphan.cheerlight",
@@ -49,10 +52,25 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "CheerLight cần quyền camera để bật/nháy đèn flash. Ứng dụng không chụp hay ghi hình.",
+          "cameraPermission": "CheerLight uses the camera only to turn on and blink the flash. It never takes photos or records video.",
           "microphonePermission": false,
           "recordAudioAndroid": false,
           "barcodeScannerEnabled": false
+        }
+      ],
+      [
+        "expo-localization",
+        {
+          "supportedLocales": {
+            "ios": [
+              "en",
+              "vi"
+            ],
+            "android": [
+              "en",
+              "vi"
+            ]
+          }
         }
       ]
     ],
@@ -60,6 +78,9 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "backgroundColor": "#F2F2F7"
+    "backgroundColor": "#F2F2F7",
+    "locales": {
+      "vi": "./assets/locales/vi.json"
+    }
   }
 }

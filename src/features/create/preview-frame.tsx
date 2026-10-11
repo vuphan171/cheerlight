@@ -9,6 +9,7 @@ import { scrollPixelsPerSecond } from '@/configs/effects';
 import { fontFamilyFor } from '@/configs/fonts';
 import { RADII } from '@/configs/ui';
 import type { LightSettings } from '@/types/settings';
+import { useStrings } from '@/i18n';
 
 /**
  * Bản thu nhỏ của màn Phát (đúng tỉ lệ khung hình ngang), dùng cùng engine hiệu ứng. Cỡ chữ và tốc
@@ -16,6 +17,7 @@ import type { LightSettings } from '@/types/settings';
  * ở màn Phát hoặc tab khác) để không chạy hai đồng hồ hiệu ứng cùng lúc.
  */
 export function PreviewFrame({ settings, children }: { settings: LightSettings; children?: ReactNode }) {
+  const t = useStrings();
   const window = useWindowDimensions();
   const focused = useIsFocused();
   const landscapeWidth = Math.max(window.width, window.height);
@@ -29,7 +31,7 @@ export function PreviewFrame({ settings, children }: { settings: LightSettings; 
     <View
       style={[styles.box, { aspectRatio: landscapeWidth / landscapeHeight }]}
       onLayout={(e) => setBoxWidth(e.nativeEvent.layout.width)}
-      accessibilityLabel="Xem trước">
+      accessibilityLabel={t.create.preview}>
       <LightCanvas color={settings.backgroundColor} effect={effect} progress={progress} />
       {scale > 0 && focused ? (
         <Marquee

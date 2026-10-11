@@ -5,11 +5,12 @@ import Animated, { LinearTransition } from 'react-native-reanimated';
 
 import { Icon, type IconName } from '@/components/ui/icon';
 import { RADII, SHADOW, TYPE, UI } from '@/configs/ui';
+import { type Strings, useStrings } from '@/i18n';
 
-const TABS: Record<string, { label: string; icon: IconName; iconActive: IconName }> = {
-  index: { label: 'Mẫu', icon: 'albums-outline', iconActive: 'albums' },
-  create: { label: 'Tạo', icon: 'color-palette-outline', iconActive: 'color-palette' },
-  settings: { label: 'Cài đặt', icon: 'settings-outline', iconActive: 'settings' },
+const TABS: Record<string, { label: keyof Strings['tabs']; icon: IconName; iconActive: IconName }> = {
+  index: { label: 'presets', icon: 'albums-outline', iconActive: 'albums' },
+  create: { label: 'create', icon: 'color-palette-outline', iconActive: 'color-palette' },
+  settings: { label: 'settings', icon: 'settings-outline', iconActive: 'settings' },
 };
 
 const TRANSITION = LinearTransition.duration(220);
@@ -34,6 +35,7 @@ function useKeyboardVisible(): boolean {
  * Bấm tab Tạo luôn mở chế độ tạo mới (xoá `presetId` của chế độ Sửa).
  */
 export function FloatingTabBar({ state, navigation, insets }: BottomTabBarProps) {
+  const t = useStrings();
   const keyboardVisible = useKeyboardVisible();
   if (keyboardVisible) return null;
 
@@ -60,7 +62,7 @@ export function FloatingTabBar({ state, navigation, insets }: BottomTabBarProps)
               <Pressable
                 accessibilityRole="tab"
                 accessibilityState={{ selected: focused }}
-                accessibilityLabel={meta.label}
+                accessibilityLabel={t.tabs[meta.label]}
                 onPress={onPress}
                 style={({ pressed }) => [
                   styles.item,
@@ -74,7 +76,7 @@ export function FloatingTabBar({ state, navigation, insets }: BottomTabBarProps)
                 />
                 {focused ? (
                   <Text style={styles.label} numberOfLines={1}>
-                    {meta.label}
+                    {t.tabs[meta.label]}
                   </Text>
                 ) : null}
               </Pressable>

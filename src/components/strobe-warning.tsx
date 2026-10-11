@@ -6,6 +6,7 @@ import { Icon } from '@/components/ui/icon';
 import { UI } from '@/configs/ui';
 import { useSettings } from '@/hooks/use-settings';
 import type { EffectMode } from '@/types/settings';
+import { useStrings } from '@/i18n';
 
 /**
  * Trả về hàm chọn hiệu ứng có chặn cảnh báo động kinh do ánh sáng lần đầu chọn `strobe`,
@@ -45,21 +46,18 @@ interface StrobeWarningModalProps {
 }
 
 function StrobeWarningModal({ visible, onAccept, onCancel }: StrobeWarningModalProps) {
+  const t = useStrings();
   return (
     <ConfirmDialog
       visible={visible}
-      title="Cảnh báo động kinh do ánh sáng"
+      title={t.strobe.title}
       icon={<Icon name="warning" size={34} color={UI.danger} style={styles.icon} />}
       onRequestClose={onCancel}
       actions={[
-        { label: 'Huỷ', onPress: onCancel },
-        { label: 'Tôi hiểu, tiếp tục', onPress: onAccept, kind: 'danger' },
+        { label: t.common.cancel, onPress: onCancel },
+        { label: t.strobe.accept, onPress: onAccept, kind: 'danger' },
       ]}>
-      <Text style={styles.body}>
-        Chế độ Strobe nhấp nháy rất nhanh và có thể gây co giật ở người bị động kinh nhạy cảm với
-        ánh sáng (photosensitive epilepsy). Không dùng nếu bạn hoặc người xung quanh có tiền sử
-        động kinh. Ngừng ngay nếu thấy chóng mặt, rối loạn thị giác hoặc co giật.
-      </Text>
+      <Text style={styles.body}>{t.strobe.body}</Text>
     </ConfirmDialog>
   );
 }

@@ -9,7 +9,7 @@ import {
 } from '@/configs/colors';
 import { DEFAULT_SETTINGS } from '@/configs/defaults';
 
-const hexOf = (name: string) => PLAY_COLORS.find((c) => c.name === name)!.hex;
+const hexOf = (id: string) => PLAY_COLORS.find((c) => c.id === id)!.hex;
 
 describe('relativeLuminance', () => {
   it('đen = 0, trắng = 1', () => {
@@ -22,10 +22,10 @@ describe('relativeLuminance', () => {
 });
 
 describe('autoTextColor (tiêu chí nghiệm thu)', () => {
-  it.each(['Đỏ', 'Hồng', 'Tím', 'Xanh dương', 'Đen'])('nền %s → chữ trắng', (name) => {
+  it.each(['red', 'pink', 'purple', 'blue', 'black'])('nền %s → chữ trắng', (name) => {
     expect(autoTextColor(hexOf(name))).toBe('#FFFFFF');
   });
-  it.each(['Trắng', 'Vàng', 'Chanh', 'Xanh lá', 'Ngọc', 'Cam', 'Hồng phấn', 'Xanh trời', 'Tím nhạt'])(
+  it.each(['white', 'yellow', 'lime', 'green', 'turquoise', 'orange', 'rose', 'sky', 'lavender'])(
     'nền %s → chữ đen',
     (name) => {
       expect(autoTextColor(hexOf(name))).toBe('#000000');

@@ -2,6 +2,8 @@ import { describe, expect, it } from '@jest/globals';
 
 import { DEFAULT_PREFS, DEFAULT_SETTINGS } from '@/configs/defaults';
 import { duplicateName, PRESET_MAX, PRESET_NAME_MAX_LENGTH } from '@/configs/presets';
+import { en } from '@/i18n/en';
+import { vi } from '@/i18n/vi';
 import {
   resolveLastUsedId,
   sanitizePrefs,
@@ -81,12 +83,16 @@ describe('resolveLastUsedId', () => {
 });
 
 describe('duplicateName', () => {
-  it('thêm (bản sao), tránh trùng', () => {
+  it('thêm (copy), tránh trùng', () => {
+    const list = [preset('1', 0, 'Team'), preset('2', 0, 'Team (copy)')];
+    expect(duplicateName(list, 'Team', en)).toBe('Team (copy 2)');
+  });
+  it('tiếng Việt: (bản sao)', () => {
     const list = [preset('1', 0, 'Đội tuyển'), preset('2', 0, 'Đội tuyển (bản sao)')];
-    expect(duplicateName(list, 'Đội tuyển')).toBe('Đội tuyển (bản sao 2)');
+    expect(duplicateName(list, 'Đội tuyển', vi)).toBe('Đội tuyển (bản sao 2)');
   });
   it('không vượt quá giới hạn độ dài', () => {
     const long = 'x'.repeat(PRESET_NAME_MAX_LENGTH);
-    expect(duplicateName([], long).length).toBeLessThanOrEqual(PRESET_NAME_MAX_LENGTH);
+    expect(duplicateName([], long, en).length).toBeLessThanOrEqual(PRESET_NAME_MAX_LENGTH);
   });
 });

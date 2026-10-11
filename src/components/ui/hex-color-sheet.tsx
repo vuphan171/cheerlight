@@ -4,6 +4,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { ConfirmDialog, dialogInputStyle } from '@/components/ui/confirm-dialog';
 import { normalizeHex } from '@/configs/colors';
 import { UI } from '@/configs/ui';
+import { useStrings } from '@/i18n';
 
 interface HexColorSheetProps {
   visible: boolean;
@@ -14,6 +15,7 @@ interface HexColorSheetProps {
 
 /** Nhập mã màu hex. Báo lỗi ngay khi gõ; xem trước là giá trị hợp lệ gần nhất. */
 export function HexColorSheet({ visible, value, onSubmit, onClose }: HexColorSheetProps) {
+  const t = useStrings();
   const [text, setText] = useState(value);
   const [lastValid, setLastValid] = useState(value);
   const [wasVisible, setWasVisible] = useState(visible);
@@ -37,12 +39,12 @@ export function HexColorSheet({ visible, value, onSubmit, onClose }: HexColorShe
   return (
     <ConfirmDialog
       visible={visible}
-      title="Màu tuỳ chỉnh"
+      title={t.color.custom}
       onRequestClose={onClose}
       actions={[
-        { label: 'Huỷ', onPress: onClose },
+        { label: t.common.cancel, onPress: onClose },
         {
-          label: 'Dùng màu',
+          label: t.color.use,
           kind: 'primary',
           disabled: normalized === null,
           onPress: () => {
@@ -64,11 +66,11 @@ export function HexColorSheet({ visible, value, onSubmit, onClose }: HexColorShe
           returnKeyType="done"
           onSubmitEditing={() => normalized && onSubmit(normalized)}
           style={[dialogInputStyle, styles.input, invalid && styles.inputInvalid]}
-          accessibilityLabel="Mã màu hex"
+          accessibilityLabel={t.color.hexA11y}
         />
       </View>
       <Text style={[styles.hint, invalid && styles.error]}>
-        {invalid ? 'Mã không hợp lệ. Dùng dạng #RGB hoặc #RRGGBB.' : 'Ví dụ: #FF2FD6 hoặc #F2D'}
+        {invalid ? t.color.hexInvalid : t.color.hexExample}
       </Text>
     </ConfirmDialog>
   );

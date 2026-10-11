@@ -3,13 +3,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ColorTab } from '@/components/create/color-tab';
-import { EffectTab } from '@/components/create/effect-tab';
-import { FlashTab } from '@/components/create/flash-tab';
-import { TextTab } from '@/components/create/text-tab';
+import { ColorTab } from '@/features/create/color-tab';
+import { EffectTab } from '@/features/create/effect-tab';
+import { FlashTab } from '@/features/create/flash-tab';
+import { TextTab } from '@/features/create/text-tab';
 import { EFFECT_META } from '@/components/effect-meta';
 import { NameDialog } from '@/components/name-dialog';
-import { PreviewFrame } from '@/components/preview-frame';
+import { PreviewFrame } from '@/features/create/preview-frame';
 import { useEffectChooser } from '@/components/strobe-warning';
 import { Icon } from '@/components/ui/icon';
 import { NavBar } from '@/components/ui/nav-bar';
@@ -21,20 +21,17 @@ import { GROUP_GAP, SPACING, TAB_BAR_CLEARANCE, UI } from '@/configs/ui';
 import { usePlay } from '@/hooks/use-play';
 import { useSettings } from '@/hooks/use-settings';
 import type { LightSettings } from '@/types/settings';
+import { useStrings } from '@/i18n';
 
 type SubTab = 'color' | 'effect' | 'text' | 'flash';
 
-const SUB_TABS: readonly { value: SubTab; label: string }[] = [
-  { value: 'color', label: 'Màu' },
-  { value: 'effect', label: 'Hiệu ứng' },
-  { value: 'text', label: 'Chữ' },
-  { value: 'flash', label: 'Flash' },
-];
+const SUB_TABS: readonly SubTab[] = ['color', 'effect', 'text', 'flash'];
 
 // Nhớ tab con đang chọn trong lúc mở app (không lưu xuống đĩa).
 let lastSubTab: SubTab = 'color';
 
 export default function CreateScreen() {
+  const t = useStrings();
   const { presetId } = useLocalSearchParams<{ presetId?: string }>();
   const { draft, updateDraft, resetDraft, presets, createPreset, updatePresetSettings, deletePreset } =
     useSettings();
@@ -74,12 +71,12 @@ export default function CreateScreen() {
 
   const reset = () => {
     Alert.alert(
-      'Đặt lại',
-      editing ? 'Bỏ các thay đổi chưa lưu của mẫu này?' : 'Đưa bản nháp về cài đặt mặc định?',
+      t.create.reset,
+      editing ? t.create.resetEditing : t.create.resetDraft,
       [
-        { text: 'Huỷ', style: 'cancel' },
+        { text: t.common.cancel, style: 'cancel' },
         {
-          text: 'Đặt lại',
+          text: t.create.reset,
           style: 'destructive',
           onPress: () => (editing ? setBuffer(editing.settings) : resetDraft()),
         },
@@ -98,10 +95,10 @@ export default function CreateScreen() {
 
   const confirmDelete = () => {
     if (!editing) return;
-    Alert.alert('Xoá mẫu', `Xoá mẫu "${editing.name}"? Không thể hoàn tác.`, [
-      { text: 'Huỷ', style: 'cancel' },
+    Alert.alert(t.presets.deletePreset, t.presets.deleteConfirm(editing.name), [
+      { text: t.common.cancel, style: 'cancel' },
       {
-        text: 'Xoá',
+        text: t.common.delete,
         style: 'destructive',
         onPress: () => {
           deletePreset(editing.id);
@@ -114,25 +111,29 @@ export default function CreateScreen() {
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
       <NavBar
-        title={editing ? `Sửa · ${editing.name}` : 'Tạo mẫu'}
-        left={{ label: 'Đặt lại', onPress: reset }}
-        right={{ label: 'Lưu', onPress: save, bold: true }}
+        title={editing ? t.create.editTitle(editing.name) : t.create.title}
+        left={{ label: t.create.reset, onPress: reset }}
+        right={{ label: t.common.save, onPress: save, bold: true }}
       />
 
       <View style={styles.fixed}>
         <PreviewFrame settings={settings}>
           <View style={styles.effectBadge} pointerEvents="none">
             <Icon name={EFFECT_META[settings.effect].icon} size={13} color="#FFFFFF" />
-            <Text style={styles.effectBadgeLabel}>{effectLabel(settings.effect)}</Text>
+            <Text style={styles.effectBadgeLabel}>{effectLabel(settings.effect, t)}</Text>
           </View>
           <View style={styles.play}>
             <PlayButton
               onPress={() => play(settings, editing?.id)}
-              accessibilityLabel={editing ? `Phát thử ${editing.name}` : 'Phát thử bản nháp'}
+              accessibilityLabel={editing ? t.create.playEditingA11y(editing.name) : t.create.playDraftA11y}
             />
           </View>
         </PreviewFrame>
-        <SegmentedControl options={SUB_TABS} value={subTab} onChange={selectSubTab} />
+        <SegmentedControl
+          options={SUB_TABS.map((value) => ({ value, label: t.create.subTabs[value] }))}
+          value={subTab}
+          onChange={selectSubTab}
+        />
       </View>
 
       <ScrollView
@@ -152,21 +153,21 @@ export default function CreateScreen() {
             accessibilityRole="button"
             style={({ pressed }) => [styles.deleteButton, pressed && styles.deletePressed]}>
             <Icon name="trash-outline" size={20} color={UI.danger} />
-            <Text style={styles.deleteLabel}>Xoá mẫu này</Text>
+            <Text style={styles.deleteLabel}>{t.create.deleteThis}</Text>
           </Pressable>
         ) : null}
       </ScrollView>
 
       <NameDialog
         visible={naming}
-        title="Lưu thành mẫu"
-        initialName={suggestPresetName(presets)}
-        confirmLabel={(name) => (findPresetByName(presets, name) ? 'Ghi đè' : 'Lưu')}
+        title={t.create.saveAs}
+        initialName={suggestPresetName(presets, t)}
+        confirmLabel={(name) => (findPresetByName(presets, name) ? t.create.overwrite : t.common.save)}
         validate={(name) => {
           const existing = findPresetByName(presets, name);
-          if (existing) return { hint: `Đã có mẫu “${existing.name}”, sẽ được ghi đè bằng cài đặt này.` };
+          if (existing) return { hint: t.create.overwriteHint(existing.name) };
           if (presets.length >= PRESET_MAX) {
-            return { error: `Đã đủ ${PRESET_MAX} mẫu. Nhập trùng tên để ghi đè, hoặc xoá bớt.` };
+            return { error: t.create.fullError(PRESET_MAX) };
           }
           return {};
         }}
