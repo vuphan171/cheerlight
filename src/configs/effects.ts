@@ -64,6 +64,7 @@ export function scrollPixelsPerSecond(scrollSpeed: number): number {
 
 export const FONT_SIZE_MIN = 40;
 export const FONT_SIZE_MAX = 240;
+export const FONT_SIZE_STEP = 20;
 
 export type TorchPlan =
   | { kind: 'off' }

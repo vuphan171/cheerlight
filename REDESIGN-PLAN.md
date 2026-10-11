@@ -1,5 +1,9 @@
 # REDESIGN-PLAN.md — CheerLight 2.0 (triển khai)
 
+> **Trạng thái (2026-10-11):** đã code xong P0–P5 và phần code của P6 trên nhánh `redesign-v2`, theo
+> đề xuất ở mục 9 (D1–D6). Icon dùng font Ionicons tự nạp thay vì thư viện (lý do trong `NOTES.md`).
+> Phần test thủ công/máy thật còn lại nằm trong checklist "Redesign 2.0" của `NOTES.md`.
+
 > Kế hoạch code cho bản redesign, bám theo đặc tả thiết kế "CheerLight 2.0 — Kế hoạch triển khai redesign"
 > (gọi tắt là **Spec**). Tài liệu này ánh xạ Spec vào code **đang có** trong `src/`, chốt các chỗ Spec
 > và code lệch nhau, và chia việc theo phase. Làm tuần tự. Mỗi phase phải pass `npx tsc --noEmit` và

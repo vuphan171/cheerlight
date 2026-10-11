@@ -5,15 +5,17 @@ import { AppState, Platform } from 'react-native';
 
 /**
  * Đặt độ sáng màn hình của app về tối đa khi màn hình đang focus, khôi phục khi rời đi.
+ * `enabled = false` (tắt "Độ sáng tối đa" trong Cài đặt) thì không làm gì.
  *
  * - Android: chỉ đổi brightness của window (activity) hiện tại, không cần quyền WRITE_SETTINGS.
  *   Khôi phục bằng `restoreSystemBrightnessAsync` để window quay về dùng brightness hệ thống.
  * - iOS: `setBrightnessAsync` đổi độ sáng màn hình và giữ nguyên cả khi app vào background,
  *   nên phải khôi phục giá trị cũ khi app rời foreground và đặt lại tối đa khi quay về.
  */
-export function useMaxBrightness(): void {
+export function useMaxBrightness(enabled = true): void {
   useFocusEffect(
     useCallback(() => {
+      if (!enabled) return;
       let saved: number | null = null;
       let boosted = false;
       let disposed = false;
@@ -60,6 +62,6 @@ export function useMaxBrightness(): void {
         sub.remove();
         void restore();
       };
-    }, []),
+    }, [enabled]),
   );
 }

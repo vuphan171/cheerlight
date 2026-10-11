@@ -1,35 +1,71 @@
 import { createContext, useContext } from 'react';
 
-import { DEFAULT_SETTINGS } from '@/configs/defaults';
-import type { LightSettings, Preset } from '@/types/settings';
+import { DEFAULT_PREFS, DEFAULT_SETTINGS } from '@/configs/defaults';
+import type { AppPrefs, LightSettings, Preset } from '@/types/settings';
+
+export type RenameResult = 'ok' | 'duplicate' | 'empty';
 
 export interface SettingsContextValue {
-  settings: LightSettings;
-  updateSettings: (patch: Partial<LightSettings>) => void;
   loaded: boolean;
+
+  /** Bản nháp ở tab Tạo (chế độ tạo mới). Được lưu lại giữa các lần mở app. */
+  draft: LightSettings;
+  updateDraft: (patch: Partial<LightSettings>) => void;
+  resetDraft: () => void;
+
+  presets: Preset[];
+  /** Tạo mẫu mới; trùng tên (không phân biệt hoa thường) thì ghi đè mẫu đó. Trả về id, hoặc `null` khi đã đủ mẫu. */
+  createPreset: (name: string, settings: LightSettings) => string | null;
+  /** Ghi đè cài đặt của mẫu đang sửa. */
+  updatePresetSettings: (id: string, settings: LightSettings) => void;
+  renamePreset: (id: string, name: string) => RenameResult;
+  /** Trả về `false` khi đã đủ mẫu. */
+  duplicatePreset: (id: string) => boolean;
+  deletePreset: (id: string) => void;
+  /** Mẫu cho thẻ "Dùng gần nhất". */
+  lastUsedPresetId: string | undefined;
+
+  /** Cài đặt màn Phát đang chạy (chỉ trong RAM, không ghi đè bản nháp). */
+  nowPlaying: LightSettings | null;
+  play: (settings: LightSettings, presetId?: string) => void;
+
+  prefs: AppPrefs;
+  updatePrefs: (patch: Partial<AppPrefs>) => void;
+
   /** Người dùng đã đồng ý cảnh báo động kinh do ánh sáng (strobe). */
   strobeAccepted: boolean;
   acceptStrobe: () => void;
+  /** "Hiện lại cảnh báo Strobe" ở tab Cài đặt. */
+  resetStrobeWarning: () => void;
+
   /** `false` khi đã biết máy không dùng được camera/flash (CameraView báo lỗi mount). */
   torchAvailable: boolean;
   markTorchUnavailable: () => void;
-  presets: Preset[];
-  /** Lưu cài đặt hiện tại thành mẫu; trùng tên (không phân biệt hoa thường) thì ghi đè mẫu đó. */
-  savePreset: (name: string) => void;
-  deletePreset: (id: string) => void;
 }
 
+const noop = () => {};
+
 export const SettingsContext = createContext<SettingsContextValue>({
-  settings: DEFAULT_SETTINGS,
-  updateSettings: () => {},
   loaded: false,
-  strobeAccepted: false,
-  acceptStrobe: () => {},
-  torchAvailable: true,
-  markTorchUnavailable: () => {},
+  draft: DEFAULT_SETTINGS,
+  updateDraft: noop,
+  resetDraft: noop,
   presets: [],
-  savePreset: () => {},
-  deletePreset: () => {},
+  createPreset: () => null,
+  updatePresetSettings: noop,
+  renamePreset: () => 'empty',
+  duplicatePreset: () => false,
+  deletePreset: noop,
+  lastUsedPresetId: undefined,
+  nowPlaying: null,
+  play: noop,
+  prefs: DEFAULT_PREFS,
+  updatePrefs: noop,
+  strobeAccepted: false,
+  acceptStrobe: noop,
+  resetStrobeWarning: noop,
+  torchAvailable: true,
+  markTorchUnavailable: noop,
 });
 
 export function useSettings(): SettingsContextValue {

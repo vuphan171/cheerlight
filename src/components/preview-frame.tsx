@@ -1,52 +1,51 @@
-import { useState } from 'react';
+import { useIsFocused } from 'expo-router';
+import { type ReactNode, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { LightCanvas, useEffectClock } from '@/components/light-canvas';
 import { Marquee } from '@/components/marquee';
+import { resolveTextColor } from '@/configs/colors';
 import { scrollPixelsPerSecond } from '@/configs/effects';
 import { fontFamilyFor } from '@/configs/fonts';
-import { RADIUS, UI } from '@/configs/ui';
+import { RADII } from '@/configs/ui';
 import type { LightSettings } from '@/types/settings';
 
 /**
- * Bản thu nhỏ của màn hình `display` (đúng tỉ lệ khung hình ngang). Cỡ chữ và tốc độ chạy chữ
- * được nhân cùng tỉ lệ để nhìn giống hệt khi chạy thật.
+ * Bản thu nhỏ của màn Phát (đúng tỉ lệ khung hình ngang), dùng cùng engine hiệu ứng. Cỡ chữ và tốc
+ * độ chạy chữ được nhân cùng tỉ lệ để nhìn giống hệt khi phát. Dừng khi màn hình không focus (đang
+ * ở màn Phát hoặc tab khác) để không chạy hai đồng hồ hiệu ứng cùng lúc.
  */
-export function EffectPreview({ settings }: { settings: LightSettings }) {
+export function PreviewFrame({ settings, children }: { settings: LightSettings; children?: ReactNode }) {
   const window = useWindowDimensions();
+  const focused = useIsFocused();
   const landscapeWidth = Math.max(window.width, window.height);
   const landscapeHeight = Math.min(window.width, window.height);
   const [boxWidth, setBoxWidth] = useState(0);
   const scale = boxWidth > 0 ? boxWidth / landscapeWidth : 0;
-  const progress = useEffectClock(settings.effect, settings.speed);
+  const effect = focused ? settings.effect : 'solid';
+  const progress = useEffectClock(effect, settings.speed);
 
   return (
     <View
       style={[styles.box, { aspectRatio: landscapeWidth / landscapeHeight }]}
       onLayout={(e) => setBoxWidth(e.nativeEvent.layout.width)}
-      accessibilityLabel="Xem trước hiệu ứng">
-      <LightCanvas color={settings.backgroundColor} effect={settings.effect} progress={progress} />
-      {scale > 0 ? (
+      accessibilityLabel="Xem trước">
+      <LightCanvas color={settings.backgroundColor} effect={effect} progress={progress} />
+      {scale > 0 && focused ? (
         <Marquee
           text={settings.text}
-          color={settings.textColor}
+          color={resolveTextColor(settings)}
           fontSize={settings.fontSize * scale}
           fontFamily={fontFamilyFor(settings.textFont)}
           pixelsPerSecond={scrollPixelsPerSecond(settings.scrollSpeed) * scale}
           direction={settings.scrollDirection}
         />
       ) : null}
+      {children}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  box: {
-    width: '100%',
-    borderRadius: RADIUS,
-    overflow: 'hidden',
-    backgroundColor: '#000',
-    borderWidth: 1,
-    borderColor: UI.border,
-  },
+  box: { width: '100%', borderRadius: RADII.preview, overflow: 'hidden', backgroundColor: '#000' },
 });

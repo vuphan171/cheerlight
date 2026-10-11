@@ -224,3 +224,44 @@ chạy rainbow + chữ chạy thu nhỏ.
   `adb shell pm grant` (hoặc trong Cài đặt của Expo Go) **không** làm app thấy `granted`. Bản
   development/production build không có lớp này. Muốn reset: `adb shell pm clear host.exp.exponent`.
 - Nút "Mở Cài đặt" trong Expo Go mở trang App info của **Expo Go**, không phải của CheerLight.
+
+## Redesign 2.0 (xem `REDESIGN-PLAN.md`)
+
+Đã chốt theo đề xuất ở mục 9 của kế hoạch:
+
+- **D1**: phát một mẫu không ghi đè bản nháp. Provider có `nowPlaying` riêng (chỉ trong RAM);
+  `draft` (key `cheerlight:settings:v1` cũ) là bản nháp tab Tạo. Chế độ Sửa chỉnh trên bản sao cục bộ.
+- **D2**: giữ nhiều key AsyncStorage, thêm `lastUsedPresetId:v1`, `prefs:v1`. Migration nằm trong
+  `sanitize.ts` (`textColorMode` suy ra từ màu chữ cũ, `updatedAt` cho mẫu cũ) và có unit test.
+- **D3 — icon**: docs Expo SDK 57 ghi `@expo/vector-icons` sắp bị khai tử. Gói thay thế
+  `@react-native-vector-icons/ionicons` có podspec và config plugin sửa `Info.plist` (thay đổi native),
+  nên **không dùng**. Thay vào đó chép `Ionicons.ttf` (MIT) vào `assets/fonts`, nạp bằng `useFonts`
+  như font LED, và vẽ bằng `components/ui/icon.tsx` (bảng mã glyph chỉ gồm icon app dùng). Không có
+  thay đổi native.
+- **D5**: giữ slider "Tốc độ chạy" ở tab con Chữ.
+- **D6**: Lưu ở chế độ Sửa (và lưu mẫu mới) xong thì về tab Mẫu.
+- Gradient Cầu vồng và vòng "＋ màu khác" là PNG tĩnh (`assets/images/rainbow.png`,
+  `color-ring.png`), sinh bằng script Python thuần, không thêm `expo-linear-gradient`.
+- Strobe: màn Phát không còn chọn hiệu ứng nên không tự cảnh báo. `usePlay()` hiện cảnh báo
+  **trước khi** mở màn Phát nếu mẫu/bản nháp là Strobe mà chưa đồng ý (vd. sau "Hiện lại cảnh báo").
+- Unit test: thêm `jest` + `jest-expo` (devDependency, thuần JS). `npm test`.
+- `StyleSheet.absoluteFillObject` không còn trong RN 0.86, dùng `StyleSheet.absoluteFill`.
+
+### Redesign 2.0 (test thủ công)
+
+Đã kiểm tra trên iOS Simulator (iPhone 17 Pro, Expo Go SDK 57): app mở vào tab Mẫu (trạng thái
+trống), tab Tạo (xem trước, lưới màu), tab Cài đặt, và màn Phát (ngang, chữ chạy). Dữ liệu bản nháp
+cũ được giữ. Các mục dưới đây **chưa** test (cần chạm thật / máy thật):
+
+- [ ] Lưu mẫu từ tab Tạo → xuất hiện ở tab Mẫu, thẻ "Dùng gần nhất" cập nhật sau khi phát.
+- [ ] Menu ⋯ và nhấn giữ ô mẫu: Sửa / Đổi tên (trùng tên báo lỗi) / Nhân bản (chặn khi đủ 20) / Xoá.
+- [ ] Sửa → Xoá mẫu này → về tab Mẫu; nếu là mẫu gần nhất thì thẻ chuyển sang mẫu khác hoặc ẩn.
+- [ ] Đủ 20 mẫu: nút "Mẫu mới" mờ, thấy ngay không cần cuộn.
+- [ ] Màu chữ Tự động / cố định; đổi màu nền không đổi màu chữ cố định.
+- [ ] "Hiện lại cảnh báo Strobe" → phát mẫu Strobe từ tab Mẫu hiện cảnh báo trước.
+- [ ] Màn Phát: chạm hiện Thoát / Khoá, tự ẩn theo Cài đặt; khoá → chạm, Back Android, vuốt iOS
+      không thoát; nhấn giữ nhãn khoá 600 ms mở khoá; gợi ý "chạm để mở" 2 giây.
+- [ ] Android: thanh tab ẩn khi bàn phím mở ở tab con Chữ; Switch/Alert theo Material.
+- [ ] Máy thật: flash (nhãn ⚡ Flash ở màn Phát), tắt "Độ sáng tối đa" thì không đổi độ sáng.
+- [ ] VoiceOver/TalkBack đọc được nhãn tab, ô màu, slider; cỡ chữ lớn không vỡ layout.
+- [ ] `npx expo prebuild --clean` (thư mục tạm) không có thay đổi native ngoài splash.

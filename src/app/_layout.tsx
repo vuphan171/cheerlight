@@ -11,8 +11,8 @@ import { useSettings } from '@/hooks/use-settings';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
-// Mở thẳng `display` qua deep link thì vẫn có `index` bên dưới để quay lại.
-export const unstable_settings = { anchor: 'index' };
+// Mở thẳng `display` qua deep link thì vẫn có các tab bên dưới để quay lại.
+export const unstable_settings = { anchor: '(tabs)' };
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(FONT_ASSETS);
@@ -41,18 +41,12 @@ function AppNavigator({ fontsReady }: { fontsReady: boolean }) {
 
   return (
     <>
-      <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: UI.background },
-          headerTintColor: UI.text,
-          contentStyle: { backgroundColor: UI.background },
-        }}>
-        <Stack.Screen name="index" options={{ title: 'CheerLight' }} />
+      <StatusBar style="dark" />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: UI.bg } }}>
+        <Stack.Screen name="(tabs)" />
         <Stack.Screen
           name="display"
           options={{
-            headerShown: false,
             animation: 'fade',
             autoHideHomeIndicator: true,
             contentStyle: { backgroundColor: '#000' },

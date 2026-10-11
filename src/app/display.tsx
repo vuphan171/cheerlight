@@ -1,52 +1,113 @@
+import { useCameraPermissions } from 'expo-camera';
 import { useKeepAwake } from 'expo-keep-awake';
 import { NavigationBar } from 'expo-navigation-bar';
-import { router, useIsFocused } from 'expo-router';
+import { router, useIsFocused, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { BackHandler, Pressable, StyleSheet } from 'react-native';
 
-import { DisplayControls } from '@/components/display-controls';
+import { DisplayOverlay } from '@/components/display-overlay';
 import { LightCanvas, useEffectClock } from '@/components/light-canvas';
 import { Marquee } from '@/components/marquee';
 import { TorchController } from '@/components/torch-controller';
-import { scrollPixelsPerSecond } from '@/configs/effects';
+import { resolveTextColor } from '@/configs/colors';
+import { scrollPixelsPerSecond, torchPlan } from '@/configs/effects';
 import { fontFamilyFor } from '@/configs/fonts';
 import { useLandscape } from '@/hooks/use-landscape';
 import { useMaxBrightness } from '@/hooks/use-max-brightness';
 import { useSettings } from '@/hooks/use-settings';
 
+const HINT_MS = 2000;
+
+/** Bật `true` rồi tự về `false` sau `ms` kể từ lần `show()` gần nhất. */
+function useTransient(ms: number, initial = false) {
+  const [state, setState] = useState({ visible: initial, key: 0 });
+  useEffect(() => {
+    if (!state.visible) return;
+    const timer = setTimeout(() => setState((s) => ({ ...s, visible: false })), ms);
+    return () => clearTimeout(timer);
+  }, [state, ms]);
+  return {
+    visible: state.visible,
+    show: () => setState((s) => ({ visible: true, key: s.key + 1 })),
+    hide: () => setState((s) => ({ ...s, visible: false })),
+  };
+}
+
 export default function DisplayScreen() {
   useKeepAwake();
   useLandscape();
-  useMaxBrightness();
-  const { settings, markTorchUnavailable } = useSettings();
-  // Chỉ ẩn thanh hệ thống khi màn hình đang focus (có thể còn mount phía dưới stack).
+  const { nowPlaying, presets, lastUsedPresetId, draft, prefs, torchAvailable, markTorchUnavailable } =
+    useSettings();
+  useMaxBrightness(prefs.maxBrightness);
+  const navigation = useNavigation();
+  const [permission] = useCameraPermissions();
+  // Chỉ ẩn thanh hệ thống khi màn hình đang focus.
   const focused = useIsFocused();
+
+  // Mở thẳng qua deep link (chưa có nowPlaying) → mẫu dùng gần nhất, không có thì bản nháp.
+  const settings = nowPlaying ?? presets.find((p) => p.id === lastUsedPresetId)?.settings ?? draft;
   const progress = useEffectClock(settings.effect, settings.speed);
 
-  // Thanh điều khiển nổi: chạm màn hình để ẩn/hiện, tự ẩn sau 3 giây không tương tác.
-  // Hiện sẵn lúc mới vào để người dùng biết là có.
-  const [controlsVisible, setControlsVisible] = useState(true);
-  const [interactionKey, setInteractionKey] = useState(0);
-  const hideControls = useCallback(() => setControlsVisible(false), []);
-  const bumpInteraction = useCallback(() => setInteractionKey((k) => k + 1), []);
-  const toggleControls = () => {
-    setControlsVisible((v) => !v);
-    bumpInteraction();
+  const controls = useTransient(prefs.autoHideMs);
+  const lockHint = useTransient(HINT_MS);
+  const tapHint = useTransient(HINT_MS, prefs.showTapHint);
+  const [locked, setLocked] = useState(false);
+
+  // Đã khoá: tắt vuốt quay lại (iOS) và chặn nút Back (Android).
+  useEffect(() => {
+    navigation.setOptions({ gestureEnabled: !locked });
+  }, [navigation, locked]);
+
+  useEffect(() => {
+    if (!locked) return;
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      lockHint.show();
+      return true;
+    });
+    return () => sub.remove();
+  }, [locked, lockHint]);
+
+  const onTap = () => {
+    tapHint.hide();
+    if (locked) {
+      if (lockHint.visible) lockHint.hide();
+      else lockHint.show();
+    } else if (controls.visible) {
+      controls.hide();
+    } else {
+      controls.show();
+    }
   };
+
+  const lock = () => {
+    controls.hide();
+    setLocked(true);
+    lockHint.show();
+  };
+
+  const unlock = () => {
+    setLocked(false);
+    lockHint.hide();
+    controls.show();
+  };
+
+  const exit = () => (router.canGoBack() ? router.back() : router.replace('/'));
+
+  const flashOn = torchAvailable && permission?.granted === true && torchPlan(settings).kind !== 'off';
 
   return (
     <Pressable
       style={styles.container}
-      onPress={toggleControls}
-      accessibilityLabel="Chạm để hiện thanh điều khiển"
-      accessibilityHint="Thanh điều khiển tự ẩn sau 3 giây">
+      onPress={onTap}
+      accessibilityLabel={locked ? 'Màn hình đã khoá' : 'Chạm để hiện điều khiển'}
+      accessibilityHint={locked ? 'Nhấn giữ nhãn khoá để mở' : undefined}>
       <StatusBar hidden={focused} style="light" />
       <NavigationBar hidden={focused} />
       <LightCanvas color={settings.backgroundColor} effect={settings.effect} progress={progress} />
       <Marquee
         text={settings.text}
-        color={settings.textColor}
+        color={resolveTextColor(settings)}
         fontSize={settings.fontSize}
         fontFamily={fontFamilyFor(settings.textFont)}
         pixelsPerSecond={scrollPixelsPerSecond(settings.scrollSpeed)}
@@ -55,15 +116,19 @@ export default function DisplayScreen() {
       <TorchController
         settings={settings}
         progress={progress}
-        active={focused}
+        // Máy đã báo không dùng được camera → không mount CameraView nữa.
+        active={focused && torchAvailable}
         onUnavailable={markTorchUnavailable}
       />
-      <DisplayControls
-        visible={controlsVisible}
-        interactionKey={interactionKey}
-        onInteract={bumpInteraction}
-        onHide={hideControls}
-        onBack={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+      <DisplayOverlay
+        controlsVisible={controls.visible}
+        locked={locked}
+        lockHintVisible={lockHint.visible}
+        tapHintVisible={tapHint.visible}
+        flashOn={flashOn}
+        onExit={exit}
+        onLock={lock}
+        onUnlock={unlock}
       />
     </Pressable>
   );
