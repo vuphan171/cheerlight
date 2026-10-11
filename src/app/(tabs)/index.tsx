@@ -1,20 +1,28 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { NameDialog } from '@/components/name-dialog';
-import { PresetTile } from '@/features/presets/preset-tile';
-import { RecentPresetCard } from '@/features/presets/recent-preset-card';
 import { ContextMenu, type MenuAnchor } from '@/components/ui/context-menu';
 import { Icon } from '@/components/ui/icon';
 import { LargeTitle } from '@/components/ui/large-title';
 import { findPresetByName, PRESET_MAX } from '@/configs/presets';
 import { SPACING, TAB_BAR_CLEARANCE, TYPE, UI } from '@/configs/ui';
+import { PresetTile } from '@/features/presets/preset-tile';
+import { RecentPresetCard } from '@/features/presets/recent-preset-card';
 import { usePlay } from '@/hooks/use-play';
 import { useSettings } from '@/hooks/use-settings';
+import { useStrings, type Strings } from '@/i18n';
 import type { Preset } from '@/types/settings';
-import { type Strings, useStrings } from '@/i18n';
 
 const GRID_GAP = 12;
 
@@ -45,9 +53,14 @@ export default function PresetsScreen() {
         {
           label: t.presets.edit,
           icon: 'color-palette-outline' as const,
-          onPress: () => router.navigate({ pathname: '/create', params: { presetId: menu.preset.id } }),
+          onPress: () =>
+            router.navigate({ pathname: '/create', params: { presetId: menu.preset.id } }),
         },
-        { label: t.presets.rename, icon: 'pencil' as const, onPress: () => setRenaming(menu.preset) },
+        {
+          label: t.presets.rename,
+          icon: 'pencil' as const,
+          onPress: () => setRenaming(menu.preset),
+        },
         {
           label: t.presets.duplicate,
           icon: 'copy-outline' as const,
@@ -84,21 +97,19 @@ export default function PresetsScreen() {
 
             <View style={styles.headerRow}>
               <View style={styles.headerTitle}>
-                <Text style={styles.sectionTitle} accessibilityRole="header">
-                  {t.presets.all}
-                </Text>
-                <Text style={styles.count} accessibilityLabel={t.presets.countA11y(presets.length, PRESET_MAX)}>
+                <Text style={styles.sectionTitle}>{t.presets.all}</Text>
+                <Text style={styles.count}>
                   {presets.length}/{PRESET_MAX}
                 </Text>
               </View>
               <Pressable
                 onPress={newPreset}
                 disabled={full}
-                accessibilityRole="button"
-                accessibilityLabel={t.presets.new}
-                accessibilityHint={full ? t.presets.fullHint(PRESET_MAX) : undefined}
-                accessibilityState={{ disabled: full }}
-                style={({ pressed }) => [styles.newButton, pressed && styles.newButtonPressed, full && styles.disabled]}>
+                style={({ pressed }) => [
+                  styles.newButton,
+                  pressed && styles.newButtonPressed,
+                  full && styles.disabled,
+                ]}>
                 <Icon name="add" size={18} color={UI.onAccent} />
                 <Text style={styles.newLabel}>{t.presets.new}</Text>
               </Pressable>
@@ -128,7 +139,9 @@ export default function PresetsScreen() {
         confirmLabel={() => t.common.save}
         validate={(name) => {
           const clash = findPresetByName(presets, name);
-          return clash && clash.id !== renaming?.id ? { error: t.presets.nameTaken(clash.name) } : {};
+          return clash && clash.id !== renaming?.id
+            ? { error: t.presets.nameTaken(clash.name) }
+            : {};
         }}
         onCancel={() => setRenaming(null)}
         onSubmit={(name) => {
@@ -150,8 +163,11 @@ function EmptyState({ t, onCreate }: { t: Strings; onCreate: () => void }) {
       <Text style={styles.emptyBody}>{t.presets.emptyBody}</Text>
       <Pressable
         onPress={onCreate}
-        accessibilityRole="button"
-        style={({ pressed }) => [styles.newButton, styles.emptyButton, pressed && styles.newButtonPressed]}>
+        style={({ pressed }) => [
+          styles.newButton,
+          styles.emptyButton,
+          pressed && styles.newButtonPressed,
+        ]}>
         <Icon name="add" size={18} color={UI.onAccent} />
         <Text style={styles.newLabel}>{t.presets.createFirst}</Text>
       </Pressable>
@@ -163,7 +179,12 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: UI.bg },
   content: { paddingHorizontal: SPACING, paddingBottom: TAB_BAR_CLEARANCE },
   body: { gap: 22 },
-  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexShrink: 0,
+  },
   headerTitle: { flexDirection: 'row', alignItems: 'baseline', gap: 8, flexShrink: 1 },
   sectionTitle: TYPE.sectionTitle,
   count: { fontSize: 15, color: UI.secondary, fontVariant: ['tabular-nums'] },

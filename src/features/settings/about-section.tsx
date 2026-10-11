@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 
-import { MenuGroup } from '@/components/ui/menu-group';
-import { MenuItem } from '@/components/ui/menu-item';
+import { MenuGroup } from '@/components/ui/menu/menu-group';
+import { MenuInfo } from '@/components/ui/menu/menu-info';
 import { useStrings } from '@/i18n';
 
 /** Nhóm cuối: phiên bản app và font. */
@@ -10,8 +10,8 @@ const AboutSection = () => {
 
   return (
     <MenuGroup>
-      <MenuItem title={t.settings.version} value={Constants.expoConfig?.version ?? '—'} />
-      <MenuItem title={t.settings.ledFont} value="Tiny5 · OFL" last />
+      <MenuInfo title={t.settings.version} value={Constants.expoConfig?.version ?? '—'} />
+      <MenuInfo title={t.settings.ledFont} value="Tiny5 · OFL" />
     </MenuGroup>
   );
 };

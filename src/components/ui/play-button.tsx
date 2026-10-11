@@ -2,15 +2,11 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { Icon } from '@/components/ui/icon';
 import { SHADOW, UI } from '@/configs/ui';
-import { useStrings } from '@/i18n';
 
 /** Kiểu nút Phát duy nhất trong app: tròn trắng 48, icon ▶ accent. */
-export function PlayButton({ onPress, accessibilityLabel }: { onPress: () => void; accessibilityLabel?: string }) {
-  const t = useStrings();
+export function PlayButton({ onPress }: { onPress: () => void }) {
   return (
     <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel ?? t.common.play}
       onPress={onPress}
       hitSlop={6}
       style={({ pressed }) => [styles.button, SHADOW.floating, pressed && styles.pressed]}>

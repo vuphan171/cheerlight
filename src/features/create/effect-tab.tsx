@@ -1,12 +1,12 @@
-import type { EditorTabProps } from '@/features/create/types';
 import { EFFECT_META } from '@/components/effect-meta';
-import { MenuGroup } from '@/components/ui/menu-group';
-import { MenuItem } from '@/components/ui/menu-item';
+import { MenuGroup } from '@/components/ui/menu/menu-group';
+import { MenuOption } from '@/components/ui/menu/menu-option';
 import { Slider } from '@/components/ui/slider';
 import { EFFECTS, SPEED_MAX, SPEED_MIN } from '@/configs/effects';
 import { UI } from '@/configs/ui';
-import type { EffectMode } from '@/types/settings';
+import type { EditorTabProps } from '@/features/create/types';
 import { useStrings } from '@/i18n';
+import type { EffectMode } from '@/types/settings';
 
 interface EffectTabProps extends EditorTabProps {
   /** Chọn hiệu ứng qua `useEffectChooser` (chặn cảnh báo Strobe lần đầu). */
@@ -18,19 +18,17 @@ export function EffectTab({ settings, update, chooseEffect }: EffectTabProps) {
   return (
     <>
       <MenuGroup label={t.effectTab.effect}>
-        {EFFECTS.map((mode, i) => {
+        {EFFECTS.map((mode) => {
           const meta = EFFECT_META[mode];
           return (
-            <MenuItem
+            <MenuOption
               key={mode}
               title={t.effects[mode].label}
               subtitle={t.effects[mode].description}
               subtitleColor={mode === 'strobe' ? UI.danger : undefined}
               icon={{ name: meta.icon, color: meta.color }}
-              checked={settings.effect === mode}
-              accessibilityRole="radio"
+              selected={settings.effect === mode}
               onPress={() => chooseEffect(mode)}
-              last={i === EFFECTS.length - 1}
             />
           );
         })}
@@ -44,7 +42,6 @@ export function EffectTab({ settings, update, chooseEffect }: EffectTabProps) {
             onChange={(speed) => update({ speed })}
             minLabel={t.common.slow}
             maxLabel={t.common.fast}
-            accessibilityLabel={t.effectTab.speedA11y}
           />
         </MenuGroup>
       ) : null}

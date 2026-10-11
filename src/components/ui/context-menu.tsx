@@ -1,9 +1,16 @@
 import { Fragment } from 'react';
-import { Modal, Platform, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import {
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 
 import { Icon, type IconName } from '@/components/ui/icon';
 import { SHADOW, UI } from '@/configs/ui';
-import { useStrings } from '@/i18n';
 
 export interface MenuAnchor {
   x: number;
@@ -12,7 +19,7 @@ export interface MenuAnchor {
   height: number;
 }
 
-export interface MenuItem {
+export interface ContextMenuAction {
   label: string;
   icon: IconName;
   onPress: () => void;
@@ -24,7 +31,7 @@ export interface MenuItem {
 
 interface ContextMenuProps {
   anchor: MenuAnchor | null;
-  items: MenuItem[];
+  items: ContextMenuAction[];
   onClose: () => void;
 }
 
@@ -37,7 +44,6 @@ const MARGIN = 12;
  * Tự lật lên trên khi không đủ chỗ phía dưới.
  */
 export function ContextMenu({ anchor, items, onClose }: ContextMenuProps) {
-  const t = useStrings();
   const window = useWindowDimensions();
   if (!anchor) return null;
 
@@ -49,18 +55,18 @@ export function ContextMenu({ anchor, items, onClose }: ContextMenuProps) {
     : Math.min(window.width - MENU_WIDTH - MARGIN, anchor.x);
   const below = anchor.y + anchor.height + 6;
   const top =
-    below + menuHeight + MARGIN > window.height ? Math.max(MARGIN, anchor.y - menuHeight - 6) : below;
+    below + menuHeight + MARGIN > window.height
+      ? Math.max(MARGIN, anchor.y - menuHeight - 6)
+      : below;
 
   return (
     <Modal visible transparent animationType="fade" statusBarTranslucent onRequestClose={onClose}>
-      <Pressable style={styles.overlay} onPress={onClose} accessibilityLabel={t.presets.closeMenu} />
-      <View style={[styles.menu, SHADOW.floating, { top, left }]} accessibilityRole="menu">
+      <Pressable style={styles.overlay} onPress={onClose} />
+      <View style={[styles.menu, SHADOW.floating, { top, left }]}>
         {items.map((item, i) => (
           <Fragment key={item.label}>
             {item.separatorBefore ? <View style={styles.groupSeparator} /> : null}
             <Pressable
-              accessibilityRole="menuitem"
-              accessibilityState={{ disabled: item.disabled }}
               disabled={item.disabled}
               onPress={() => {
                 onClose();
@@ -73,7 +79,9 @@ export function ContextMenu({ anchor, items, onClose }: ContextMenuProps) {
                 pressed && styles.pressed,
                 item.disabled && styles.disabled,
               ]}>
-              <Text style={[styles.label, item.destructive && styles.destructive]}>{item.label}</Text>
+              <Text style={[styles.label, item.destructive && styles.destructive]}>
+                {item.label}
+              </Text>
               <Icon name={item.icon} size={19} color={item.destructive ? UI.danger : UI.label} />
             </Pressable>
           </Fragment>

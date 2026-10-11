@@ -1,4 +1,4 @@
-import { type StyleProp, Text, type TextStyle } from 'react-native';
+import { Text, type StyleProp, type TextStyle } from 'react-native';
 
 import { ICON_FONT_FAMILY } from '@/configs/fonts';
 
@@ -48,8 +48,6 @@ export function Icon({ name, size = 20, color, style }: IconProps) {
   return (
     <Text
       allowFontScaling={false}
-      accessible={false}
-      importantForAccessibility="no"
       style={[{ fontFamily: ICON_FONT_FAMILY, fontSize: size, lineHeight: size, color }, style]}>
       {String.fromCodePoint(GLYPHS[name])}
     </Text>

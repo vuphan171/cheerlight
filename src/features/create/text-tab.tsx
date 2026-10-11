@@ -1,18 +1,24 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import type { EditorTabProps } from '@/features/create/types';
 import { ColorSwatch, CustomColorSwatch } from '@/components/ui/color-swatch';
-import { MenuGroup } from '@/components/ui/menu-group';
 import { HexColorSheet } from '@/components/ui/hex-color-sheet';
+import { MenuGroup } from '@/components/ui/menu/menu-group';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Slider } from '@/components/ui/slider';
 import { colorName, TEXT_COLOR_QUICK } from '@/configs/colors';
-import { FONT_SIZE_MAX, FONT_SIZE_MIN, FONT_SIZE_STEP, SPEED_MAX, SPEED_MIN } from '@/configs/effects';
+import {
+  FONT_SIZE_MAX,
+  FONT_SIZE_MIN,
+  FONT_SIZE_STEP,
+  SPEED_MAX,
+  SPEED_MIN,
+} from '@/configs/effects';
 import { TEXT_MAX_LENGTH } from '@/configs/fonts';
 import { TYPE, UI } from '@/configs/ui';
-import type { ScrollDirection, TextFont } from '@/types/settings';
+import type { EditorTabProps } from '@/features/create/types';
 import { useStrings } from '@/i18n';
+import type { ScrollDirection, TextFont } from '@/types/settings';
 
 const QUICK_SWATCH = 30;
 
@@ -23,9 +29,9 @@ export function TextTab({ settings, update }: EditorTabProps) {
     { value: 'led', label: t.textTab.fontLed },
     { value: 'system', label: t.textTab.fontSystem },
   ];
-  const directions: readonly { value: ScrollDirection; label: string; accessibilityLabel: string }[] = [
-    { value: 'left', label: '←', accessibilityLabel: t.textTab.left },
-    { value: 'right', label: '→', accessibilityLabel: t.textTab.right },
+  const directions: readonly { value: ScrollDirection; label: string }[] = [
+    { value: 'left', label: '←' },
+    { value: 'right', label: '→' },
   ];
   const fixed = settings.textColorMode === 'fixed';
   const textColor = settings.textColor.toUpperCase();
@@ -43,24 +49,26 @@ export function TextTab({ settings, update }: EditorTabProps) {
             maxLength={TEXT_MAX_LENGTH}
             returnKeyType="done"
             style={styles.input}
-            accessibilityLabel={t.textTab.textA11y}
           />
-          <Text style={styles.counter} accessibilityLabel={t.textTab.counterA11y(settings.text.length, TEXT_MAX_LENGTH)}>
+          <Text style={styles.counter}>
             {settings.text.length}/{TEXT_MAX_LENGTH}
           </Text>
         </View>
       </MenuGroup>
 
       <MenuGroup label={t.textTab.font} list={false}>
-        <SegmentedControl options={fonts} value={settings.textFont} onChange={(textFont) => update({ textFont })} />
+        <SegmentedControl
+          options={fonts}
+          value={settings.textFont}
+          onChange={(textFont) => update({ textFont })}
+        />
       </MenuGroup>
 
-      <MenuGroup label={t.textTab.textColor(fixed ? colorName(textColor, t) : t.textTab.auto)} list={false}>
-        <View style={styles.colorRow} accessibilityRole="radiogroup">
+      <MenuGroup
+        label={t.textTab.textColor(fixed ? colorName(textColor, t) : t.textTab.auto)}
+        list={false}>
+        <View style={styles.colorRow}>
           <Pressable
-            accessibilityRole="radio"
-            accessibilityState={{ selected: !fixed }}
-            accessibilityLabel={t.textTab.autoA11y}
             onPress={() => update({ textColorMode: 'auto' })}
             style={[styles.autoPill, !fixed && styles.autoPillOn]}>
             <Text style={[styles.autoLabel, !fixed && styles.autoLabelOn]}>{t.textTab.auto}</Text>
@@ -74,7 +82,11 @@ export function TextTab({ settings, update }: EditorTabProps) {
               onPress={() => update({ textColorMode: 'fixed', textColor: color })}
             />
           ))}
-          <CustomColorSwatch size={QUICK_SWATCH} selected={customSelected} onPress={() => setHexOpen(true)} />
+          <CustomColorSwatch
+            size={QUICK_SWATCH}
+            selected={customSelected}
+            onPress={() => setHexOpen(true)}
+          />
         </View>
       </MenuGroup>
 
@@ -92,8 +104,6 @@ export function TextTab({ settings, update }: EditorTabProps) {
           min={FONT_SIZE_MIN / FONT_SIZE_STEP}
           max={FONT_SIZE_MAX / FONT_SIZE_STEP}
           onChange={(v) => update({ fontSize: v * FONT_SIZE_STEP })}
-          formatValue={(v) => `${v * FONT_SIZE_STEP}`}
-          accessibilityLabel={t.textTab.size}
           minLabel={<Text style={styles.aSmall}>A</Text>}
           maxLabel={<Text style={styles.aBig}>A</Text>}
         />
@@ -107,7 +117,6 @@ export function TextTab({ settings, update }: EditorTabProps) {
           onChange={(scrollSpeed) => update({ scrollSpeed })}
           minLabel={t.common.slow}
           maxLabel={t.common.fast}
-          accessibilityLabel={t.textTab.scrollSpeedA11y}
         />
       </MenuGroup>
 

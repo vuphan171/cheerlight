@@ -6,7 +6,7 @@ import { TYPE } from '@/configs/ui';
 export function LargeTitle({ children, right }: { children: string; right?: ReactNode }) {
   return (
     <View style={styles.row}>
-      <Text style={styles.title} accessibilityRole="header" numberOfLines={1}>
+      <Text style={styles.title} numberOfLines={1}>
         {children}
       </Text>
       {right}

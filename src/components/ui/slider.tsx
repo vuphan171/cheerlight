@@ -1,5 +1,5 @@
-import { type ReactNode, useRef } from 'react';
-import { type GestureResponderEvent, StyleSheet, Text, View } from 'react-native';
+import { useRef, type ReactNode } from 'react';
+import { StyleSheet, Text, View, type GestureResponderEvent } from 'react-native';
 
 import { SHADOW, TYPE, UI } from '@/configs/ui';
 
@@ -8,28 +8,16 @@ interface SliderProps {
   onChange: (value: number) => void;
   min: number;
   max: number;
-  accessibilityLabel: string;
   /** Nhãn hai đầu, vd. "Chậm"/"Nhanh" hoặc chữ "A" nhỏ/to. */
   minLabel?: ReactNode;
   maxLabel?: ReactNode;
-  /** Đọc cho VoiceOver/TalkBack. */
-  formatValue?: (value: number) => string;
 }
 
 /**
  * Slider rời rạc viết bằng responder system của RN (không thêm thư viện slider native).
  * Kéo hoặc chạm vào bất kỳ đâu trên thanh để chọn.
  */
-export function Slider({
-  value,
-  onChange,
-  min,
-  max,
-  accessibilityLabel,
-  minLabel,
-  maxLabel,
-  formatValue = String,
-}: SliderProps) {
+export function Slider({ value, onChange, min, max, minLabel, maxLabel }: SliderProps) {
   const railRef = useRef<View>(null);
   const track = useRef({ x: 0, width: 1 });
   const fraction = max > min ? (value - min) / (max - min) : 0;
@@ -52,15 +40,6 @@ export function Slider({
       {typeof minLabel === 'string' ? <Text style={styles.endLabel}>{minLabel}</Text> : minLabel}
       <View
         style={styles.touchArea}
-        accessible
-        accessibilityRole="adjustable"
-        accessibilityLabel={accessibilityLabel}
-        accessibilityValue={{ min, max, now: value, text: formatValue(value) }}
-        accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
-        onAccessibilityAction={(e) => {
-          if (e.nativeEvent.actionName === 'increment') onChange(Math.min(max, value + 1));
-          if (e.nativeEvent.actionName === 'decrement') onChange(Math.max(min, value - 1));
-        }}
         onStartShouldSetResponder={() => true}
         onMoveShouldSetResponder={() => true}
         onResponderTerminationRequest={() => false}
@@ -90,7 +69,14 @@ const styles = StyleSheet.create({
   touchArea: { flex: 1, height: 44, justifyContent: 'center', paddingHorizontal: THUMB / 2 },
   rail: { justifyContent: 'center', height: THUMB },
   track: { height: 4, borderRadius: 2, backgroundColor: UI.fill },
-  fill: { position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 2, backgroundColor: UI.accent },
+  fill: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    borderRadius: 2,
+    backgroundColor: UI.accent,
+  },
   thumb: {
     position: 'absolute',
     width: THUMB,

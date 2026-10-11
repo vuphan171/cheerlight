@@ -1,23 +1,32 @@
 import type React from 'react';
-import { Children, type ReactNode } from 'react';
+import { Children, isValidElement, type ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { MenuRowLastContext } from '@/components/ui/menu/menu-row';
 import { RADII, SPACING, TYPE, UI } from '@/configs/ui';
 
 interface Props {
   label?: string;
   footer?: string;
   children: ReactNode;
-  /** `false` khi nội dung không phải dòng list (lưới màu, slider…) → có padding. */
   list?: boolean;
 }
 
-/** Nhóm kiểu iOS: nhãn IN HOA, khối trắng bo góc, chú thích tuỳ chọn. */
 const MenuGroup: React.FC<Props> = ({ label, footer, children, list = true }) => {
+  const rows = Children.toArray(children).filter(Boolean);
+
   return (
     <View style={styles.section}>
       {label ? <Text style={styles.label}>{label}</Text> : null}
-      <View style={[styles.body, !list && styles.padded]}>{Children.toArray(children).filter(Boolean)}</View>
+      <View style={[styles.body, !list && styles.padded]}>
+        {rows.map((row, i) => (
+          <MenuRowLastContext.Provider
+            key={isValidElement(row) ? row.key : i}
+            value={i === rows.length - 1}>
+            {row}
+          </MenuRowLastContext.Provider>
+        ))}
+      </View>
       {footer ? <Text style={styles.footer}>{footer}</Text> : null}
     </View>
   );

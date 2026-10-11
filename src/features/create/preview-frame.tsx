@@ -1,5 +1,5 @@
 import { useIsFocused } from 'expo-router';
-import { type ReactNode, useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { LightCanvas, useEffectClock } from '@/components/light-canvas';
@@ -9,15 +9,19 @@ import { scrollPixelsPerSecond } from '@/configs/effects';
 import { fontFamilyFor } from '@/configs/fonts';
 import { RADII } from '@/configs/ui';
 import type { LightSettings } from '@/types/settings';
-import { useStrings } from '@/i18n';
 
 /**
  * Bản thu nhỏ của màn Phát (đúng tỉ lệ khung hình ngang), dùng cùng engine hiệu ứng. Cỡ chữ và tốc
  * độ chạy chữ được nhân cùng tỉ lệ để nhìn giống hệt khi phát. Dừng khi màn hình không focus (đang
  * ở màn Phát hoặc tab khác) để không chạy hai đồng hồ hiệu ứng cùng lúc.
  */
-export function PreviewFrame({ settings, children }: { settings: LightSettings; children?: ReactNode }) {
-  const t = useStrings();
+export function PreviewFrame({
+  settings,
+  children,
+}: {
+  settings: LightSettings;
+  children?: ReactNode;
+}) {
   const window = useWindowDimensions();
   const focused = useIsFocused();
   const landscapeWidth = Math.max(window.width, window.height);
@@ -30,8 +34,7 @@ export function PreviewFrame({ settings, children }: { settings: LightSettings; 
   return (
     <View
       style={[styles.box, { aspectRatio: landscapeWidth / landscapeHeight }]}
-      onLayout={(e) => setBoxWidth(e.nativeEvent.layout.width)}
-      accessibilityLabel={t.create.preview}>
+      onLayout={(e) => setBoxWidth(e.nativeEvent.layout.width)}>
       <LightCanvas color={settings.backgroundColor} effect={effect} progress={progress} />
       {scale > 0 && focused ? (
         <Marquee

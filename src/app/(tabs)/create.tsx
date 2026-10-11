@@ -3,13 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ColorTab } from '@/features/create/color-tab';
-import { EffectTab } from '@/features/create/effect-tab';
-import { FlashTab } from '@/features/create/flash-tab';
-import { TextTab } from '@/features/create/text-tab';
 import { EFFECT_META } from '@/components/effect-meta';
 import { NameDialog } from '@/components/name-dialog';
-import { PreviewFrame } from '@/features/create/preview-frame';
 import { useEffectChooser } from '@/components/strobe-warning';
 import { Icon } from '@/components/ui/icon';
 import { NavBar } from '@/components/ui/nav-bar';
@@ -18,10 +13,15 @@ import { SegmentedControl } from '@/components/ui/segmented-control';
 import { DEFAULT_SETTINGS } from '@/configs/defaults';
 import { effectLabel, findPresetByName, PRESET_MAX, suggestPresetName } from '@/configs/presets';
 import { GROUP_GAP, SPACING, TAB_BAR_CLEARANCE, UI } from '@/configs/ui';
+import { ColorTab } from '@/features/create/color-tab';
+import { EffectTab } from '@/features/create/effect-tab';
+import { FlashTab } from '@/features/create/flash-tab';
+import { PreviewFrame } from '@/features/create/preview-frame';
+import { TextTab } from '@/features/create/text-tab';
 import { usePlay } from '@/hooks/use-play';
 import { useSettings } from '@/hooks/use-settings';
-import type { LightSettings } from '@/types/settings';
 import { useStrings } from '@/i18n';
+import type { LightSettings } from '@/types/settings';
 
 type SubTab = 'color' | 'effect' | 'text' | 'flash';
 
@@ -33,8 +33,15 @@ let lastSubTab: SubTab = 'color';
 export default function CreateScreen() {
   const t = useStrings();
   const { presetId } = useLocalSearchParams<{ presetId?: string }>();
-  const { draft, updateDraft, resetDraft, presets, createPreset, updatePresetSettings, deletePreset } =
-    useSettings();
+  const {
+    draft,
+    updateDraft,
+    resetDraft,
+    presets,
+    createPreset,
+    updatePresetSettings,
+    deletePreset,
+  } = useSettings();
   const { play, warning: playWarning } = usePlay();
   const editing = presetId ? presets.find((p) => p.id === presetId) : undefined;
 
@@ -60,7 +67,9 @@ export default function CreateScreen() {
   }, []);
   const update = editing ? updateBuffer : updateDraft;
 
-  const { choose: chooseEffect, warning: strobeWarning } = useEffectChooser((effect) => update({ effect }));
+  const { choose: chooseEffect, warning: strobeWarning } = useEffectChooser((effect) =>
+    update({ effect }),
+  );
   const [subTab, setSubTab] = useState<SubTab>(lastSubTab);
   const [naming, setNaming] = useState(false);
 
@@ -70,18 +79,14 @@ export default function CreateScreen() {
   };
 
   const reset = () => {
-    Alert.alert(
-      t.create.reset,
-      editing ? t.create.resetEditing : t.create.resetDraft,
-      [
-        { text: t.common.cancel, style: 'cancel' },
-        {
-          text: t.create.reset,
-          style: 'destructive',
-          onPress: () => (editing ? setBuffer(editing.settings) : resetDraft()),
-        },
-      ],
-    );
+    Alert.alert(t.create.reset, editing ? t.create.resetEditing : t.create.resetDraft, [
+      { text: t.common.cancel, style: 'cancel' },
+      {
+        text: t.create.reset,
+        style: 'destructive',
+        onPress: () => (editing ? setBuffer(editing.settings) : resetDraft()),
+      },
+    ]);
   };
 
   const save = () => {
@@ -123,10 +128,7 @@ export default function CreateScreen() {
             <Text style={styles.effectBadgeLabel}>{effectLabel(settings.effect, t)}</Text>
           </View>
           <View style={styles.play}>
-            <PlayButton
-              onPress={() => play(settings, editing?.id)}
-              accessibilityLabel={editing ? t.create.playEditingA11y(editing.name) : t.create.playDraftA11y}
-            />
+            <PlayButton onPress={() => play(settings, editing?.id)} />
           </View>
         </PreviewFrame>
         <SegmentedControl
@@ -143,14 +145,15 @@ export default function CreateScreen() {
         keyboardDismissMode="on-drag"
         automaticallyAdjustKeyboardInsets>
         {subTab === 'color' ? <ColorTab settings={settings} update={update} /> : null}
-        {subTab === 'effect' ? <EffectTab settings={settings} update={update} chooseEffect={chooseEffect} /> : null}
+        {subTab === 'effect' ? (
+          <EffectTab settings={settings} update={update} chooseEffect={chooseEffect} />
+        ) : null}
         {subTab === 'text' ? <TextTab settings={settings} update={update} /> : null}
         {subTab === 'flash' ? <FlashTab settings={settings} update={update} /> : null}
 
         {editing ? (
           <Pressable
             onPress={confirmDelete}
-            accessibilityRole="button"
             style={({ pressed }) => [styles.deleteButton, pressed && styles.deletePressed]}>
             <Icon name="trash-outline" size={20} color={UI.danger} />
             <Text style={styles.deleteLabel}>{t.create.deleteThis}</Text>
@@ -162,7 +165,9 @@ export default function CreateScreen() {
         visible={naming}
         title={t.create.saveAs}
         initialName={suggestPresetName(presets, t)}
-        confirmLabel={(name) => (findPresetByName(presets, name) ? t.create.overwrite : t.common.save)}
+        confirmLabel={(name) =>
+          findPresetByName(presets, name) ? t.create.overwrite : t.common.save
+        }
         validate={(name) => {
           const existing = findPresetByName(presets, name);
           if (existing) return { hint: t.create.overwriteHint(existing.name) };
@@ -203,7 +208,12 @@ const styles = StyleSheet.create({
   effectBadgeLabel: { fontSize: 12, fontWeight: '600', color: '#FFFFFF' },
   play: { position: 'absolute', right: 12, bottom: 12 },
   scroll: { flex: 1 },
-  content: { paddingHorizontal: SPACING, paddingTop: 8, paddingBottom: TAB_BAR_CLEARANCE, gap: GROUP_GAP },
+  content: {
+    paddingHorizontal: SPACING,
+    paddingTop: 8,
+    paddingBottom: TAB_BAR_CLEARANCE,
+    gap: GROUP_GAP,
+  },
   deleteButton: {
     flexDirection: 'row',
     alignItems: 'center',

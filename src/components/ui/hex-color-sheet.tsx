@@ -66,7 +66,6 @@ export function HexColorSheet({ visible, value, onSubmit, onClose }: HexColorShe
           returnKeyType="done"
           onSubmitEditing={() => normalized && onSubmit(normalized)}
           style={[dialogInputStyle, styles.input, invalid && styles.inputInvalid]}
-          accessibilityLabel={t.color.hexA11y}
         />
       </View>
       <Text style={[styles.hint, invalid && styles.error]}>

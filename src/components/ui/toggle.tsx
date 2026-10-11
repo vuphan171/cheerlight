@@ -1,12 +1,11 @@
-import type React from "react";
-import { Switch, SwitchProps } from "react-native";
+import type React from 'react';
+import { Switch, SwitchProps } from 'react-native';
 
-import { UI } from "@/configs/ui";
+import { UI } from '@/configs/ui';
 
 interface Props extends SwitchProps {
   value: boolean;
   onValueChange: (value: boolean) => void;
-  accessibilityLabel: string;
 }
 
 const Toggle: React.FC<Props> = ({ value, onValueChange, ...props }) => {

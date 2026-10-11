@@ -9,11 +9,19 @@ interface NavButton {
   bold?: boolean;
 }
 
-export function NavBar({ title, left, right }: { title: string; left?: NavButton; right?: NavButton }) {
+export function NavBar({
+  title,
+  left,
+  right,
+}: {
+  title: string;
+  left?: NavButton;
+  right?: NavButton;
+}) {
   return (
     <View style={styles.bar}>
       <View style={[styles.side, styles.left]}>{left ? <NavTextButton {...left} /> : null}</View>
-      <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail" accessibilityRole="header">
+      <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
         {title}
       </Text>
       <View style={[styles.side, styles.right]}>{right ? <NavTextButton {...right} /> : null}</View>
@@ -23,13 +31,7 @@ export function NavBar({ title, left, right }: { title: string; left?: NavButton
 
 function NavTextButton({ label, onPress, disabled, bold }: NavButton) {
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ disabled }}
-      disabled={disabled}
-      onPress={onPress}
-      hitSlop={10}
-      style={styles.button}>
+    <Pressable disabled={disabled} onPress={onPress} hitSlop={10} style={styles.button}>
       {({ pressed }) => (
         <Text
           style={[

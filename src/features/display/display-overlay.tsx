@@ -11,12 +11,12 @@ const FADE_MS = 200;
 
 /** Lớp mờ dần (200 ms), không nhận chạm khi ẩn. */
 function Fade({ visible, children }: { visible: boolean; children: ReactNode }) {
-  const style = useAnimatedStyle(() => ({ opacity: withTiming(visible ? 1 : 0, { duration: FADE_MS }) }));
+  const style = useAnimatedStyle(() => ({
+    opacity: withTiming(visible ? 1 : 0, { duration: FADE_MS }),
+  }));
   return (
     <Animated.View
       pointerEvents={visible ? 'box-none' : 'none'}
-      accessibilityElementsHidden={!visible}
-      importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
       style={[StyleSheet.absoluteFill, style]}>
       {children}
     </Animated.View>
@@ -69,8 +69,6 @@ export function DisplayOverlay({
         ) : null}
         <Pressable
           onPress={onExit}
-          accessibilityRole="button"
-          accessibilityLabel={t.display.exitA11y}
           style={({ pressed }) => [
             styles.pill,
             styles.exit,
@@ -83,9 +81,6 @@ export function DisplayOverlay({
         </Pressable>
         <Pressable
           onPress={onLock}
-          accessibilityRole="button"
-          accessibilityLabel={t.display.lock}
-          accessibilityHint={t.display.lockHint}
           style={({ pressed }) => [
             styles.pill,
             styles.lock,
@@ -100,16 +95,7 @@ export function DisplayOverlay({
 
       <Fade visible={locked && lockHintVisible}>
         <View style={[styles.centerBottom, { bottom: edges.bottom }]} pointerEvents="box-none">
-          <Pressable
-            onLongPress={onUnlock}
-            delayLongPress={600}
-            accessibilityRole="button"
-            accessibilityLabel={t.display.lockedA11y}
-            accessibilityActions={[{ name: 'activate', label: t.display.unlock }]}
-            onAccessibilityAction={(e) => {
-              if (e.nativeEvent.actionName === 'activate') onUnlock();
-            }}
-            style={styles.lockedHint}>
+          <Pressable onLongPress={onUnlock} delayLongPress={600} style={styles.lockedHint}>
             <Icon name="lock-closed" size={15} color="#FFFFFF" />
             <Text style={styles.hintLabel}>{t.display.lockedLabel}</Text>
           </Pressable>

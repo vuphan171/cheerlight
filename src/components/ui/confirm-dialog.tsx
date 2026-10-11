@@ -1,5 +1,13 @@
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import { RADII, TYPE, UI } from '@/configs/ui';
 
@@ -22,7 +30,15 @@ interface ConfirmDialogProps {
 }
 
 /** Hộp thoại tông sáng (cảnh báo Strobe, đặt tên mẫu, chọn tuỳ chọn…). Xác nhận xoá vẫn dùng `Alert`. */
-export function ConfirmDialog({ visible, title, message, icon, children, actions, onRequestClose }: ConfirmDialogProps) {
+export function ConfirmDialog({
+  visible,
+  title,
+  message,
+  icon,
+  children,
+  actions,
+  onRequestClose,
+}: ConfirmDialogProps) {
   const stacked = actions.length > 2;
   return (
     <Modal
@@ -32,13 +48,13 @@ export function ConfirmDialog({ visible, title, message, icon, children, actions
       statusBarTranslucent
       supportedOrientations={['portrait', 'landscape']}
       onRequestClose={onRequestClose}>
-      <KeyboardAvoidingView style={styles.backdrop} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View style={styles.card} accessibilityViewIsModal>
+      <KeyboardAvoidingView
+        style={styles.backdrop}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={styles.card}>
           <View style={styles.body}>
             {icon}
-            <Text style={styles.title} accessibilityRole="header">
-              {title}
-            </Text>
+            <Text style={styles.title}>{title}</Text>
             {message ? <Text style={styles.message}>{message}</Text> : null}
             {children}
           </View>
@@ -46,8 +62,6 @@ export function ConfirmDialog({ visible, title, message, icon, children, actions
             {actions.map((action, i) => (
               <Pressable
                 key={action.label}
-                accessibilityRole="button"
-                accessibilityState={{ disabled: action.disabled }}
                 disabled={action.disabled}
                 onPress={action.onPress}
                 style={({ pressed }) => [
@@ -82,7 +96,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 32,
   },
-  card: { width: '100%', maxWidth: 340, backgroundColor: UI.surface, borderRadius: RADII.dialog, overflow: 'hidden' },
+  card: {
+    width: '100%',
+    maxWidth: 340,
+    backgroundColor: UI.surface,
+    borderRadius: RADII.dialog,
+    overflow: 'hidden',
+  },
   body: { padding: 20, paddingBottom: 16, gap: 10, alignItems: 'stretch' },
   title: { ...TYPE.navTitle, textAlign: 'center' },
   message: { fontSize: 14, lineHeight: 20, color: UI.label, textAlign: 'center' },
@@ -92,7 +112,13 @@ const styles = StyleSheet.create({
     borderTopColor: UI.separator,
   },
   actionsStacked: { flexDirection: 'column' },
-  action: { flex: 1, minHeight: 48, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8 },
+  action: {
+    flex: 1,
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+  },
   actionDivider: { borderLeftWidth: StyleSheet.hairlineWidth, borderLeftColor: UI.separator },
   actionDividerTop: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: UI.separator },
   pressed: { backgroundColor: 'rgba(0,0,0,0.06)' },

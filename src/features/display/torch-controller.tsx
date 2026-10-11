@@ -1,10 +1,10 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useEffect, useState } from 'react';
 import { AppState, Platform, StyleSheet } from 'react-native';
-import { type SharedValue, useAnimatedReaction } from 'react-native-reanimated';
+import { useAnimatedReaction, type SharedValue } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
-import { ON_RATIO, type TorchPlan, torchPlan } from '@/configs/effects';
+import { ON_RATIO, torchPlan, type TorchPlan } from '@/configs/effects';
 import type { LightSettings } from '@/types/settings';
 
 interface TorchControllerProps {
@@ -35,7 +35,12 @@ function useAppActive(): boolean {
  * mới tháo. Đóng camera là bất đồng bộ (Android ~2–3 giây trên emulator) nên không chỉ dựa vào
  * unmount. Nếu cả màn hình bị unmount đột ngột thì việc tháo CameraView vẫn đóng camera → tắt flash.
  */
-export function TorchController({ settings, progress, active, onUnavailable }: TorchControllerProps) {
+export function TorchController({
+  settings,
+  progress,
+  active,
+  onUnavailable,
+}: TorchControllerProps) {
   const [permission] = useCameraPermissions();
   const appActive = useAppActive();
   const plan = torchPlan(settings);
@@ -110,8 +115,6 @@ function TorchCamera({ plan, progress, onUnavailable }: TorchCameraProps) {
       enableTorch={plan.kind === 'steady' || (plan.kind !== 'off' && on)}
       animateShutter={false}
       pointerEvents="none"
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
       onMountError={(e) => {
         console.warn('[torch] camera mount error', e.message);
         // iOS báo "session was reset" khi media services khởi động lại — lỗi tạm thời, tự phục hồi.

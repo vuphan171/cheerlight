@@ -7,7 +7,6 @@ export function RainbowFill() {
       source={require('../../../assets/images/rainbow.png')}
       style={StyleSheet.absoluteFill}
       resizeMode="cover"
-      accessible={false}
     />
   );
 }

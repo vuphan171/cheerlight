@@ -6,8 +6,8 @@ import { resolveTextColor } from '@/configs/colors';
 import { fontFamilyFor } from '@/configs/fonts';
 import { presetSummary } from '@/configs/presets';
 import { RADII } from '@/configs/ui';
-import type { Preset } from '@/types/settings';
 import { useStrings } from '@/i18n';
+import type { Preset } from '@/types/settings';
 
 /** Thẻ "Dùng gần nhất": chạm vào bất kỳ đâu (hoặc ▶) để phát. */
 export function RecentPresetCard({ preset, onPlay }: { preset: Preset; onPlay: () => void }) {
@@ -19,9 +19,11 @@ export function RecentPresetCard({ preset, onPlay }: { preset: Preset; onPlay: (
   return (
     <Pressable
       onPress={onPlay}
-      accessibilityRole="button"
-      accessibilityLabel={t.presets.playRecentA11y(preset.name)}
-      style={({ pressed }) => [styles.card, { backgroundColor: settings.backgroundColor }, pressed && styles.pressed]}>
+      style={({ pressed }) => [
+        styles.card,
+        { backgroundColor: settings.backgroundColor },
+        pressed && styles.pressed,
+      ]}>
       {settings.effect === 'rainbow' ? <RainbowFill /> : null}
       <Text style={[styles.kicker, { color: fg }]}>{t.presets.recent}</Text>
       <Text
@@ -39,7 +41,7 @@ export function RecentPresetCard({ preset, onPlay }: { preset: Preset; onPlay: (
             {presetSummary(settings, t)}
           </Text>
         </View>
-        <PlayButton onPress={onPlay} accessibilityLabel={t.presets.playA11y(preset.name)} />
+        <PlayButton onPress={onPlay} />
       </View>
     </Pressable>
   );

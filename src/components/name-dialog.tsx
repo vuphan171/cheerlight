@@ -46,7 +46,12 @@ export function NameDialog({
       onRequestClose={onCancel}
       actions={[
         { label: t.common.cancel, onPress: onCancel },
-        { label: confirmLabel(trimmed), kind: 'primary', disabled: !canSubmit, onPress: () => onSubmit(trimmed) },
+        {
+          label: confirmLabel(trimmed),
+          kind: 'primary',
+          disabled: !canSubmit,
+          onPress: () => onSubmit(trimmed),
+        },
       ]}>
       <TextInput
         value={name}
@@ -59,7 +64,6 @@ export function NameDialog({
         returnKeyType="done"
         onSubmitEditing={() => canSubmit && onSubmit(trimmed)}
         style={[dialogInputStyle, error ? styles.invalid : null]}
-        accessibilityLabel={t.presets.namePlaceholder}
       />
       <Text style={[styles.note, error ? styles.error : null]}>
         {error ?? hint ?? `${name.length}/${PRESET_NAME_MAX_LENGTH}`}

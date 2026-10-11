@@ -73,7 +73,7 @@ src/
     settings/     các nhóm của tab Cài đặt
     display/      lớp điều khiển, điều khiển flash, độ sáng tối đa (màn Phát)
   components/     dùng chung giữa các feature: light-canvas, marquee, name-dialog, strobe-warning, …
-    ui/           component giao diện chung (tab bar, menu item, segmented, slider, dialog, icon…)
+    ui/           component giao diện chung (tab bar, menu/ (MenuGroup + các loại dòng), segmented, slider, dialog, icon…)
   hooks/          use-settings, use-play, use-torch-permission, use-landscape
   i18n/           chuỗi giao diện: en.ts (mặc định), vi.ts, useStrings()
   configs/        ui (token), colors, effects, presets, sanitize (+ migration), storage, …

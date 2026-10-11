@@ -2,14 +2,14 @@ import { useRef } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { EFFECT_META } from '@/components/effect-meta';
-import { Icon } from '@/components/ui/icon';
 import type { MenuAnchor } from '@/components/ui/context-menu';
+import { Icon } from '@/components/ui/icon';
 import { RainbowFill } from '@/components/ui/rainbow-fill';
 import { resolveTextColor } from '@/configs/colors';
-import { effectLabel, presetSummary } from '@/configs/presets';
+import { presetSummary } from '@/configs/presets';
 import { RADII } from '@/configs/ui';
-import type { Preset } from '@/types/settings';
 import { useStrings } from '@/i18n';
+import type { Preset } from '@/types/settings';
 
 interface PresetTileProps {
   preset: Preset;
@@ -35,13 +35,6 @@ export function PresetTile({ preset, width, onPlay, onOpenMenu }: PresetTileProp
       ref={tileRef}
       onPress={onPlay}
       onLongPress={() => open(moreRef.current ?? tileRef.current)}
-      accessibilityRole="button"
-      accessibilityLabel={t.presets.tileA11y(preset.name, presetSummary(settings, t))}
-      accessibilityHint={t.presets.tileHint}
-      accessibilityActions={[{ name: 'longpress', label: t.presets.openMenu }]}
-      onAccessibilityAction={(e) => {
-        if (e.nativeEvent.actionName === 'longpress') open(moreRef.current);
-      }}
       style={({ pressed }) => [
         styles.tile,
         { width, backgroundColor: settings.backgroundColor },
@@ -49,15 +42,10 @@ export function PresetTile({ preset, width, onPlay, onOpenMenu }: PresetTileProp
       ]}>
       {settings.effect === 'rainbow' ? <RainbowFill /> : null}
       <View style={styles.top}>
-        <View accessible accessibilityLabel={effectLabel(settings.effect, t)}>
+        <View>
           <Icon name={EFFECT_META[settings.effect].icon} size={20} color={fg} />
         </View>
-        <Pressable
-          ref={moreRef}
-          onPress={() => open(moreRef.current)}
-          accessibilityRole="button"
-          accessibilityLabel={t.presets.optionsA11y(preset.name)}
-          style={styles.more}>
+        <Pressable ref={moreRef} onPress={() => open(moreRef.current)} style={styles.more}>
           <Icon name="ellipsis-horizontal" size={22} color={fg} />
         </Pressable>
       </View>
@@ -85,7 +73,12 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.08)',
   },
   pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
-  top: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginRight: -10 },
+  top: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginRight: -10,
+  },
   more: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
   bottom: { gap: 2 },
   name: { fontSize: 17, fontWeight: '700', lineHeight: 22 },

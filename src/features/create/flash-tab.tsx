@@ -1,20 +1,24 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import type { EditorTabProps } from '@/features/create/types';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { MenuGroup } from '@/components/ui/menu-group';
-import { MenuItem } from '@/components/ui/menu-item';
+import { MenuAction } from '@/components/ui/menu/menu-action';
+import { MenuGroup } from '@/components/ui/menu/menu-group';
+import { MenuLink } from '@/components/ui/menu/menu-link';
+import { MenuToggle } from '@/components/ui/menu/menu-toggle';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Slider } from '@/components/ui/slider';
-import { Toggle } from '@/components/ui/toggle';
-import { SPEED_MAX, SPEED_MIN, TORCH_MAX_FLASHES_PER_SECOND, torchPeriodMs } from '@/configs/effects';
-import { ICON_BG, TYPE, UI } from '@/configs/ui';
+import {
+  SPEED_MAX,
+  SPEED_MIN,
+  TORCH_MAX_FLASHES_PER_SECOND,
+  torchPeriodMs,
+} from '@/configs/effects';
+import { ICON_BG, TYPE } from '@/configs/ui';
+import type { EditorTabProps } from '@/features/create/types';
 import { useTorchPermission } from '@/hooks/use-torch-permission';
-import type { TorchMode } from '@/types/settings';
 import { useStrings } from '@/i18n';
-
-
+import type { TorchMode } from '@/types/settings';
 
 export function FlashTab({ settings, update }: EditorTabProps) {
   const t = useStrings();
@@ -44,17 +48,14 @@ export function FlashTab({ settings, update }: EditorTabProps) {
 
   if (status === 'blocked') {
     return (
-      <MenuGroup
-        label={t.flashTab.group}
-        footer={t.flashTab.blockedFooter}>
-        <MenuItem
+      <MenuGroup label={t.flashTab.group} footer={t.flashTab.blockedFooter}>
+        <MenuLink
           title={t.flashTab.cameraPermission}
           icon={{ name: 'camera', color: ICON_BG.gray }}
           value={t.torchStatus.blocked}
-          chevron
           onPress={openSettings}
         />
-        <MenuItem title={t.common.openSettings} titleColor={UI.accent} onPress={openSettings} last />
+        <MenuAction title={t.common.openSettings} onPress={openSettings} />
       </MenuGroup>
     );
   }
@@ -69,43 +70,35 @@ export function FlashTab({ settings, update }: EditorTabProps) {
 
   const enabled = settings.torchEnabled && granted;
   const rateValue =
-    settings.torchMode === 'steady' ? t.flashTab.steady : t.flashTab.blinkValue(flashesPerSecond(settings.torchRate));
+    settings.torchMode === 'steady'
+      ? t.flashTab.steady
+      : t.flashTab.blinkValue(flashesPerSecond(settings.torchRate));
 
   return (
     <>
       <MenuGroup
         label={t.flashTab.group}
         footer={granted ? flashNote : t.flashTab.askFooter(flashNote)}>
-        <MenuItem
+        <MenuToggle
           title={t.flashTab.enable}
           icon={{ name: 'flash', color: ICON_BG.orange }}
-          accessory={
-            <Toggle value={enabled} onValueChange={(v) => void toggleTorch(v)} accessibilityLabel={t.flashTab.enable} />
-          }
-          last={!enabled}
+          value={enabled}
+          onValueChange={(v) => void toggleTorch(v)}
         />
         {enabled ? (
-          <MenuItem
+          <MenuToggle
             title={t.flashTab.sync}
             icon={{ name: 'pulse', color: ICON_BG.blue }}
-            accessory={
-              <Toggle
-                value={settings.torchSyncWithEffect}
-                onValueChange={(torchSyncWithEffect) => update({ torchSyncWithEffect })}
-                accessibilityLabel={t.flashTab.syncA11y}
-              />
-            }
-            last={settings.torchSyncWithEffect}
+            value={settings.torchSyncWithEffect}
+            onValueChange={(torchSyncWithEffect) => update({ torchSyncWithEffect })}
           />
         ) : null}
         {enabled && !settings.torchSyncWithEffect ? (
-          <MenuItem
+          <MenuLink
             title={t.flashTab.rate}
             icon={{ name: 'time', color: ICON_BG.gray }}
             value={rateValue}
-            chevron
             onPress={() => setRateOpen(true)}
-            last
           />
         ) : null}
       </MenuGroup>
@@ -128,10 +121,8 @@ export function FlashTab({ settings, update }: EditorTabProps) {
                 min={SPEED_MIN}
                 max={SPEED_MAX}
                 onChange={(torchRate) => update({ torchRate })}
-                formatValue={flashesPerSecond}
                 minLabel={t.common.slow}
                 maxLabel={t.common.fast}
-                accessibilityLabel={t.flashTab.rateA11y}
               />
               <Text style={styles.rateValue}>{flashesPerSecond(settings.torchRate)}</Text>
             </>

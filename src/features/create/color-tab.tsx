@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import type { EditorTabProps } from '@/features/create/types';
 import { ColorSwatch, CustomColorSwatch } from '@/components/ui/color-swatch';
-import { MenuGroup } from '@/components/ui/menu-group';
 import { HexColorSheet } from '@/components/ui/hex-color-sheet';
+import { MenuGroup } from '@/components/ui/menu/menu-group';
 import { colorName, PLAY_COLORS } from '@/configs/colors';
+import type { EditorTabProps } from '@/features/create/types';
 import { useStrings } from '@/i18n';
 
 const COLUMNS = 8;
@@ -21,17 +21,14 @@ export function ColorTab({ settings, update }: EditorTabProps) {
       <MenuGroup
         label={t.colorTab.background(colorName(current, t))}
         list={false}
-        footer={
-          settings.effect === 'rainbow' ? t.colorTab.rainbowNote : undefined
-        }>
-        <View style={styles.grid} accessibilityRole="radiogroup">
+        footer={settings.effect === 'rainbow' ? t.colorTab.rainbowNote : undefined}>
+        <View style={styles.grid}>
           {PLAY_COLORS.map((c) => (
             <View key={c.hex} style={styles.cell}>
               <ColorSwatch
                 color={c.hex}
                 selected={c.hex === current}
                 onPress={() => update({ backgroundColor: c.hex })}
-                accessibilityLabel={t.color.a11y(t.colors[c.id])}
               />
             </View>
           ))}

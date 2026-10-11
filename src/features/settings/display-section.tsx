@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { ActionSheetIOS, Platform } from 'react-native';
 
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { MenuGroup } from '@/components/ui/menu-group';
-import { MenuItem } from '@/components/ui/menu-item';
-import { Toggle } from '@/components/ui/toggle';
+import { MenuGroup } from '@/components/ui/menu/menu-group';
+import { MenuLink } from '@/components/ui/menu/menu-link';
+import { MenuToggle } from '@/components/ui/menu/menu-toggle';
 import { AUTO_HIDE_OPTIONS } from '@/configs/defaults';
 import { ICON_BG } from '@/configs/ui';
 import { useSettings } from '@/hooks/use-settings';
-import type { AutoHideMs } from '@/types/settings';
 import { useStrings } from '@/i18n';
+import type { AutoHideMs } from '@/types/settings';
 
 /** Nhóm "Màn Phát": gợi ý chạm, độ sáng tối đa, thời gian tự ẩn điều khiển. */
 const DisplaySection = () => {
@@ -25,7 +25,11 @@ const DisplaySection = () => {
     }
     const labels = AUTO_HIDE_OPTIONS.map(secondsLabel);
     ActionSheetIOS.showActionSheetWithOptions(
-      { title: t.settings.autoHideTitle, options: [...labels, t.common.cancel], cancelButtonIndex: labels.length },
+      {
+        title: t.settings.autoHideTitle,
+        options: [...labels, t.common.cancel],
+        cancelButtonIndex: labels.length,
+      },
       (index) => {
         const ms = AUTO_HIDE_OPTIONS[index];
         if (ms) updatePrefs({ autoHideMs: ms });
@@ -36,35 +40,23 @@ const DisplaySection = () => {
   return (
     <>
       <MenuGroup label={t.settings.display}>
-        <MenuItem
+        <MenuToggle
           title={t.settings.tapHint}
           icon={{ name: 'hand-left', color: ICON_BG.blue }}
-          accessory={
-            <Toggle
-              value={prefs.showTapHint}
-              onValueChange={(showTapHint) => updatePrefs({ showTapHint })}
-              accessibilityLabel={t.settings.tapHintA11y}
-            />
-          }
+          value={prefs.showTapHint}
+          onValueChange={(showTapHint) => updatePrefs({ showTapHint })}
         />
-        <MenuItem
+        <MenuToggle
           title={t.settings.maxBrightness}
           icon={{ name: 'sunny', color: ICON_BG.yellow }}
-          accessory={
-            <Toggle
-              value={prefs.maxBrightness}
-              onValueChange={(maxBrightness) => updatePrefs({ maxBrightness })}
-              accessibilityLabel={t.settings.maxBrightnessA11y}
-            />
-          }
+          value={prefs.maxBrightness}
+          onValueChange={(maxBrightness) => updatePrefs({ maxBrightness })}
         />
-        <MenuItem
+        <MenuLink
           title={t.settings.autoHide}
           icon={{ name: 'time', color: ICON_BG.gray }}
           value={secondsLabel(prefs.autoHideMs)}
-          chevron
           onPress={pickAutoHide}
-          last
         />
       </MenuGroup>
 
