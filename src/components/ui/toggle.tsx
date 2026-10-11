@@ -1,23 +1,22 @@
-import { Switch } from 'react-native';
+import type React from "react";
+import { Switch, SwitchProps } from "react-native";
 
-import { UI } from '@/configs/ui';
+import { UI } from "@/configs/ui";
 
-interface ToggleProps {
+interface Props extends SwitchProps {
   value: boolean;
   onValueChange: (value: boolean) => void;
   accessibilityLabel: string;
-  disabled?: boolean;
 }
 
-export function Toggle({ value, onValueChange, accessibilityLabel, disabled }: ToggleProps) {
+export const Toggle: React.FC<Props> = ({ value, onValueChange, ...props }) => {
   return (
     <Switch
-      value={value}
-      onValueChange={onValueChange}
-      disabled={disabled}
       trackColor={{ true: UI.accent, false: UI.fill }}
       ios_backgroundColor={UI.fill}
-      accessibilityLabel={accessibilityLabel}
+      value={value}
+      onValueChange={onValueChange}
+      {...props}
     />
   );
-}
+};

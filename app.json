@@ -8,9 +8,11 @@
     "scheme": "cheerlight",
     "userInterfaceStyle": "light",
     "ios": {
+      "bundleIdentifier": "com.vuphan.cheerlight",
       "requireFullScreen": true
     },
     "android": {
+      "package": "com.vuphan.cheerlight",
       "adaptiveIcon": {
         "backgroundColor": "#B000D8",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

@@ -37,6 +37,10 @@ Docs: https://docs.expo.dev/eas/index.md
 ## Rules
 
 - File names use **kebab-case** (e.g. `ColorPicker.tsx` → `color-picker.tsx`, `useSettings.ts` → `use-settings.ts`). Exported identifiers keep their normal casing (`ColorPicker`, `useSettings`).
+- Components are arrow functions typed with `React.FC<Props>` (`import type React from 'react'`): `export const Toggle: React.FC<Props> = (props) => { ... }`. No `function` declarations for components.
+- A props type used only inside its own component file is named just `Props` (not `ToggleProps`). Only export a longer name when other files need it.
+- A component that wraps a React Native primitive extends that primitive's props (`interface Props extends SwitchProps`) and spreads the rest onto it, so callers keep the full native API. Re-declare props as required in `Props` only where the wrapper needs them.
+- Styling uses **react-native-unistyles** (v3): `import { StyleSheet } from 'react-native-unistyles'` and `StyleSheet.create((theme) => ({ ... }))` instead of React Native's `StyleSheet`. Colors, type, radii and spacing come from the theme, not hard-coded values. Read the docs before writing setup or theme code: https://www.unistyl.es/v3/start/introduction
 - If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.
-- Expo Go only includes its bundled native modules. After adding a library with native code, the app needs a development build: `npx expo run:ios|android` locally, or `eas build --profile development`.
+- This project runs on a **development build** (`expo-dev-client`), not Expo Go. After adding or updating a library with native code, changing `app.json`, or upgrading the SDK, rebuild: `npx expo run:ios|android` locally, or `eas build --profile development` (`development-simulator` for iOS Simulator). Native libraries outside Expo Go are fine to use.
 - Prefer recommended Expo modules over third-party libraries, and check your available skills before adding dependencies. Docs: https://docs.expo.dev/versions/latest/index.md

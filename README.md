@@ -27,21 +27,30 @@ Giao diện sáng kiểu iOS, 3 tab với thanh tab nổi:
 
 ## Chạy app
 
-Yêu cầu: Node.js 20+ (đã dùng Node 24), Expo Go SDK 57 trên điện thoại hoặc iOS Simulator /
-Android Emulator.
+App chạy bằng **development build** (có `expo-dev-client`), không dùng Expo Go.
+
+Yêu cầu: Node.js 20+ (đã dùng Node 24). Build local cần Xcode (iOS) hoặc Android Studio (Android);
+build trên cloud bằng EAS thì không cần.
+
+Lần đầu, hoặc sau khi thêm/cập nhật thư viện native, đổi `app.json`, nâng SDK — build và cài app:
 
 ```bash
 npm install
-npx expo start          # quét QR bằng Expo Go, hoặc nhấn i / a để mở simulator / emulator
+npx expo run:ios        # hoặc: npx expo run:android  (thêm --device để chạy trên máy thật)
+# hoặc build trên cloud:
+npx eas-cli@latest build --profile development-simulator --platform ios   # iOS Simulator
+npx eas-cli@latest build --profile development --platform android         # máy thật / emulator
 ```
 
-Mọi thư viện dùng trong app đều có sẵn trong Expo Go. Muốn có đúng tên app, icon, splash và
-quyền camera tuỳ chỉnh thì cần development build:
+Hằng ngày chỉ cần chạy dev server rồi mở app CheerLight (bản dev) đã cài:
 
 ```bash
-npx expo run:ios        # hoặc: npx expo run:android
-# hoặc build trên cloud: npx eas-cli@latest build --profile development
+npx expo start
 ```
+
+Thư mục `ios/` và `android/` được sinh tự động (Continuous Native Generation) và nằm trong
+`.gitignore` — không sửa tay; cấu hình native qua `app.json`. Khi cần sinh lại từ đầu:
+`npx expo prebuild --clean`.
 
 ### Kiểm tra
 
