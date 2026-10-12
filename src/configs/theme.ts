@@ -49,6 +49,11 @@ export const lightTheme = {
   playColors: PLAY_UI,
   type: TYPE,
   radii: { ...RADII, full: 9999 },
+  borderWidth: {
+    thin: 1,
+    regular: 2,
+    thick: 3,
+  },
   space,
   fontSize,
   lineHeight,
@@ -64,4 +69,6 @@ export const appThemes = {
   light: lightTheme,
 } as const;
 
-export type { ScaleStep };
+type AppTheme = typeof lightTheme;
+
+export type { AppTheme, ScaleStep };

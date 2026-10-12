@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { ColorSwatch, CustomColorSwatch } from '@/components/ui/color-swatch';
+import { ColorSwatch } from '@/components/ui/color-swatch';
+import { CustomColorSwatch } from '@/components/ui/custom-color-swatch';
 import { HexColorSheet } from '@/components/ui/hex-color-sheet';
 import { MenuGroup } from '@/components/ui/menu/menu-group';
 import { colorName, PLAY_COLORS } from '@/configs/colors';
@@ -12,7 +13,9 @@ const COLUMNS = 8;
 
 export function ColorTab({ settings, update }: EditorTabProps) {
   const t = useStrings();
+
   const [hexOpen, setHexOpen] = useState(false);
+
   const current = settings.backgroundColor.toUpperCase();
   const isCustom = !PLAY_COLORS.some((c) => c.hex === current);
 

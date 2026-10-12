@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { ColorSwatch, CustomColorSwatch } from '@/components/ui/color-swatch';
+import { ColorSwatch } from '@/components/ui/color-swatch';
+import { CustomColorSwatch } from '@/components/ui/custom-color-swatch';
 import { HexColorSheet } from '@/components/ui/hex-color-sheet';
 import { MenuGroup } from '@/components/ui/menu/menu-group';
 import { SegmentedControl } from '@/components/ui/segmented-control';
@@ -19,8 +20,6 @@ import { TYPE, UI } from '@/configs/ui';
 import type { EditorTabProps } from '@/features/create/types';
 import { useStrings } from '@/i18n';
 import type { ScrollDirection, TextFont } from '@/types/settings';
-
-const QUICK_SWATCH = 30;
 
 export function TextTab({ settings, update }: EditorTabProps) {
   const t = useStrings();
@@ -76,14 +75,14 @@ export function TextTab({ settings, update }: EditorTabProps) {
           {TEXT_COLOR_QUICK.map((color) => (
             <ColorSwatch
               key={color}
-              size={QUICK_SWATCH}
+              size="md"
               color={color}
               selected={fixed && textColor === color}
               onPress={() => update({ textColorMode: 'fixed', textColor: color })}
             />
           ))}
           <CustomColorSwatch
-            size={QUICK_SWATCH}
+            size="md"
             selected={customSelected}
             onPress={() => setHexOpen(true)}
           />
