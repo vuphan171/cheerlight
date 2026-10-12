@@ -1,4 +1,4 @@
-import { RADII, TYPE, UI } from '@/configs/ui';
+import { PLAY_UI, RADII, TYPE, UI } from '@/configs/ui';
 
 type ScaleStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
@@ -46,6 +46,7 @@ const lineHeight = (step: ScaleStep) => LINE_HEIGHT_SCALE[step] * SCALING;
 
 export const lightTheme = {
   colors: UI,
+  playColors: PLAY_UI,
   type: TYPE,
   radii: { ...RADII, full: 9999 },
   space,

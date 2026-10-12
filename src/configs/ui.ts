@@ -4,6 +4,7 @@ import { Platform, type TextStyle, type ViewStyle } from 'react-native';
 export const UI = {
   bg: '#F2F2F7',
   surface: '#FFFFFF',
+  surfacePressed: '#E9E9EE',
   fill: 'rgba(118,118,128,0.12)',
   separator: 'rgba(60,60,67,0.29)',
   label: '#1C1C1E',
