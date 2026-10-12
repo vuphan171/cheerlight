@@ -1,17 +1,18 @@
+import type React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { StyleSheet } from 'react-native-unistyles';
 
+import { Card } from '@/components/ui/card';
 import { ColorSwatch } from '@/components/ui/color-swatch';
 import { CustomColorSwatch } from '@/components/ui/custom-color-swatch';
+import { Grid } from '@/components/ui/grid';
 import { HexColorSheet } from '@/components/ui/hex-color-sheet';
-import { MenuGroup } from '@/components/ui/menu/menu-group';
 import { colorName, PLAY_COLORS } from '@/configs/colors';
 import type { EditorTabProps } from '@/features/create/types';
 import { useStrings } from '@/i18n';
 
-const COLUMNS = 8;
-
-export function ColorTab({ settings, update }: EditorTabProps) {
+const ColorTab: React.FC<EditorTabProps> = ({ settings, update }) => {
   const t = useStrings();
 
   const [hexOpen, setHexOpen] = useState(false);
@@ -21,25 +22,25 @@ export function ColorTab({ settings, update }: EditorTabProps) {
 
   return (
     <>
-      <MenuGroup
-        label={t.colorTab.background(colorName(current, t))}
-        list={false}
-        footer={settings.effect === 'rainbow' ? t.colorTab.rainbowNote : undefined}>
-        <View style={styles.grid}>
-          {PLAY_COLORS.map((c) => (
-            <View key={c.hex} style={styles.cell}>
+      <View style={styles.section}>
+        <Text style={styles.label}>{t.colorTab.background(colorName(current, t))}</Text>
+        <Card>
+          <Grid columns={8} gapX={1} gapY={2}>
+            {PLAY_COLORS.map((c) => (
               <ColorSwatch
+                key={c.hex}
                 color={c.hex}
                 selected={c.hex === current}
                 onPress={() => update({ backgroundColor: c.hex })}
               />
-            </View>
-          ))}
-          <View style={styles.cell}>
+            ))}
             <CustomColorSwatch selected={isCustom} onPress={() => setHexOpen(true)} />
-          </View>
-        </View>
-      </MenuGroup>
+          </Grid>
+        </Card>
+        {settings.effect === 'rainbow' ? (
+          <Text style={styles.footer}>{t.colorTab.rainbowNote}</Text>
+        ) : null}
+      </View>
       <HexColorSheet
         visible={hexOpen}
         value={current}
@@ -51,9 +52,21 @@ export function ColorTab({ settings, update }: EditorTabProps) {
       />
     </>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  grid: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 12 },
-  cell: { width: `${100 / COLUMNS}%`, alignItems: 'center' },
-});
+const styles = StyleSheet.create((theme) => ({
+  section: {
+    gap: theme.space(2),
+    flexShrink: 0,
+  },
+  label: {
+    ...theme.type.groupLabel,
+    paddingHorizontal: theme.space(4),
+  },
+  footer: {
+    ...theme.type.caption,
+    paddingHorizontal: theme.space(4),
+  },
+}));
+
+export { ColorTab };
